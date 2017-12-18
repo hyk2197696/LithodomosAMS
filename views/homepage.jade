@@ -1,0 +1,17 @@
+extends sidebartest
+
+block content
+    div(class="container-fluid bg-1 text-center")
+        h1  #{title}
+        img(src="/images/LithodomosLogo.png" class="img-rounded " width="300" height="200" alt='lithodomos logo')
+        p Asset number : #{assetnum}
+        a(href="/catalog/assetsearch" class="btn btn-default btn-lg")
+            span(class="glyphicon glyphicon-search") Search
+
+        a(href="/catalog/assetcreate" class="btn btn-default btn-lg")
+            span(class="glyphicon glyphicon-plus") Create
+
+        a(href="/catalog/assetfind?id=0" class="btn btn-default btn-lg")
+            span(class="glyphicon glyphicon-folder-open")  Find
+    // 
+

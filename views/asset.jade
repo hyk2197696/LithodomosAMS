@@ -1,0 +1,24 @@
+extends sidebartest
+
+block content
+    h1= asset.name
+
+
+    div(style='margin-left:20px;margin-top:20px')
+
+
+
+
+        each row,title in asset
+            dt
+
+                p #{title}: #{row}
+    - var alterhref = "/catalog/assetalter?id=" + asset.id
+    - var deletehref = "/catalog/assetdelete?id=" + asset.id
+    - var downloadhref = "/catalog/assetdownload?id=" + asset.id
+    a(href = downloadhref class="btn btn-default btn-lg")
+        span(class="glyphicon glyphicon-download-alt") Download
+    a(href = alterhref class="btn btn-default btn-lg")
+        span(class="glyphicon glyphicon-pencil") Alter
+    a(href = deletehref class="btn btn-default btn-lg")
+        span(class="glyphicon glyphicon-remove") Delete

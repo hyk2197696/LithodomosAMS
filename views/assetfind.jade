@@ -1,0 +1,84 @@
+extends sidebartest
+
+block content
+    h1.text-center #{title}
+    link(rel='stylesheet', href='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css')
+    script(src='http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js')
+    script(src='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js')
+    div(style='margin-left:20px;margin-top:20px')
+
+
+
+        table.table.table-sm.table-dark
+            tbody
+                th(scope='row')
+                    //- var create_href = /catalog
+                    //span.glyphicon.glyphicon-folder-close
+                    //a(href= folder_href)
+                    button.btn.btn-basic.btn-md( class = 'glyphicon glyphicon-plus', data-toggle='modal', data-target='#myModal' )
+                    // Modal
+                    #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                        .modal-dialog
+                            .modal-content
+                                .modal-header
+                                    button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                        | ×
+                                    h4#myModalLabel.modal-title.text-center
+                                        | Create a new folder
+                                .modal-body
+
+                                    div.form-group
+                                        label(for='name') name:
+                                        input#name.form-control(type='text', placeholder='folder name', name='name', required = 'true')
+
+                                .modal-footer
+                                    button.btn.btn-default(type='button', data-dismiss='modal')
+                                        | close
+                                    button.btn.btn-primary(type='submit' onclick ="exist()") Submit
+
+                dl
+                each folder in folder_list
+                    dt
+                        - var folder_href = '/catalog/assetfind?id=' + folder.idfakedirectory
+                        tr
+                            th(scope='row')
+                                span.glyphicon.glyphicon-folder-close
+                                a(href= folder_href)   #{folder.name}
+                dl
+                each asset in asset_list
+                    dt
+                        - var asset_href = '/catalog/asset?id=' + asset.id
+                        tr
+                            th(scope='row')
+                                span.glyphicon.glyphicon-text-background
+                                a(href= asset_href)   #{asset.name}
+                th(scope='row')
+    script.
+        function exist() {
+            if($("#name").val() == ''){
+                alert("Name can't be empty");
+                return;
+            }
+            var req = new XMLHttpRequest();
+
+            req.open("get", "/dynamic/checkfolderexistance?name=" + $("#name").val()+'&id=' + #{folderid});
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+
+                    if(req.responseText == 'success'){
+                        alert('New folder creation success');
+                        window.location.reload();
+                    }else{
+                        alert(req.responseText);
+                    }
+                    //references = JSON.parse(req.responseText);
+                    //alert(references);
+                    //$("#test").html(req.responseText);
+                    //var responds = JSON.parse(req.responseText);
+                    //for (i = 0; i < responds.length; i++) {
+                    //    references.push(responds[i].name);
+                    //}
+                }
+            }
+            req.send();
+        }

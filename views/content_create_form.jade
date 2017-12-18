@@ -1,0 +1,17 @@
+extends sidebartest
+
+block content
+
+    h1.text-center #{title}
+
+    form(method='POST' action='')
+        div.form-group
+            label(for=content_name) #{content_name} name:
+            - var place_holder = 'Input the ' +content_name  + ' name'
+            input#content_name.form-control(type='text', placeholder=place_holder name='content_name' required='true' value=(undefined===author ? '' : author.content_name) )
+        button.btn.btn-primary(type='submit') Create
+    if errors
+        ul
+            for error in errors
+                li!= error.msg
+

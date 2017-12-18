@@ -1,0 +1,88 @@
+extends sidebartest
+
+block content
+
+
+    h1.text-center #{title}
+
+
+    form(method='POST' action='' enctype='multipart/form-data')
+        div.form-group
+            label(for='asset_name') Asset Name:
+            input#asset_name.form-control(type='text', placeholder='Input Asset Name' name='asset_name' required='true' value = name )
+
+        div.form-group.row
+            label.col-sm-12(for='project_name') Project Name:
+            div.col-sm-9
+                input#project_name.form-control(type='text' ,placeholder='Input Project Name', name='project_name', data-provide='typeahead', data-items='4'  value=project)
+            div.col-sm-3
+                a(href="/catalog/contentcreate?content_name=project" class="btn btn-default btn-md")
+                    span Create new project
+
+        div.form-group.row
+            label.col-sm-12(for='project_name') Reference:
+            div.col-sm-9
+                //input#reference.form-control(type='text' ,data-provide='typeahead', data-items='4'  )
+                select#reference.form-control(type='select', placeholder='Select reference' name='reference' required='true' )
+
+                    option(value= idReference) #{reference}
+                    for ref in reference_list
+                        option(value=ref.idReference) #{ref.referenceType}
+            div.col-sm-3
+                a(href="/catalog/contentcreate?content_name=reference" class="btn btn-default btn-md")
+                    span Create new reference
+
+        button.btn.btn-primary(type='submit') Submit
+    if errors
+        ul
+            for error in errors
+                li!= error.msg
+
+    script.
+        var project = []
+        var references = []
+        $(document).ready(function(){
+            getallproject();
+            //getallreference();
+
+        });
+
+        $('#project_name').typeahead({source: project});
+
+        function getallproject() {
+            var req = new XMLHttpRequest();
+
+            req.open("GET", "/dynamic/selectallproject");
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    //$("#test").html(req.responseText);
+                    var responds = JSON.parse(req.responseText);
+                    for (i = 0; i < responds.length; i++) {
+                        project.push(responds[i].name);
+                    }
+                }
+            }
+            req.send();
+        }
+
+        function getallreference() {
+            var req = new XMLHttpRequest();
+
+            req.open("GET", "/dynamic/selectallreference");
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    //alert(req.responseText);
+                    references = JSON.parse(req.responseText);
+                    //alert(references);
+                    //$("#test").html(req.responseText);
+                    //var responds = JSON.parse(req.responseText);
+                    //for (i = 0; i < responds.length; i++) {
+                    //    references.push(responds[i].name);
+                    //}
+                }
+            }
+            req.send();
+        }
+
+
+

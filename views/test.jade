@@ -1,0 +1,51 @@
+extend sidebartest
+block content
+    button.btn.btn-info.btn-lg( class = 'glyphicon glyphicon-plus', data-toggle='modal', data-target='#choose_directory' )
+
+    // 模态框（Modal）
+    link(rel='stylesheet', href='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css')
+    script(src='http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js')
+    script(src='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js')
+
+
+
+    #choose_directory.modal.fade(tabindex='-1', role='dialog', aria-labelledby='choose_directory', aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                        | ×
+                    h4.modal-title
+                        | title of the modal
+                #content.modal-body
+
+                    div.form-group
+                        label(for='name') name:
+                        input#name.form-control(type='text', placeholder='folder name', name='name', required = 'true')
+
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal')
+                        | close
+                    button.btn.btn-primary(type='submit' onclick = 'getdirectory();') Submit
+            // /.modal-content
+        // /.modal
+    script.
+        function change(){
+        $("#content").html('<div class="form-group">\n' +
+            '  <label for="22">222:</label>\n' +
+            '  <input id="22" type="text" placeholder="222" name="222" required="true" class="form-control"/>\n' +
+            '</div>')
+        }
+
+        function getdirectory(){
+            var req = new XMLHttpRequest();
+            req.open("get", "/dynamic/getfullfolderdirectory?id=9");
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+
+                       alert(req.responseText);
+
+                }
+            }
+            req.send();
+        }

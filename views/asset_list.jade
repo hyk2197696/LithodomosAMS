@@ -1,0 +1,15 @@
+extends sidebartest
+
+block content
+
+    h1 Asset list:
+
+    div(style='margin-left:20px;margin-top:20px')
+
+
+
+        dl
+        each asset in list_asset
+            dt
+                - var asset_href = '/catalog/asset?id=' + asset.id
+                a(href= asset_href) #{asset.name}
