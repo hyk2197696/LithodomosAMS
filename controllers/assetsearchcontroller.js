@@ -8,7 +8,7 @@ var json = require('json')
 
 //get method for asset search
 exports.search_get = function(req, res, next) {
-    res.render('search_form', { title: 'Search Asset' });
+    res.render('searchForm', { title: 'Search Asset' });
 };
 
 
@@ -30,7 +30,7 @@ exports.search_post = function(req, res, next) {
 
     if (errors) {
         //If there are errors render the form again, passing the previously entered values and errors
-        res.render('search_form', { title: 'Search Asset', id:req.body.id, errors: errors});
+        res.render('searchForm', { title: 'Search Asset', id:req.body.id, errors: errors});
         return;
     }
     else {
@@ -57,7 +57,7 @@ exports.search_post = function(req, res, next) {
                  }
                  else {
                      console.log(resultJson);
-                     res.render('asset_list', { list_asset : resultJson})
+                     res.render('assetList', { list_asset : resultJson})
                  }
              })
     }

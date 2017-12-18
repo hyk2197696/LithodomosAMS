@@ -22,7 +22,7 @@ exports.create_get = function(req, res, next){
     });
     query.on('end',function(){
         console.log(reference_list);
-        res.render('create_form', {title: 'Create a New Asset', reference_list: reference_list});
+        res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list});
     })
 
 }

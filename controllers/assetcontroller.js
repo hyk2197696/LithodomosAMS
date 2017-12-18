@@ -35,9 +35,7 @@ exports.asset_get = function(req, res, next){
         console.log(row);
         res.render('asset', {title: row.name , asset: row});
     });
-    query.on(end){
 
-    }
 }
 
 //method for asset downloading

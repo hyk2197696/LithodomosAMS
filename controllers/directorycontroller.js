@@ -40,7 +40,7 @@ exports.find_get = function(req, res, next) {
         })
 
         query_asset.on('end',function(){
-            res.render('assetfind', { title: 'Find an Asset', folder_list:folder_list, asset_list:asset_list,folderid:req.query.id});
+            res.render('assetFind', { title: 'Find an Asset', folder_list:folder_list, asset_list:asset_list,folderid:req.query.id});
         });
 
     })
@@ -49,7 +49,7 @@ exports.find_get = function(req, res, next) {
 };
 
 exports.find_post =  function(req, res, next) {
-    res.render('search_form', { title: 'Search Asset' });
+    res.render('searchForm', { title: 'Search Asset' });
 };
 
 

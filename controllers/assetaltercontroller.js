@@ -33,7 +33,7 @@ exports.alter_get = function(req, res, next){
         });
         query.on('end',function(){
             console.log(reference_list);
-            res.render('assetalter', {title: 'Asset Alter', id: req.query.id,
+            res.render('assetAlter', {title: 'Asset Alter', id: req.query.id,
                 name: row.name, project: row.project, idReference : row.idReference,
                 reference: row.reference, directroy:row.directory, reference_list: reference_list});
         })
