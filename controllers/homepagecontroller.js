@@ -1,19 +1,20 @@
-var con = require('./databasecontroller')
-var app = require('../app')
+var con = require('./databasecontroller');
+var app = require('../app');
 var formidable = require('formidable');
 var fs = require('fs');
-
+var Asset = require('../models/asset');
 
 exports.index = function(req, res, next){
-    var query = con.query("select count(*) as countAsset from sys.asset");
-    query.on('error', function(err) {
-        throw err;
-    });
-
-    query.on('result', function(row) {
-        //console.log(row);
-        res.render('homepage',{title : 'Lithodomos Asset Management System', assetnum: row.countAsset });
-    });
+    // var query = con.query("select count(*) as countAsset from sys.asset");
+    // query.on('error', function(err) {
+    //     throw err;
+    // });
+    //
+    // query.on('result', function(row) {
+    //     //console.log(row);
+    //     res.render('homepage',{title : 'Lithodomos Asset Management System', assetnum: row.countAsset });
+    // });
+    Asset.count
 };
 
 exports.test = function(req, res, next) {

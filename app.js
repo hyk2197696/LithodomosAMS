@@ -11,7 +11,7 @@ var users = require('./routes/users');
 var catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
 var dynamic = require('./routes/dynamic');  //Import routes for "dynamic"
 
-var mysql = require('mysql');
+
 // var con = mysql.createConnection({
 //     host: "localhost",
 //     user: "root",
@@ -20,6 +20,17 @@ var mysql = require('mysql');
 
 
 var app = express();
+
+var mongoose = require('mongoose');
+var mongoDB = 'mongodb://hyk:hyk219769696@ds131826.mlab.com:31826/lithodomos';
+mongoose.connect(mongoDB, {
+    useMongoClient: true
+});
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
