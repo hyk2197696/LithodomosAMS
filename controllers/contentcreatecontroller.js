@@ -1,10 +1,11 @@
 /**
  * Controller for content(different attributes of asset) creation
  */
-var con = require('./databasecontroller')
-var app = require('../app')
-var json = require('json')
-var content_name = ""
+var con = require('./databasecontroller');
+var app = require('../app');
+var json = require('json');
+var Reference = require('../models/reference');
+var content_name = "";
 
 //handle content create on get
 exports.content_create_get = function(req, res, next){

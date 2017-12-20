@@ -8,6 +8,8 @@ var Asset = require('../models/asset');
 var Project = require('../models/project');
 var Reference = require('../models/reference');
 var FakeDirectory = require('../models/fakeDirectory');
+
+
 //get method for asset list display
 // exports.list_get = function(req, res, next){
 //     var query = con.query("select count(*) as countAsset from sys.asset");
@@ -43,7 +45,7 @@ exports.asset_get = function(req, res, next){
         .populate('project', Project)
         .populate('fakeDirectory',FakeDirectory)
         .populate('reference',Reference)
-        .exec( (err, asset_datail) => {
+        .exec((err, asset_datail) => {
             if (err)  {return next(err);}
             console.log(asset_datail);
             res.render('asset', { title: asset_datail.name, asset : asset_datail})
@@ -53,14 +55,20 @@ exports.asset_get = function(req, res, next){
 }
 
 //method for asset downloading
-exports.asset_download = function(req, res,next) {
-    var sql = 'select directory from sys.asset where id = ' + req.query.id;
-    console.log(sql);
-    var query = con.query(sql);
-    query.on('result', function (row){
-        console.log(" result : ");
-        console.log(row);
-        console.log(row.directory);
-        res.download(row.directory);
+exports.asset_download = (req, res,next) => {
+    Asset.findById(req.query.id, (err, result) => {
+        if(err) {return next(err);}
+
+
+        res.download(result.trueLocation,result.fileName);
     });
+    // var sql = 'select directory from sys.asset where id = ' + req.query.id;
+    // console.log(sql);
+    // var query = con.query(sql);
+    // query.on('result', function (row){
+    //     console.log(" result : ");
+    //     console.log(row);
+    //     console.log(row.directory);
+    //     res.download(row.directory);
+    // });
 }

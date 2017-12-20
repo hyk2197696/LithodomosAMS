@@ -7,7 +7,8 @@ var AssetSchema = new Schema({
     project: {type: Schema.ObjectId, ref: 'Project'},
     reference: {type: Schema.ObjectId, ref: 'Reference'},
     fakeDirectory: {type: Schema.ObjectId, ref: 'FakeDirectory', require: true},
-    trueLocation: {type: String, require: true}
+    trueLocation: {type: String, require: true},
+    fileName :{type: String, require: true}
 });
 
 module.exports = mongoose.model('Asset', AssetSchema);

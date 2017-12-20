@@ -35,12 +35,12 @@ block content
                                 .modal-footer
                                     button.btn.btn-default(type='button', data-dismiss='modal')
                                         | close
-                                    button.btn.btn-primary(type='submit' onclick ="exist()") Submit
+                                    button.btn.btn-primary(type='submit' onclick ="exist();") Submit
 
                 dl
                 each folder in folder_list
                     dt
-                        - var folder_href = '/catalog/assetfind?id=' + folder.idfakedirectory
+                        - var folder_href = '/catalog/assetfind?id=' + folder.id
                         tr
                             th(scope='row')
                                 span.glyphicon.glyphicon-folder-close
@@ -54,15 +54,18 @@ block content
                                 span.glyphicon.glyphicon-text-background
                                 a(href= asset_href)   #{asset.name}
                 th(scope='row')
+
+
     script.
         function exist() {
+            //alert();
             if($("#name").val() == ''){
                 alert("Name can't be empty");
                 return;
             }
             var req = new XMLHttpRequest();
 
-            req.open("get", "/dynamic/checkfolderexistance?name=" + $("#name").val()+'&id=' + #{folderid});
+            req.open("get", "/dynamic/checkfolderexistance?name=" + $("#name").val()+'&id=' + '#{folderId}' );
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
 

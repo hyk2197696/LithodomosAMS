@@ -16,10 +16,7 @@ exports.index = function(req, res, next){
     //     res.render('homepage',{title : 'Lithodomos Asset Management System', assetnum: row.countAsset });
     // });
     Asset.count((err, countAsset)=> {
-        if (err) {
-            throw err;
-            return;
-        }
+        if (err) {return next(err);}
         res.render('homepage', {title: 'Lithodomos Asset Management System', assetnum: countAsset});
     });
 };

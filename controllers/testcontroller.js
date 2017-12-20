@@ -1,20 +1,7 @@
-db = require('./databasecontroller')
+var json = require('json');
 
-var Person = db.define('person', {
-    id:      {type: 'serial', key: true}, // the auto-incrementing primary key
-    name:    {type: 'text'},
-    surname: {type: 'text'},
-    age:     {type: 'number'}
-}, {
-    methods : {
-        fullName: function() {
-            return this.name + ' ' + this.surname;
-        }
-    }
+var jsonString = [{Id:1, color:"blue"},{Id:2, color:"green"},{Id:3, color:"blue"},{Id:4, color:"red"}];
+var filtered = jsonString.filter( item => {
+    return item.color == 'green';
 });
-
-Person
-    .create({ id: 3, name: "John", surname: "Doe", age: 27 }, function(err) {
-        if (err) throw err;
-
-    });
+console.log(filtered);

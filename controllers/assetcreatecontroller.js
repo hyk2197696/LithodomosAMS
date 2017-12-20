@@ -8,9 +8,12 @@ var json = require('json');
 var exp = require('express');
 var formidable = require('formidable');
 var fs = require('fs');
+var Asset = require('../models/asset')
 var Reference = require('../models/reference');
 var Project = require('../models/project');
-
+var uniqid = require('uniqid');
+var ObjectID = require("bson-objectid");
+const path = require('path')
 //get method for asset create
 exports.create_get = function(req, res, next){
     // var sql = "select * from sys.reference";
@@ -110,39 +113,54 @@ exports.select_all_reference = function(req, res){
 };
 
 //the post method for asset create
-exports.create_post = function(req, res, next) {
+exports.create_post = (req, res, next) =>  {
 
     var form = new formidable.IncomingForm();
-    form.parse(req, function (err, fields, files) {
+    form.parse(req,  (err, fields, files) => {
+        // fields.sanitize('name').escape();
+        // fields.sanitize('project_name').escape();
+        // fields.sanitize('reference').escape();
+        // fields.sanitize('fakeDirectory').escape();
+        //
+        // fields.sanitize('name').trim();
+        // fields.sanitize('project_name').trim();
+        // fields.sanitize('reference').trim();
+        // fields.sanitize('fakeDirectory').trim();
+        console.log(fields.project_name);
+        Project.findOne({'name':fields.project_name})
+            .exec( (err, found_project) => {
+                console.log(found_project);
+                if(err) {return next(err);}
+                var assetDetail = {
+                    _id: ObjectID(),
+                    name: fields.asset_name,
+                    project: found_project.id,
+                    reference: fields.reference,
+                    //fakeDirectory: req.body.fakeDirectory,
+                    fileName: files.file_upload.name,
+                };
+                var oldpath = files.file_upload.path;
+                var newpath = 'C:/Users/Render4/WebstormProjects/lithodomosAMS/file/' + assetDetail._id ;
+                assetDetail.trueLocation = newpath;
 
-        sql = 'insert into sys.asset values \( default, \'' + fields.asset_name + '\'\, ';
-        //console.log(fields.asset_name);
-        if(fields.project_name != ''){
-            sql += '(select idProject from sys.project where name = \'' + fields.project_name.toString() + '\'\)\, ';
-        }else{
-            sql += 'default, ';
-        };
-        if(fields.reference != '-1'){
-            sql += '\'' + fields.reference + '\', ';
-        }
-        else{
-            sql += 'default, ';
-        };
+                var newAsset = new Asset(assetDetail);
 
+                newAsset.save( err => {
+                    if(err) {return next(err);}
 
-        var oldpath = files.file_upload.path;
-        var newpath = 'C:/Users/Render4/WebstormProjects/lithodomosVR/file/' + files.file_upload.name;
-        sql += '\'' + newpath + '\'\)';
-        console.log(sql);
+                    //success, save and rename the file
+                    fs.rename(oldpath, newpath, err => {
+                        if (err) {return next(err);}
+                        res.render('success', {title: 'Asset creation success'});
+                        // var query = con.query(sql);
+                        // query.on('end', () => {
+                        //     res.render('success', {title: 'Asset creation success'});
+                        // });
+                        //alert();
+                    });
+                })
+            })
 
-        fs.rename(oldpath, newpath, function (err) {
-            if (err) throw err;
-            var query = con.query(sql);
-            query.on('end',function(){
-                res.render('success', {title: 'Asset creation success'});
-            });
-            //alert();
-        });
     });
 
 };

@@ -2,101 +2,117 @@
  * Controller for fake directory
  */
 
-var con = require('./databasecontroller')
-var app = require('../app')
-var json = require('json')
+var con = require('./databasecontroller');
+var async = require('async');
+var app = require('../app');
+var json = require('json');
+var FakeDirectory = require('../models/fakeDirectory');
+var Asset = require('../models/asset');
 
-
-
-
-exports.find_get = function(req, res, next) {
-    var sql = 'select * from sys.fakedirectory where super';
-
-    if(req.query.id == 0){
-        sql += ' is null';
-    }else{
-        sql += '=' + req.query.id;
+exports.find_get = function (req, res, next) {
+    var folderDetail = {};
+    var assetDetail = {};
+    if (req.query.id != 'null') {
+        folderDetail.super = req.query.id;
+        assetDetail.fakeDirectory = req.query.id;
+    } else {
+        folderDetail.super = null;
+        assetDetail.fakeDirectory = null;
     }
-    console.log('new query: ' +  sql);
-    var query_folder = con.query(sql);
-    var folder_list = [];
-    var asset_list = [];
-    query_folder.on('result',function(row){
-        console.log(row);
-        folder_list.push(row);
-    })
-    query_folder.on('end',function(){
-        sql = 'select * from sys.asset where location = ';
-        if(req.query.id == 0){
-            sql += '1';
-        }else{
-            sql +=  req.query.id;
+
+
+    async.parallel({
+        folder_list: callback => {
+            FakeDirectory.find(folderDetail)
+                .exec(callback);
+        },
+        asset_list: callback => {
+            Asset.find(assetDetail)
+                .exec(callback);
         }
-        console.log('new query: ' + sql);
-        var query_asset = con.query(sql);
-        query_asset.on('result', function(row){
-            console.log(row);
-            asset_list.push(row);
-        })
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
 
-        query_asset.on('end',function(){
-            res.render('assetFind', { title: 'Find an Asset', folder_list:folder_list, asset_list:asset_list,folderid:req.query.id});
+        res.render('assetFind', {
+            title: 'Find an Asset',
+            folder_list: results.folder_list,
+            asset_list: results.asset_list,
+            folderId: req.query.id.toString()
         });
-
-    })
-
+    });
 
 };
 
-exports.find_post =  function(req, res, next) {
-    res.render('searchForm', { title: 'Search Asset' });
+exports.find_post = function (req, res, next) {
+    res.render('searchForm', {title: 'Search Asset'});
 };
 
 
-
-exports.check_folder_existance = function (req, res, next ){
-    sql = 'select count(*) as count from sys.fakedirectory where name = \'' + req.query.name + '\' and super = ' + req.query.id;
-    console.log('new query' + sql);
-
-    query = con.query(sql);
-    query.on('result',function(row){
-        if(row.count == '0'){
-            sql = 'insert into sys.fakedirectory values (default, \'' + req.query.name + '\' , ';
-            if(req.query.id == 0){
-                sql += 'null)';
-            }else{
-                sql += req.query.id + ')'
-            }
-            console.log('new query: ' + sql);
-            con.query(sql).on('end',function(){
+exports.check_folder_existance = function (req, res, next) {
+    var folderDetail = {
+        name: req.query.name
+    };
+    if(req.query.id != 'null'){
+        folderDetail.super = req.query.id ;
+    }else{
+        folderDetail.super = null;
+    }
+    FakeDirectory.count(folderDetail, (err, count) => {
+        if(err) {return next(err);}
+        if(count == '0'){
+            newFolder = new FakeDirectory(folderDetail);
+            newFolder.save(err =>{
+                if(err) {return next(err);}
                 res.end('success');
             })
+        }else{
+            res.end('Folder exist!');
         }
-        else{
-
-        }res.end('Folder exist!');
-
-    })
+    });
+    // sql = 'select count(*) as count from sys.fakedirectory where name = \'' + req.query.name + '\' and super = ' + req.query.id;
+    // console.log('new query' + sql);
+    //
+    // query = con.query(sql);
+    // query.on('result', function (row) {
+    //     if (row.count == '0') {
+    //         sql = 'insert into sys.fakedirectory values (default, \'' + req.query.name + '\' , ';
+    //         if (req.query.id == 0) {
+    //             sql += 'null)';
+    //         } else {
+    //             sql += req.query.id + ')'
+    //         }
+    //         console.log('new query: ' + sql);
+    //         con.query(sql).on('end', function () {
+    //             res.end('success');
+    //         })
+    //     }
+    //     else {
+    //
+    //     }
+    //     res.end('Folder exist!');
+    //
+    // })
 
     //res.end('success');
 };
 
-function get_folder_info(id,call_back, html_res){
-    var sql = 'select name,ifnull(super,\'null\') as super from sys.fakedirectory where idfakedirectory = '+ id;
+function get_folder_info(id, call_back, html_res) {
+    var sql = 'select name,ifnull(super,\'null\') as super from sys.fakedirectory where idfakedirectory = ' + id;
     console.log('new query :' + sql);
     var query = con.query(sql);
-    var name,super_id;
-    query.on('result', function(row) {
+    var name, super_id;
+    query.on('result', function (row) {
         name = row.name.toString();
         super_id = row.super.toString();
     });
-    query.on('end',function(){
-        call_back(name,super_id, html_res);
+    query.on('end', function () {
+        call_back(name, super_id, html_res);
     });
 };
 
-function on_get_folder_info(name, super_id, html_res)
-{
+function on_get_folder_info(name, super_id, html_res) {
     directory = name + '/' + directory;
     console.log('directory inside = ' + directory);
     id = super_id;
@@ -104,48 +120,68 @@ function on_get_folder_info(name, super_id, html_res)
 
     }
 }
+var find_folder_by_id = (id, allDirectory) => {
 
-exports.get_full_folder_directory = function (req,res,next) {
-    var directory = '';
-    var id = req.query.id;
-    var sql = 'select name, ifnull(super,\'null\'\) as super from sys.fakedirectory where idfakedirectory =' + req.query.id;
-    console.log("new query" + sql);
-    var query = con.query(sql);
-
-    query.on('result', function (row) {
-        console.log(row);
-        directory = row.name.toString();
-        id = row.super.toString();
+}
+var folder_Directory = (id ,subDirectory, allDirectory, callback) => {
+    var thisFolder = allDirectory.filter( item => {
+        return item.id == id;
     });
-    query.on('end', function () {
-        // console.log('directory before = ' + directory);
-        //
-        // get_folder_info(id, function(name, super_id){
-        //     directory = name + '/' + directory;
-        //     console.log('directory inside = ' + directory);
-        //     id = super_id;
-        // });
-        get_folder_info(id, on_get_resonpse);
-
-        res.end(directory);
-        console.log('directory after = ' + directory);
-
-    });
+    thisDirectory = thisFolder[0].name + '/' + subDirectory;
+    if(thisFolder[0].super != null){
+        folder_Directory(subDirectory.super, thisDirectory, allDirectory,callback);
+    }else{
+        callback(thisDirectory);
+    }
+};
+exports.get_full_folder_directory = function (req, res, next) {
+    FakeDirectory.find().exec(
+        (err,results) => {
+            if (err) {return next(err);}
+            folder_Directory(req.query.id, '', results , fullDirectory => {
+                res.end(fullDirectory);
+            })
+        }
+    )
+    // var directory = '';
+    // var id = req.query.id;
+    // var sql = 'select name, ifnull(super,\'null\'\) as super from sys.fakedirectory where idfakedirectory =' + req.query.id;
+    // console.log("new query" + sql);
+    // var query = con.query(sql);
+    //
+    // query.on('result', function (row) {
+    //     console.log(row);
+    //     directory = row.name.toString();
+    //     id = row.super.toString();
+    // });
+    // query.on('end', function () {
+    //     // console.log('directory before = ' + directory);
+    //     //
+    //     // get_folder_info(id, function(name, super_id){
+    //     //     directory = name + '/' + directory;
+    //     //     console.log('directory inside = ' + directory);
+    //     //     id = super_id;
+    //     // });
+    //     get_folder_info(id, on_get_resonpse);
+    //
+    //     res.end(directory);
+    //     console.log('directory after = ' + directory);
+    //
+    // });
 };
 
-    // while(id != 'null'){
-    //     sql = 'select name,ifnull(super,\'null\') as super from sys.fakedirectory where idfakedirectory = '+ id;
-    //     console.log('new query :' + sql);
-    //     con.query(sql).on('result', function(){
-    //         directory = row.name.toString() + '/' + directory;
-    //         id = row.super.toString();
-    //     })
-    //
-    //
-    // }
-    // res.end(directory);
-    // ;
-
+// while(id != 'null'){
+//     sql = 'select name,ifnull(super,\'null\') as super from sys.fakedirectory where idfakedirectory = '+ id;
+//     console.log('new query :' + sql);
+//     con.query(sql).on('result', function(){
+//         directory = row.name.toString() + '/' + directory;
+//         id = row.super.toString();
+//     })
+//
+//
+// }
+// res.end(directory);
+// ;
 
 
 //
