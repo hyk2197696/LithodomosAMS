@@ -5,14 +5,16 @@ block content
 
 
     div(style='margin-left:20px;margin-top:20px')
-
-
-
-
-        each row,title in asset
-            dt
-
-                p #{title}: #{row}
+        p Asset Name : #{asset.name}
+        if (asset.project != null )
+            p Project : #{asset.project.name}
+        else
+            p Project : Null
+        if (asset.reference != null )
+            p Reference : #{asset.reference.name}
+        else
+            p Reference : Null
+        p Directory: #{asset.fakeDirectory.name}
     - var alterhref = "/catalog/assetalter?id=" + asset.id
     - var deletehref = "/catalog/assetdelete?id=" + asset.id
     - var downloadhref = "/catalog/assetdownload?id=" + asset.id

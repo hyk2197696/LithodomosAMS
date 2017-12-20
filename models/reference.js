@@ -6,4 +6,4 @@ var ReferenceSchema = new Schema({
     name:{type: String, rquired:true}
 })
 
-module.exports = mongoose.model('Project', ReferenceSchema);
+module.exports = mongoose.model('Reference', ReferenceSchema);

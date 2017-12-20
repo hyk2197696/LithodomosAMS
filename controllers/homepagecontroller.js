@@ -3,6 +3,7 @@ var app = require('../app');
 var formidable = require('formidable');
 var fs = require('fs');
 var Asset = require('../models/asset');
+var mongoose = require('mongoose');
 
 exports.index = function(req, res, next){
     // var query = con.query("select count(*) as countAsset from sys.asset");
@@ -14,11 +15,17 @@ exports.index = function(req, res, next){
     //     //console.log(row);
     //     res.render('homepage',{title : 'Lithodomos Asset Management System', assetnum: row.countAsset });
     // });
-    Asset.count
+    Asset.count((err, countAsset)=> {
+        if (err) {
+            throw err;
+            return;
+        }
+        res.render('homepage', {title: 'Lithodomos Asset Management System', assetnum: countAsset});
+    });
 };
 
 exports.test = function(req, res, next) {
-    res.download('/file/C&IS Graduate Attributes.pdf');
+    //res.download('/file/C&IS Graduate Attributes.pdf');
     res.render('test', {title: 'Lithodomos Asset Management System'});
 
 };
@@ -35,6 +42,11 @@ exports.test_post = function(req, res, next) {
 
     //console.log(req.body.textload);
 }
+exports.typeahead_test = (req, res) => {
+    res.render('typeaheadTest', {title: 'Lithodomos Asset Management System'});
+}
+
+
 
 exports.check_folder_existance = function (req, res, next ){
     console.log("success");

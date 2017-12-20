@@ -20,7 +20,7 @@ router.get('/assetfind', directory_controller.find_get);
 
 router.post('/assetfind', directory_controller.find_post);
 
-router.get('/assetlist', asset_controller.list_get);
+//router.get('/assetlist', asset_controller.list_get);
 
 router.get('/asset', asset_controller.asset_get);
 
@@ -45,5 +45,7 @@ router.get('/success',homepage_controller.success_get);
 router.post('/test',homepage_controller.test_post);
 
 router.get('/assetdownload',asset_controller.asset_download);
+
+router.get('/typeaheadTest', homepage_controller.typeahead_test);
 
 module.exports = router;

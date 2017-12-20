@@ -1,7 +1,12 @@
+/*
+ this file is for generating the database schema and some test instances
+ It can be run directly using node dbGenerator.js
+ */
+
 var async = require('async');
 var Project = require('./project');
 var Asset = require('./asset');
-var Fakedirectory = require('./fakeDirectory');
+var FakeDirectory = require('./fakeDirectory');
 var Reference = require('./reference');
 
 var mongoose = require('mongoose');
@@ -14,9 +19,9 @@ mongoose.connection.on('error',console.error.bind(console,'Error!!!'));
 var assets = [];
 var projects = [];
 var fakeDirectories = [];
-var reference = [];
+var references = [];
 
-function projectCreate(name,cb){
+var projectCreate = (name,cb) => {
     projectDetail = {name:name};
     var project = new Project(projectDetail);
 
@@ -26,36 +31,39 @@ function projectCreate(name,cb){
                 cb(err, null);
                 return;
             }
-            consoole.log('New Porject: ' + project);
+            console.log('New Porject: ' + project);
             projects.push(project);
             cb(null, project);
     });
+
 };
 
-function referenceCreate(name,cb){
-    referenceDetail = {name:name};
+var referenceCreate = (name,cb) => {
+    referenceDetail = {
+        name:name
+    };
     var reference = new Reference(referenceDetail);
 
-    project.save(
+    reference.save(
         err => {
             if(err) {
                 cb(err, null);
                 return;
             }
-            consoole.log('New Reference: ' + reference);
-            references.push(reference);
-            cb(null, reference);
-        });
+        console.log('New Reference: ' + reference);
+        references.push(reference);
+        cb(null, reference);
+    });
 };
 
-function fakeDirectoryCreate(name, superDirectory, cb){
+var fakeDirectoryCreate = (name, superDirectory, cb) => {
     fakeDirectoryDetail = {
         name: name,
     }
     if(superDirectory != null){
-        fakeDirectory.super = superDirectory;
+        fakeDirectoryDetail.super = superDirectory;
     }else{
-        fakeDirectory.super = null;
+        fakeDirectoryDetail.super = null;
     }
 
     var fakeDirectory = new FakeDirectory(fakeDirectoryDetail);
@@ -67,7 +75,7 @@ function fakeDirectoryCreate(name, superDirectory, cb){
             }
             console.log('New directory: ' + fakeDirectory);
             fakeDirectories.push(fakeDirectory);
-            cb(null,book);
+            cb(null,fakeDirectory);
 
         }
     )
@@ -93,7 +101,7 @@ var assetCreate =  (name, project, reference, fakeDirectory, cb) => {
     )
 };
 
-var generate = () => {
+var generate = (cb) => {
     async.parallel([
         callback => {
             projectCreate('project 1',callback);
@@ -120,16 +128,40 @@ var generate = () => {
             fakeDirectoryCreate('D1_1',null,callback);
         },
         callback => {
-            fakeDirectoryCreate('D1_1', null, callback);
+            fakeDirectoryCreate('D1_2', null, callback);
         }
 
-    ],(err, results) => {
-        if(err){
-            console.err('Error occurs');
-        }else{
-            console.log('Create successfully');
+    ],cb
+
+    );
+};
+
+var createAsset = (cb) => async.parallel([
+        callback => {
+            assetCreate('asset 1', projects[0],references[0],fakeDirectories[0], callback);
+        },
+        callback => {
+            assetCreate('asset 2', projects[1],references[1],fakeDirectories[1], callback);
         }
+    ],
+    cb);
+
+
+
+async.series([
+        generate,
+        createAsset
+    ],
+    (err, results) => {
+        if (err) {
+            console.log('FINAL ERR: '+err);
+        }
+        else {
+            console.log('Asset: '+assets);
+        }
+        //All done, disconnect from database
         mongoose.connection.close();
     });
-};
+
+
 

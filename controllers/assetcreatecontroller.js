@@ -2,54 +2,68 @@
  * Controller for asset creation
  */
 
-var con = require('./databasecontroller')
-var app = require('../app')
-var json = require('json')
-var exp = require('express')
+var con = require('./databasecontroller');
+var app = require('../app');
+var json = require('json');
+var exp = require('express');
 var formidable = require('formidable');
 var fs = require('fs');
+var Reference = require('../models/reference');
+var Project = require('../models/project');
 
 //get method for asset create
 exports.create_get = function(req, res, next){
-    var sql = "select * from sys.reference";
-
-    //selection all reference from the database
-    var query = con.query(sql);
-    var reference_list = []
-    query.on('result', function(row) {
-        console.log(row);
-        reference_list.push(row);
-    });
-    query.on('end',function(){
-        console.log(reference_list);
-        res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list});
-    })
+    // var sql = "select * from sys.reference";
+    //
+    // //selection all reference from the database
+    // var query = con.query(sql);
+    // var reference_list = []
+    // query.on('result', function(row) {
+    //     console.log(row);
+    //     reference_list.push(row);
+    // });
+    // query.on('end',function(){
+    //     console.log(reference_list);
+    //     res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list});
+    // })
+    Reference.find()
+        .exec( (err, reference_list) => {
+            if (err)  {return next(err);}
+            console.log(reference_list);
+            res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list});
+        })
 
 }
 
 //find the project which (partially) contains the name
 //not used at the moment
-function find_project_from_db(name, callback){
-    var sql = "select * from sys.project where name like \'%" + name + "%'"
-    var project_list = [];
-    var query = con.query(sql);
-
-    query.on('error', function(err) {
-        throw err;
-    });
-
-    query.on('result', function(row) {
-        console.log(row);
-        project_list.push(row);
-    });
-
-    query.on('end',function(){
-        callback(project_list);
-    });
+var find_all_project_from_db = callback => {
+    // var sql = "select * from sys.project where name like \'%" + name + "%'"
+    // var project_list = [];
+    // var query = con.query(sql);
+    //
+    // query.on('error', function(err) {
+    //     throw err;
+    // });
+    //
+    // query.on('result', function(row) {
+    //     console.log(row);
+    //     project_list.push(row);
+    // });
+    //
+    // query.on('end',function(){
+    //     callback(project_list);
+    // });
+    Project.find()
+        .exec( (err, project_list) => {
+            if (err)  {return next(err);}
+            console.log(project_list);
+            callback(project_list)
+        })
 }
 
 //select all the reference from the database
-
+//not used at the moment
 function find_all_reference_from_db(callback){
     var sql = "select * from sys.reference"
     var reference_list = [];
@@ -81,16 +95,17 @@ exports.select_project = function(req, res){
 }
 
 //select all the project for typeahead of project field
-exports.select_all_project = function(req, res){
-    find_project_from_db('', function(results){
+exports.select_all_project = (req, res) => {
+    find_all_project_from_db(results => {
         res.end(JSON.stringify(results));
     });
 }
 
-//select all the reference for selection bar
+//select all the reference for selection menu
+//not used at the moment
 exports.select_all_reference = function(req, res){
     find_all_reference_from_db( function(results){
-        res.end(JSON.stringify(results));
+        res.end(results);
     });
 };
 

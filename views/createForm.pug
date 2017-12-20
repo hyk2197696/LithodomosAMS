@@ -22,62 +22,62 @@ block content
                 button.btn.btn-default.btn-md(data-toggle='modal', data-target='#myModal',onclick='showDirectory();' )
                     |Create new project
                     // Modal
-                #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                    .modal-dialog
-                        .modal-content
-                            .modal-header
-                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
-                                    | ×
-                                h4#myModalLabel.modal-title.text-center
-                                    | Create a new project
-                            .modal-body
-
-                                div.form-group
-                                    label(for='name') name:
-                                    input#name.form-control(type='text', placeholder='Project name', name='name', required = 'true')
-
-                            .modal-footer
-                                button.btn.btn-default(type='button', data-dismiss='modal')
-                                    | close
-                                button.btn.btn-primary(type='submit' onclick ="exist()") Submit
+                //#myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                //    .modal-dialog
+                //        .modal-content
+                //            .modal-header
+                //                button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                //                    | ×
+                //                h4#myModalLabel.modal-title.text-center
+                //                    | Create a new project
+                //            .modal-body
+                //
+                //                div.form-group
+                //                    label(for='name') name:
+                //                    input#name.form-control(type='text', placeholder='Project name', name='name', required = 'true')
+                //
+                //            .modal-footer
+                //                button.btn.btn-default(type='button', data-dismiss='modal')
+                //                    | close
+                //                button.btn.btn-primary(type='submit' onclick ="exist()") Submit
 
         div.form-group.row
-            label.col-sm-12(for='project_name') Reference:
+            label.col-sm-12(for='reference') Reference:
             div.col-sm-9
                 //input#reference.form-control(type='text' ,data-provide='typeahead', data-items='4'  )
                 select#reference.form-control(type='select', placeholder='Select reference' name='reference' required='true' )
                     option(value= '-1') Please select a reference if there is one
                     for ref in reference_list
-                        option(value=ref.idReference) #{ref.referenceType}
+                        option(value=ref.id) #{ref.name}
             div.col-sm-3
                 a(href="/catalog/contentcreate?content_name=reference" class="btn btn-default btn-md")
                     span Create new reference
 
-        div.form-group.row
-            label.col-sm-12(for='project_name') Directory:
-            div.col-sm-1
-                button.btn.btn-default.btn-md(data-toggle='modal', data-target='#directory_selector' )
-                    | choose
-
-                #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                    .modal-dialog
-                        .modal-content
-                            .modal-header
-                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
-                                    | ×
-                                h4#directory_selector_header.modal-title.text-center
-                                    | Select a directory
-                            #directory_table.modal-body
-
-                            .modal-footer
-                                button.btn.btn-default(type='button', data-dismiss='modal')
-                                    | close
-                                button.btn.btn-primary(data-toggle='modal', data-target='#myModal') Submit
-            div.col-sm-11
-                .input-group
-                    .input-group-addon @
-                    input#directory.form-control(type='text', placeholder='Please input a folder name', name='durectory', required = 'true',disabled)
-
+        //div.form-group.row
+        //    label.col-sm-12(for='project_name') Directory:
+        //    div.col-sm-1
+        //        button.btn.btn-default.btn-md(data-toggle='modal', data-target='#directory_selector' )
+        //            | choose
+        //
+        //        #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+        //            .modal-dialog
+        //                .modal-content
+        //                    .modal-header
+        //                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+        //                            | ×
+        //                        h4#directory_selector_header.modal-title.text-center
+        //                            | Select a directory
+        //                    #directory_table.modal-body
+        //
+        //                    .modal-footer
+        //                        button.btn.btn-default(type='button', data-dismiss='modal')
+        //                            | close
+        //                        button.btn.btn-primary(data-toggle='modal', data-target='#myModal') Submit
+        //    div.col-sm-11
+        //        .input-group
+        //            .input-group-addon @
+        //            input#directory.form-control(type='text', placeholder='Please select a folder name', name='directory', disabled)
+        //
 
 
         div.form-group
@@ -89,7 +89,8 @@ block content
         ul
             for error in errors
                 li!= error.msg
-
+    script(src='/javascripts/typeahead.min.js')
+    script(src='/javascripts/bootstrap/twitter-bootstrap-v2/docs/assets/js/bootstrap-typeahead.js')
     script.
         var project = []
         var references = []
@@ -98,7 +99,6 @@ block content
         $(document).ready(function(){
             getallproject();
             //getallreference();
-
         });
 
         $('#project_name').typeahead({source: project});
@@ -112,7 +112,9 @@ block content
                 if (req.readyState == 4) {
                     //$("#test").html(req.responseText);
                     var responds = JSON.parse(req.responseText);
+                    //alert(req.responseText);
                     for (i = 0; i < responds.length; i++) {
+
                         project.push(responds[i].name);
                     }
                 }
