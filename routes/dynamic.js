@@ -16,6 +16,8 @@ router.get('/selectallproject',create_controller.select_all_project);
 
 router.get('/selectallreference',create_controller.select_all_reference);
 
+router.get('/selectalldirectory',directory_controller.select_all_directory);
+
 router.get('/checkfolderexistance',directory_controller.check_folder_existance);
 
 router.get('/getfullfolderdirectory',directory_controller.get_full_folder_directory);

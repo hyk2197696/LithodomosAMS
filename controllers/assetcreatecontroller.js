@@ -32,7 +32,7 @@ exports.create_get = function(req, res, next){
     Reference.find()
         .exec( (err, reference_list) => {
             if (err)  {return next(err);}
-            console.log(reference_list);
+            //console.log(reference_list);
             res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list});
         })
 

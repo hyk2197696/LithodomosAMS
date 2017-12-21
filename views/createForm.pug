@@ -53,31 +53,35 @@ block content
                 a(href="/catalog/contentcreate?content_name=reference" class="btn btn-default btn-md")
                     span Create new reference
 
-        //div.form-group.row
-        //    label.col-sm-12(for='project_name') Directory:
-        //    div.col-sm-1
-        //        button.btn.btn-default.btn-md(data-toggle='modal', data-target='#directory_selector' )
-        //            | choose
-        //
-        //        #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-        //            .modal-dialog
-        //                .modal-content
-        //                    .modal-header
-        //                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
-        //                            | ×
-        //                        h4#directory_selector_header.modal-title.text-center
-        //                            | Select a directory
-        //                    #directory_table.modal-body
-        //
-        //                    .modal-footer
-        //                        button.btn.btn-default(type='button', data-dismiss='modal')
-        //                            | close
-        //                        button.btn.btn-primary(data-toggle='modal', data-target='#myModal') Submit
-        //    div.col-sm-11
-        //        .input-group
-        //            .input-group-addon @
-        //            input#directory.form-control(type='text', placeholder='Please select a folder name', name='directory', disabled)
-        //
+        div.form-group.row
+            label.col-sm-12 Directory:
+            div.col-sm-1
+                //link(rel='stylesheet', href='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css')
+                //script(src='http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js')
+                //script(src='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js')
+                button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
+                    | choose
+
+                #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                    | ×
+                                h4#directory_selector_header.modal-title.text-center
+                                    | Select a directory
+                            #directory_table.modal-body
+
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal')
+                                    | close
+                                button.btn.btn-primary(data-toggle='modal', data-target='#myModal') Submit
+
+            div.col-sm-11
+                .input-group
+                    .input-group-addon @
+                    input#directory.form-control(type='text', placeholder='Please choose a folder', name='directory', disabled)
+
 
 
         div.form-group
@@ -89,8 +93,7 @@ block content
         ul
             for error in errors
                 li!= error.msg
-    script(src='/javascripts/typeahead.min.js')
-    script(src='/javascripts/bootstrap/twitter-bootstrap-v2/docs/assets/js/bootstrap-typeahead.js')
+
     script.
         var project = []
         var references = []
@@ -142,36 +145,5 @@ block content
             req.send();
         }
 
-        function exist() {
-
-            var req = new XMLHttpRequest();
-
-            req.open("get", "/dynamic/contentcreate?name=" + $("#name").val() );
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-
-                    if (req.responseText == 'success') {
-                        alert('New folder creation success');
-                        window.location.reload();
-                    } else {
-                        alert(req.responseText);
-                    }
-                    //references = JSON.parse(req.responseText);
-                    //alert(references);
-                    //$("#test").html(req.responseText);
-                    //var responds = JSON.parse(req.responseText);
-                    //for (i = 0; i < responds.length; i++) {
-                    //    references.push(responds[i].name);
-                    //}
-                }
-            }
-            req.send();
-        }
-
-        function showDirectory(){
 
 
-
-
-
-        }

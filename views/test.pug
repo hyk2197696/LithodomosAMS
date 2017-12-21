@@ -1,6 +1,8 @@
 extends layout
 
 block content
+
+    p(  onclick = 'alert()') aaaaaaaaa
     button.btn.btn-info.btn-lg( class = 'glyphicon glyphicon-plus', data-toggle='modal', data-target='#choose_directory' )
 
     // 模态框（Modal）
@@ -30,6 +32,21 @@ block content
                     button.btn.btn-primary(type='submit' onclick = 'getdirectory();') Submit
             // /.modal-content
         // /.modal
+    button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal')
+        | Launch demo modal
+    // Modal
+    #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Modal title
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                .modal-body
+                    | ...
+                .modal-footer
+                    button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                    button.btn.btn-primary(type='button') Save changes
     script.
         function change(){
         $("#content").html('<div class="form-group">\n' +

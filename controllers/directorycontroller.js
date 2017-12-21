@@ -120,54 +120,38 @@ function on_get_folder_info(name, super_id, html_res) {
 
     }
 }
-var find_folder_by_id = (id, allDirectory) => {
 
-}
-var folder_Directory = (id ,subDirectory, allDirectory, callback) => {
-    var thisFolder = allDirectory.filter( item => {
+exports.select_all_directory = (req, res, next) => {
+    FakeDirectory.find().exec(
+        (err,results) => {
+            if (err) {return next(err);}
+            res.end(results);
+        }
+    )
+};
+
+var folder_Directory = (id ,subDirectory, allDirectories, callback) => {
+    var thisFolder = allDirectories.filter( item => {
         return item.id == id;
     });
-    thisDirectory = thisFolder[0].name + '/' + subDirectory;
+    thisDirectory =  '/' + thisFolder[0].name  + subDirectory;
     if(thisFolder[0].super != null){
-        folder_Directory(subDirectory.super, thisDirectory, allDirectory,callback);
+        folder_Directory(thisFolder[0].super, thisDirectory, allDirectories,callback);
     }else{
         callback(thisDirectory);
     }
 };
+
 exports.get_full_folder_directory = function (req, res, next) {
     FakeDirectory.find().exec(
         (err,results) => {
             if (err) {return next(err);}
-            folder_Directory(req.query.id, '', results , fullDirectory => {
+            folder_Directory(req.query.id, '/', results , fullDirectory => {
                 res.end(fullDirectory);
             })
         }
     )
-    // var directory = '';
-    // var id = req.query.id;
-    // var sql = 'select name, ifnull(super,\'null\'\) as super from sys.fakedirectory where idfakedirectory =' + req.query.id;
-    // console.log("new query" + sql);
-    // var query = con.query(sql);
-    //
-    // query.on('result', function (row) {
-    //     console.log(row);
-    //     directory = row.name.toString();
-    //     id = row.super.toString();
-    // });
-    // query.on('end', function () {
-    //     // console.log('directory before = ' + directory);
-    //     //
-    //     // get_folder_info(id, function(name, super_id){
-    //     //     directory = name + '/' + directory;
-    //     //     console.log('directory inside = ' + directory);
-    //     //     id = super_id;
-    //     // });
-    //     get_folder_info(id, on_get_resonpse);
-    //
-    //     res.end(directory);
-    //     console.log('directory after = ' + directory);
-    //
-    // });
+ 
 };
 
 // while(id != 'null'){
