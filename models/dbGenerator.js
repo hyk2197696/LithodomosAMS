@@ -10,7 +10,7 @@ var FakeDirectory = require('./fakeDirectory');
 var Reference = require('./reference');
 
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://hyk:hyk219769696@ds133166.mlab.com:33166/lithodomos';
+var mongoDB = 'mongodb://localhost:27017/lithodomos';
 
 mongoose.connect(mongoDB);
 var db = mongoose.connection;
@@ -150,7 +150,7 @@ var createAsset = (cb) => async.parallel([
 
 async.series([
         generate,
-        createAsset
+        //createAsset
     ],
     (err, results) => {
         if (err) {

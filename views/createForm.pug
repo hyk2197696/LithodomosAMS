@@ -71,7 +71,10 @@ block content
                                 h4#directory_selector_header.modal-title.text-center
                                     | Select a directory
                             #directory_table.modal-body
-
+                                table.table.table-sm.table-dark
+                                    tbody
+                                        th(scope='row')
+                                        div#directory_tbody
                             .modal-footer
                                 button.btn.btn-default(type='button', data-dismiss='modal')
                                     | close
@@ -95,19 +98,29 @@ block content
                 li!= error.msg
 
     script.
-        var project = []
+        var projects = []
         var references = []
-
+        var allDirectories = []
+        var currentDirectory = null
         //load all data before the loading the page
-        $(document).ready(function(){
-            getallproject();
-            //getallreference();
+        $(document).ready(function () {
+            getAllProject();
+
+            getAllDirectory(function (allDirectory) {
+                allDirectories = JSON.parse(allDirectory);
+                var folders = getFoldersById(currentDirectory);
+                for (var i = 0, len = folders.length; i < len; i++) {
+                    var html = '<botton class="glyphicon glyphicon-folder-close">' + folders[i].name + '</span>';
+                    alert(html);
+                    $("#directory_tbody").append(html);
+                }
+            });
         });
 
-        $('#project_name').typeahead({source: project});
+        $('#project_name').typeahead({source: projects});
 
         //select all project from the database
-        function getallproject() {
+        function getAllProject() {
             var req = new XMLHttpRequest();
 
             req.open("GET", "/dynamic/selectallproject");
@@ -118,7 +131,7 @@ block content
                     //alert(req.responseText);
                     for (i = 0; i < responds.length; i++) {
 
-                        project.push(responds[i].name);
+                        projects.push(responds[i].name);
                     }
                 }
             }
@@ -128,7 +141,6 @@ block content
         //select all reference and form the selection box
         function getallreference() {
             var req = new XMLHttpRequest();
-
             req.open("GET", "/dynamic/selectallreference");
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
@@ -143,7 +155,30 @@ block content
                 }
             }
             req.send();
-        }
+        };
+
+        function getAllDirectory(callback){
+            var req = new XMLHttpRequest();
+            req.open("GET", "/dynamic/selectalldirectory");
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    //alert(req.responseText);
+
+                    callback(req.responseText);
+
+                }
+            }
+
+            req.send();
+        };
+
+        function getFoldersById(id) {
+            var folders = allDirectories.filter(function (item) {
+                return item.id == id;
+            });
+            return folders;
+        };
+
 
 
 

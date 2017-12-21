@@ -22,7 +22,7 @@ var dynamic = require('./routes/dynamic');  //Import routes for "dynamic"
 var app = express();
 
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://hyk:hyk219769696@ds133166.mlab.com:33166/lithodomos';
+var mongoDB = 'mongodb://localhost:27017/lithodomos';
 mongoose.connect(mongoDB, {
     useMongoClient: true
 });

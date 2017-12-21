@@ -125,7 +125,8 @@ exports.select_all_directory = (req, res, next) => {
     FakeDirectory.find().exec(
         (err,results) => {
             if (err) {return next(err);}
-            res.end(results);
+            //console.log(results);
+            res.end(JSON.stringify(results));
         }
     )
 };
@@ -151,7 +152,31 @@ exports.get_full_folder_directory = function (req, res, next) {
             })
         }
     )
- 
+    // var directory = '';
+    // var id = req.query.id;
+    // var sql = 'select name, ifnull(super,\'null\'\) as super from sys.fakedirectory where idfakedirectory =' + req.query.id;
+    // console.log("new query" + sql);
+    // var query = con.query(sql);
+    //
+    // query.on('result', function (row) {
+    //     console.log(row);
+    //     directory = row.name.toString();
+    //     id = row.super.toString();
+    // });
+    // query.on('end', function () {
+    //     // console.log('directory before = ' + directory);
+    //     //
+    //     // get_folder_info(id, function(name, super_id){
+    //     //     directory = name + '/' + directory;
+    //     //     console.log('directory inside = ' + directory);
+    //     //     id = super_id;
+    //     // });
+    //     get_folder_info(id, on_get_resonpse);
+    //
+    //     res.end(directory);
+    //     console.log('directory after = ' + directory);
+    //
+    // });
 };
 
 // while(id != 'null'){
