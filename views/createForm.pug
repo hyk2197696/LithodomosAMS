@@ -72,18 +72,18 @@ block content
                                     | Select a directory
                             #directory_table.modal-body
                                 table.table.table-sm.table-dark
-                                    tbody
-                                        th(scope='row')
-                                        div#directory_tbody
+                                    tbody#directory_tbody
+
+
                             .modal-footer
                                 button.btn.btn-default(type='button', data-dismiss='modal')
                                     | close
-                                button.btn.btn-primary(data-toggle='modal', data-target='#myModal') Submit
+                                button.btn.btn-primary(data-toggle='modal', data-target='#myModal', data-dismiss='modal',onclick = 'save()') Save
 
             div.col-sm-11
                 .input-group
-                    .input-group-addon @
-                    input#directory.form-control(type='text', placeholder='Please choose a folder', name='directory', disabled)
+                    #directoryContent.input-group-addon Please choose a folder to save the asset
+                    input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', disabled )
 
 
 
@@ -104,16 +104,22 @@ block content
         var currentDirectory = null
         //load all data before the loading the page
         $(document).ready(function () {
+
             getAllProject();
 
             getAllDirectory(function (allDirectory) {
                 allDirectories = JSON.parse(allDirectory);
                 var folders = getFoldersById(currentDirectory);
-                for (var i = 0, len = folders.length; i < len; i++) {
-                    var html = '<botton class="glyphicon glyphicon-folder-close">' + folders[i].name + '</span>';
-                    alert(html);
-                    $("#directory_tbody").append(html);
-                }
+                setDirectoryTableHeader('Root');
+                setDirectoryTableBody();
+                //                $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
+                //                    + currentDirectory + '\')"></botton>' +
+                //                    '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > root</botton></th><th scope="row"/>');
+                //                for (var i = 0, len = folders.length; i < len; i++) {
+                //                    var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close " onclick="explore(\'' +folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
+                //                    //alert(html);
+                //                    $("#directory_tbody").append(html);
+                //                }
             });
         });
 
@@ -144,14 +150,7 @@ block content
             req.open("GET", "/dynamic/selectallreference");
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
-                    //alert(req.responseText);
                     references = JSON.parse(req.responseText);
-                    //alert(references);
-                    //$("#test").html(req.responseText);
-                    //var responds = JSON.parse(req.responseText);
-                    //for (i = 0; i < responds.length; i++) {
-                    //    references.push(responds[i].name);
-                    //}
                 }
             }
             req.send();
@@ -173,12 +172,103 @@ block content
         };
 
         function getFoldersById(id) {
-            var folders = allDirectories.filter(function (item) {
-                return item.id == id;
-            });
+            var folders = [];
+
+            for(var i = 0; i < allDirectories.length; i++){
+                if(allDirectories[i].super == id){
+                    folders.push(allDirectories[i]);
+                }
+            }
+            //alert(folders);
             return folders;
         };
 
+        function getSuperFolderIdById(id){
+            for(var i = 0; i < allDirectories.length; i++ ){
+                if(allDirectories[i]._id == id){
+                    return allDirectories[i].super;
+                }
+            }
+        }
+        function getFolderObjectById(id){
+            for (var i = 0; i < allDirectories.length; i++) {
+                if (allDirectories[i]._id == id) {
+                    return allDirectories[i]
+                }
+            }
+        }
+        function back(id) {
+            if (id == null) {
+                return;
+            }
+            currentDirectory = getSuperFolderIdById(id);
+            var currentFolderName;
+            if(currentDirectory == null){
+              currentFolderName = 'root';
+            }else{
+                var currentFolder = getFolderObjectById(currentDirectory);
+                currentFolderName = currentFolder.name;
+            }
+            setDirectoryTableHeader(currentFolderName);
+            setDirectoryTableBody();
+            //            $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
+            //                + currentDirectory + '\')"></botton>' +
+            //                '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > ' + currentFolderName + '</botton></th><th scope="row"/>');
 
+            //            var folders = getFoldersById(currentDirectory);
+            //            for (var i = 0, len = folders.length; i < len; i++) {
+            //                var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' +folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
+            //                //alert(html);
+            //                $("#directory_tbody").append(html);
+            //            }
 
+        }
 
+        function explore(id) {
+            //alert();
+            currentDirectory = id;
+            var currentFolder = getFolderObjectById(id);
+            //            $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
+            //                + currentDirectory + '\')"></botton>' +
+            //                '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > ' + currentFolder.name + '</botton></th><th scope="row"/>');
+            setDirectoryTableHeader(currentFolder.name);
+            setDirectoryTableBody();
+            //            var folders = getFoldersById(currentDirectory);
+            //            for (var i = 0, len = folders.length; i < len; i++) {
+            //                var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' +folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
+            //                //alert(html);
+            //                $("#directory_tbody").append(html);
+            //            }
+        }
+        function setDirectoryTableHeader(name){
+            $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
+                + currentDirectory + '\')"></botton>' +
+                '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > ' + name + '</botton></th><th scope="row"/>');
+        }
+
+        function setDirectoryTableBody() {
+            var folders = getFoldersById(currentDirectory);
+            for (var i = 0, len = folders.length; i < len; i++) {
+                var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' + folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
+                //alert(html);
+                $("#directory_tbody").append(html);
+            }
+        }
+
+        function save(){
+            if(currentDirectory == null){
+                $("#directory").val('null');
+                $("#directoryContent").html('Root/');
+            }
+            $("#directory").val(currentDirectory);
+            var req = new XMLHttpRequest();
+            req.open("GET", "/dynamic/getfullfolderdirectory?id=" + currentDirectory);
+            req.onreadystatechange = function () {
+
+                if (req.readyState == 4) {
+
+                    $("#directoryContent").html('Root' + req.responseText);
+                }
+            }
+            req.send();
+        }

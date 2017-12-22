@@ -7,9 +7,6 @@ block content
     script(src='http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js')
     script(src='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js')
     div(style='margin-left:20px;margin-top:20px')
-
-
-
         table.table.table-sm.table-dark
             tbody
                 th(scope='row')
@@ -75,13 +72,6 @@ block content
                     }else{
                         alert(req.responseText);
                     }
-                    //references = JSON.parse(req.responseText);
-                    //alert(references);
-                    //$("#test").html(req.responseText);
-                    //var responds = JSON.parse(req.responseText);
-                    //for (i = 0; i < responds.length; i++) {
-                    //    references.push(responds[i].name);
-                    //}
                 }
             }
             req.send();

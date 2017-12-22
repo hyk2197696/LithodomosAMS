@@ -135,6 +135,9 @@ var folder_Directory = (id ,subDirectory, allDirectories, callback) => {
     var thisFolder = allDirectories.filter( item => {
         return item.id == id;
     });
+    if(thisFolder.length == 0){
+        return subDirectory;
+    }
     thisDirectory =  '/' + thisFolder[0].name  + subDirectory;
     if(thisFolder[0].super != null){
         folder_Directory(thisFolder[0].super, thisDirectory, allDirectories,callback);
@@ -148,6 +151,7 @@ exports.get_full_folder_directory = function (req, res, next) {
         (err,results) => {
             if (err) {return next(err);}
             folder_Directory(req.query.id, '/', results , fullDirectory => {
+                console.log('id = ' + req.query.id);
                 res.end(fullDirectory);
             })
         }
