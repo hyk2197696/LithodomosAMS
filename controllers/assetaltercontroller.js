@@ -2,79 +2,52 @@
  * Controller for asset alter
  */
 var con = require('./databasecontroller')
-var app = require('../app')
-
-//asset alter page get method
+var app = require('../app');
+var async = require('async');
+var Asset = require('../models/asset');
+var Reference = require('../models/reference');
+var Project = require('../models/project');
+//asset alter page get method, select all attribute from the database and display in a form
 exports.alter_get = function(req, res, next){
-    var sql = "select sys.asset.id, " +
-                    "sys.asset.name," +
-                    "sys.project.name as project," +
-                    "sys.reference.referenceType as reference," +
-                    "sys.asset.reference as idReference" +
-                    "directory " +
-                    "from sys.asset left join sys.project " +
-                        "on sys.asset.project = sys.project.idProject " +
-                    "left join sys.reference " +
-                        "on sys.asset.reference = sys.reference.idReference " +
-                    "where sys.asset.id =" + req.query.id;
-
-    //select all the imformation of the specfic asset
-    console.log('new query :' );
-    console.log(sql);
-
-    con.query(sql).on('result', function(row) {
-        //console.log(row);
-
-        var query = con.query('select * from sys.reference');
-        var reference_list = [];
-        query.on('result', function(row) {
-            console.log(row);
-            reference_list.push(row);
-        });
-        query.on('end',function(){
-            console.log(reference_list);
-            res.render('assetAlter', {title: 'Asset Alter', id: req.query.id,
-                name: row.name, project: row.project, idReference : row.idReference,
-                reference: row.reference, directroy:row.directory, reference_list: reference_list});
-        })
-
-    });
+    async.parallel({
+        asset: callback => {
+            Asset.findById(req.query.id).populate('reference').populate('project').populate('fakeDirectory').exec(callback);
+        },
+        reference_list: callback => {
+            Reference.find().exec(callback);
+        },
+    }, (err, result) => {
+        if(err) {return next(err);  }
+        //successful
+        res.render('assetAlter', {title: 'Asset Alter', asset: result.asset, reference_list: result.reference_list});
+    })
 }
 
 //post method for asset alter
 exports.alter_post = function(req, res, next) {
+    Project.findOne({'name':req.body.project_name})
+        .exec( (err, found_project) => {
+            //judge if the following attributes of the asset is not defined
+        var projectId = found_project == null? null:found_project.id;
+        var referenceId = req.body.reference == '-1'? null : req.body.reference;
+        //var fakeDirectoryId = fields.directory == 'null'? null: fields.directory;
 
-        sql = 'insert into sys.asset values \( default, \'' + fields.asset_name + '\'\, ';
-        //console.log(fields.asset_name);
-        if(fields.project_name != ''){
-            sql += '(select idProject from sys.project where name = \'' + fields.project_name.toString() + '\'\)\, ';
-        }else{
-            sql += 'default, ';
+        if(err) {return next(err);}
+
+        //if nothing wrong, create a new template for the new asset
+        var assetDetail = {
+            name: req.body.asset_name,
+            project: projectId,
+            reference: referenceId,
+            fakeDirectory: req.body.directory,
         };
-        if(fields.reference != '-1'){
-            sql += '\'' + fields.reference + '\', ';
-        }
-        else{
-            sql += 'default, ';
-        };
+        //console.log(assetDetail);
+        //update the database
+        Asset.findByIdAndUpdate(req.query.id, assetDetail, {}, (err) => {
+            if (err) {return next(err); }
+            res.render('success', {title: 'Asset update success'});
+        })
 
 
-        var oldpath = files.file_upload.path;
-        var newpath = 'C:/Users/Render4/WebstormProjects/lithodomosVR/file/' + files.file_upload.name;
-
-        sql += '\'' + newpath + '\'\)';
-        //insert the altered asset
-        console.log(sql);
-
-
-        fs.rename(oldpath, newpath, function (err) {
-            if (err) throw err;
-            var query = con.query(sql);
-            query.on('end',function(){
-                res.render('success', {title: 'Asset creation success'});
-            });
-            //alert();
-        });
-
-
-};
+    })
+}

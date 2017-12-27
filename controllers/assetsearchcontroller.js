@@ -35,34 +35,8 @@ exports.search_post = function(req, res, next) {
         return;
     }
     else {
-        //     var sql = "select *  from sys.asset where id = " + req.body.id ;
-        //
-        //     console.log("new query:")
-        //     console.log(sql);
-        //
-        //     var query = con.query(sql);
-        //     var rowCount = 0;
-        //     var resultJson = []
-        //     query.on('error', function(err) { throw err; })
-        //          .on('result',function(row){
-        //             rowCount ++;
-        //             console.log(row);
-        //              resultJson.push(row);
-        //
-        //             //res.render('asset_list', { list_asset : row});
-        //          })
-        //          .on('end',function(){
-        //              //if the result has 0 row, jump to empty page
-        //              if(rowCount == 0) {
-        //                  res.render('success', {title: 'empty', massage: 'empty!'});
-        //              }
-        //              else {
-        //                  console.log(resultJson);
-        //                  res.render('assetList', { list_asset : resultJson})
-        //              }
-        //          })
-        // }
-        Asset.find( {name: req.body.name} )
+        //if there are no errors search the database and return the result, render the asset list page
+        Asset.find( {name: ({$regex:req.body.name})} )
             .exec( (err, list_asset) => {
                 if (err)  {return next(err);}
                 if(list_asset.length == 0) {

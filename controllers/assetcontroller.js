@@ -10,36 +10,8 @@ var Reference = require('../models/reference');
 var FakeDirectory = require('../models/fakeDirectory');
 
 
-//get method for asset list display
-// exports.list_get = function(req, res, next){
-//     var query = con.query("select count(*) as countAsset from sys.asset");
-//     query.on('error', function(err) {
-//         throw err;
-//     });
-//
-//     query.on('result', function(row) {
-//         //console.log(row);
-//         res.render('homepage', {title: 'Lithodomos Asset Management System', assetnum: row.countAsset});
-//     });
-// }
-
-//get method for asset display
+//get method for asset display, find an asset by id and send back asset details
 exports.asset_get = function(req, res, next){
-    // sql = "select *  from sys.asset where id = " + req.query.id;
-    //
-    // //select all the information of the specific asset
-    // console.log("new query:");
-    // console.log(sql);
-    //
-    // var query = con.query(sql);
-    // query.on('error', function(err) {
-    //     throw err;
-    // });
-    //
-    // query.on('result', function(row) {
-    //     console.log(row);
-    //     res.render('asset', {title: row.name , asset: row});
-    // });
     console.log('New query: finding asset id = ' + req.query.id);
     Asset.findById( req.query.id )
         .populate('project', Project)
@@ -49,26 +21,14 @@ exports.asset_get = function(req, res, next){
             if (err)  {return next(err);}
             console.log(asset_datail);
             res.render('asset', { title: asset_datail.name, asset : asset_datail})
-
         })
 
 }
 
-//method for asset downloading
+//method for asset downloading, find asset by id and rename the file as it was when uploaded
 exports.asset_download = (req, res,next) => {
     Asset.findById(req.query.id, (err, result) => {
         if(err) {return next(err);}
-
-
         res.download(result.trueLocation,result.fileName);
     });
-    // var sql = 'select directory from sys.asset where id = ' + req.query.id;
-    // console.log(sql);
-    // var query = con.query(sql);
-    // query.on('result', function (row){
-    //     console.log(" result : ");
-    //     console.log(row);
-    //     console.log(row.directory);
-    //     res.download(row.directory);
-    // });
 }

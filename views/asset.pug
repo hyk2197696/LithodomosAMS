@@ -35,7 +35,7 @@ block content
             req.open("get", "/dynamic/getfullfolderdirectory?id=#{asset.fakeDirectory.id}");
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
-                    $('#directory').html('Directory: ' +  req.responseText);
+                    $('#directory').html('Directory: Root' +  req.responseText);
                 }
             }
             req.send();

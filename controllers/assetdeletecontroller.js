@@ -1,18 +1,17 @@
 /**
  * Controller for asset deletion
  */
-var con = require('./databasecontroller')
-var app = require('../app')
+var con = require('./databasecontroller');
+var app = require('../app');
+var Asset = require('../models/asset');
 
-//get method for asset deletion
+//get method for asset deletion delete the asset by id (collection.findByIdAndRemove())
 exports.delete_get = function(req, res, next){
-    var query = con.query("select count(*) as countAsset from sys.asset");
-    query.on('error', function(err) {
-        throw err;
+    Asset.findByIdAndRemove(req.query.id, err => {
+        if (err) { return next(err); }
+        Asset.count((err, countAsset)=> {
+            if (err) {return next(err);}
+            res.render('homepage', {title: 'Asset Delete successfully', assetnum: countAsset});
     });
-
-    query.on('result', function(row) {
-        //console.log(row);
-        res.render('homepage', {title: 'Lithodomos Asset Management System', assetnum: row.countAsset});
     });
 }

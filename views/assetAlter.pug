@@ -4,17 +4,17 @@ block content
 
 
     h1.text-center #{title}
-
-
-    form(method='POST' action='' enctype='multipart/form-data')
+    #test
+    -var action = '?id=' + asset.id
+    form(method='POST' action=action )
         div.form-group
             label(for='asset_name') Asset Name:
-            input#asset_name.form-control(type='text', placeholder='Input Asset Name' name='asset_name' required='true' value = name )
+            input#asset_name.form-control(type='text', placeholder='Input Asset Name' name='asset_name' required='true' value = asset.name )
 
         div.form-group.row
             label.col-sm-12(for='project_name') Project Name:
             div.col-sm-9
-                input#project_name.form-control(type='text' ,placeholder='Input Project Name', name='project_name', data-provide='typeahead', data-items='4'  value=project)
+                input#project_name.form-control(type='text' ,placeholder='Input Project Name', name='project_name', data-provide='typeahead', data-items='4'  value=null == asset.project?null:asset.project.name)
             div.col-sm-3
                 a(href="/catalog/contentcreate?content_name=project" class="btn btn-default btn-md")
                     span Create new project
@@ -24,13 +24,49 @@ block content
             div.col-sm-9
                 //input#reference.form-control(type='text' ,data-provide='typeahead', data-items='4'  )
                 select#reference.form-control(type='select', placeholder='Select reference' name='reference' required='true' )
-
-                    option(value= idReference) #{reference}
+                    if(null == asset.reference)
+                        option(value= '-1') Please select a reference if there is one
+                    else
+                        option(value= asset.reference.id) #{asset.reference.name}
+                        option(value= '-1') No reference
                     for ref in reference_list
-                        option(value=ref.idReference) #{ref.referenceType}
+                        if ref.id != (null == asset.reference? null: asset.reference.id)
+                            option(value=ref.id) #{ref.name}
             div.col-sm-3
                 a(href="/catalog/contentcreate?content_name=reference" class="btn btn-default btn-md")
                     span Create new reference
+
+        //Directory
+        div.form-group.row
+            label.col-sm-12 Directory:
+            div.col-sm-1
+                button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
+                    | choose
+
+                #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                    | ×
+                                h4#directory_selector_header.modal-title.text-center
+                                    | Select a directory
+                            #directory_table.modal-body
+                                table.table.table-sm.table-dark
+                                    tbody#directory_tbody
+
+
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal')
+                                    | close
+                                button.btn.btn-primary(data-toggle='modal', data-target='#myModal', data-dismiss='modal',onclick = 'save()') Save
+
+            div.col-sm-11
+                .input-group
+                    #directoryContent.input-group-addon Please choose a folder to save the asset
+                    input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true', value=asset.fakeDirectory )
+
+
 
         button.btn.btn-primary(type='submit') Submit
     if errors
@@ -41,9 +77,20 @@ block content
     script.
         var project = []
         var references = []
+        var allDirectories = []
+        var currentDirectory = null
+
         $(document).ready(function(){
             getallproject();
-            //getallreference();
+            //('#{directoryEmpty}' == "F");
+            currentDirectory ='#{asset.fakeDirectory.id}';
+            //alert(currentDirectory);
+            getAllDirectory(function (allDirectory) {
+                allDirectories = JSON.parse(allDirectory);
+                setDirectoryTableHeader('#{asset.fakeDirectory.name}');
+                setDirectoryTableBody();
+            });
+            save();
 
         });
 
@@ -71,18 +118,120 @@ block content
             req.open("GET", "/dynamic/selectallreference");
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
-                    //alert(req.responseText);
                     references = JSON.parse(req.responseText);
-                    //alert(references);
-                    //$("#test").html(req.responseText);
-                    //var responds = JSON.parse(req.responseText);
-                    //for (i = 0; i < responds.length; i++) {
-                    //    references.push(responds[i].name);
-                    //}
                 }
             }
             req.send();
         }
 
+        function getAllDirectory(callback) {
+
+            var req = new XMLHttpRequest();
+            req.open("GET", "/dynamic/selectalldirectory");
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    //alert(req.responseText);
+
+                    callback(req.responseText);
+
+                }
+            }
+
+            req.send();
+        };
+
+        function getFoldersById(id) {
+            var folders = [];
+
+            for (var i = 0; i < allDirectories.length; i++) {
+                if (allDirectories[i].super == id) {
+                    folders.push(allDirectories[i]);
+                }
+            }
+            //alert(folders);
+            return folders;
+        };
+
+        function getSuperFolderIdById(id) {
+            for (var i = 0; i < allDirectories.length; i++) {
+                if (allDirectories[i]._id == id) {
+                    return allDirectories[i].super;
+                }
+            }
+        }
+        function getFolderObjectById(id) {
+            for (var i = 0; i < allDirectories.length; i++) {
+                if (allDirectories[i]._id == id) {
+                    return allDirectories[i]
+                }
+            }
+        }
+        function back(id) {
+            if (id == null) {
+                return;
+            }
+            currentDirectory = getSuperFolderIdById(id);
+            var currentFolderName;
+            if (currentDirectory == null) {
+                currentFolderName = 'Root';
+            } else {
+                var currentFolder = getFolderObjectById(currentDirectory);
+                currentFolderName = currentFolder.name;
+            }
+            setDirectoryTableHeader(currentFolderName);
+            setDirectoryTableBody();
+
+        }
+
+        function explore(id) {
+            //alert();
+            currentDirectory = id;
+            var currentFolder = getFolderObjectById(id);
+            setDirectoryTableHeader(currentFolder.name);
+            setDirectoryTableBody();
+        }
+
+        function setDirectoryTableHeader(name) {
+            $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
+                + currentDirectory + '\')"></botton>' +
+                '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > ' + name + '</botton></th><th scope="row"/>');
+        }
+
+        function setDirectoryTableBody() {
+            var folders = getFoldersById(currentDirectory);
+            for (var i = 0, len = folders.length; i < len; i++) {
+                var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' + folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
+                //alert(html);
+                $("#directory_tbody").append(html);
+            }
+        }
+
+        function save() {
+            if (currentDirectory == null) {
+                alert('Can\'t save assets in root directory,\nplease choose another');
+                return;
+            }
+            $("#directory").val(currentDirectory);
+            var req = new XMLHttpRequest();
+            req.open("GET", "/dynamic/getfullfolderdirectory?id=" + currentDirectory);
+            req.onreadystatechange = function () {
+
+                if (req.readyState == 4) {
+
+                    $("#directoryContent").html('Root' + req.responseText);
+                }
+            }
+            req.send();
+        }
+
+        function checkRequire() {
+            if ($("#directory").val() == '') {
+                alert("please select a directory");
+                return false;
+            } else {
+
+                return true;
+            }
+        }
 
 

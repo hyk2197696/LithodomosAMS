@@ -6,11 +6,13 @@ block content
     h1.text-center #{title}
     em(onclick = "showDirectory()") www
 
-    form(method='POST' action='' enctype='multipart/form-data')
+    form(method='POST' action='' enctype='multipart/form-data' onsubmit="return checkRequire();")
+        //asset name
         div.form-group
             label(for='asset_name') Asset Name:
             input#asset_name.form-control(type='text', placeholder='Input Asset Name' name='asset_name' required='true'   )
 
+        //project name
         div.form-group.row
             label.col-sm-12(for='project_name') Project Name:
             div.col-sm-9
@@ -40,7 +42,7 @@ block content
                 //                button.btn.btn-default(type='button', data-dismiss='modal')
                 //                    | close
                 //                button.btn.btn-primary(type='submit' onclick ="exist()") Submit
-
+        //Reference
         div.form-group.row
             label.col-sm-12(for='reference') Reference:
             div.col-sm-9
@@ -52,7 +54,7 @@ block content
             div.col-sm-3
                 a(href="/catalog/contentcreate?content_name=reference" class="btn btn-default btn-md")
                     span Create new reference
-
+        //Directory
         div.form-group.row
             label.col-sm-12 Directory:
             div.col-sm-1
@@ -83,10 +85,10 @@ block content
             div.col-sm-11
                 .input-group
                     #directoryContent.input-group-addon Please choose a folder to save the asset
-                    input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', disabled )
+                    input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true' )
 
 
-
+        //file upload
         div.form-group
             label Upload asset:
             input.form-control(type='file', name='file_upload', required='true')
@@ -109,17 +111,8 @@ block content
 
             getAllDirectory(function (allDirectory) {
                 allDirectories = JSON.parse(allDirectory);
-                var folders = getFoldersById(currentDirectory);
                 setDirectoryTableHeader('Root');
                 setDirectoryTableBody();
-                //                $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
-                //                    + currentDirectory + '\')"></botton>' +
-                //                    '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > root</botton></th><th scope="row"/>');
-                //                for (var i = 0, len = folders.length; i < len; i++) {
-                //                    var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close " onclick="explore(\'' +folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
-                //                    //alert(html);
-                //                    $("#directory_tbody").append(html);
-                //                }
             });
         });
 
@@ -204,23 +197,13 @@ block content
             currentDirectory = getSuperFolderIdById(id);
             var currentFolderName;
             if(currentDirectory == null){
-              currentFolderName = 'root';
+              currentFolderName = 'Root';
             }else{
                 var currentFolder = getFolderObjectById(currentDirectory);
                 currentFolderName = currentFolder.name;
             }
             setDirectoryTableHeader(currentFolderName);
             setDirectoryTableBody();
-            //            $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
-            //                + currentDirectory + '\')"></botton>' +
-            //                '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > ' + currentFolderName + '</botton></th><th scope="row"/>');
-
-            //            var folders = getFoldersById(currentDirectory);
-            //            for (var i = 0, len = folders.length; i < len; i++) {
-            //                var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' +folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
-            //                //alert(html);
-            //                $("#directory_tbody").append(html);
-            //            }
 
         }
 
@@ -228,18 +211,10 @@ block content
             //alert();
             currentDirectory = id;
             var currentFolder = getFolderObjectById(id);
-            //            $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
-            //                + currentDirectory + '\')"></botton>' +
-            //                '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > ' + currentFolder.name + '</botton></th><th scope="row"/>');
             setDirectoryTableHeader(currentFolder.name);
             setDirectoryTableBody();
-            //            var folders = getFoldersById(currentDirectory);
-            //            for (var i = 0, len = folders.length; i < len; i++) {
-            //                var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' +folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
-            //                //alert(html);
-            //                $("#directory_tbody").append(html);
-            //            }
         }
+
         function setDirectoryTableHeader(name){
             $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
                 + currentDirectory + '\')"></botton>' +
@@ -257,8 +232,8 @@ block content
 
         function save(){
             if(currentDirectory == null){
-                $("#directory").val('null');
-                $("#directoryContent").html('Root/');
+                alert('Can\'t save assets in root directory,\nplease choose another');
+                return;
             }
             $("#directory").val(currentDirectory);
             var req = new XMLHttpRequest();
@@ -271,4 +246,14 @@ block content
                 }
             }
             req.send();
+        }
+
+        function checkRequire(){
+            if($("#directory").val() == ''){
+                alert("please select a directory");
+                return false;
+            }else{
+
+                return true;
+            }
         }
