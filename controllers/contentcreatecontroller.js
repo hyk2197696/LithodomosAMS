@@ -5,6 +5,7 @@ var con = require('./databasecontroller');
 var app = require('../app');
 var json = require('json');
 var Reference = require('../models/reference');
+var Project = require('../models/project');
 var content_name = "";
 
 //handle content create on get
@@ -31,3 +32,46 @@ exports.content_create_modal_post = function(req, res, next){
     req.checkBody('content_name', content_name + ' name must be specified.').notEmpty();
     req.sanitize('content_name').escape();
 };
+
+exports.project_create_get = (req, res, next) => {
+    var projectDetail = {name:req.query.name};
+    Project.count(projectDetail,(err, project_count) => {
+        if(err) {next(err)};
+        if(project_count > 0){
+            res.end('Project exists!');
+            return;
+        }
+
+        //if not exist, create new project
+        var newProject = new Project(projectDetail);
+        newProject.save(err => {
+            if(err) {next(err); }
+
+            //success
+            res.end('Project Created successfully!')
+        })
+    })
+}
+
+exports.reference_create_get = (req, res, next) => {
+    var referenceDetail = {name:req.query.name};
+    Reference.count(referenceDetail,(err, reference_count) => {
+        if(err) {next(err)};
+        if(reference_count > 0){
+            res.end('Reference exists!');
+            return;
+        }
+
+        //if not exist, create new reference
+        var newReference = new Reference(referenceDetail);
+        newReference.save(err => {
+            if(err) {next(err); }
+            var resText = {};
+            resText.message = 'New reference create successfully!';
+
+            resText.newReference= newReference;
+            //success
+            res.end(JSON.stringify(resText));
+        })
+    })
+}

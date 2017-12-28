@@ -21,46 +21,67 @@ block content
                 //a(href="/catalog/contentcreate?content_name=project" class="btn btn-default btn-md")
                 //    span Create new project
 
-                button.btn.btn-default.btn-md(data-toggle='modal', data-target='#myModal',onclick='showDirectory();' )
+                button.btn.btn-default.btn-md(data-toggle='modal', data-target='#project_create' )
                     |Create new project
                     // Modal
-                //#myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                //    .modal-dialog
-                //        .modal-content
-                //            .modal-header
-                //                button.close(type='button', data-dismiss='modal', aria-hidden='true')
-                //                    | ×
-                //                h4#myModalLabel.modal-title.text-center
-                //                    | Create a new project
-                //            .modal-body
-                //
-                //                div.form-group
-                //                    label(for='name') name:
-                //                    input#name.form-control(type='text', placeholder='Project name', name='name', required = 'true')
-                //
-                //            .modal-footer
-                //                button.btn.btn-default(type='button', data-dismiss='modal')
-                //                    | close
-                //                button.btn.btn-primary(type='submit' onclick ="exist()") Submit
+                #project_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                    | ×
+                                h4#project_create_label.modal-title.text-center
+                                    | Create a new project
+                            .modal-body
+
+                                div.form-group
+                                    label(for='new_project_name') name:
+                                    input#new_project_name.form-control(type='text', placeholder='New project name')
+
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal')
+                                    | close
+                                button.btn.btn-primary(type='botton', onclick ="project_create()") Create
         //Reference
         div.form-group.row
             label.col-sm-12(for='reference') Reference:
             div.col-sm-9
                 //input#reference.form-control(type='text' ,data-provide='typeahead', data-items='4'  )
                 select#reference.form-control(type='select', placeholder='Select reference' name='reference' required='true' )
-                    option(value= '-1') Please select a reference if there is one
+                    option#reference_default_option(value= '-1') Please select a reference if there is one
+
                     for ref in reference_list
                         option(value=ref.id) #{ref.name}
             div.col-sm-3
-                a(href="/catalog/contentcreate?content_name=reference" class="btn btn-default btn-md")
-                    span Create new reference
+                button.btn.btn-default.btn-md(data-toggle='modal', data-target='#reference_create' )
+                    | Create new reference
+            // Modal
+            #reference_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='reference_create_label', aria-hidden='true')
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                | ×
+                            h4#reference_create_label.modal-title.text-center
+                                | Create a new reference
+                        .modal-body
+
+                            div.form-group
+                                label(for='new_project_name') name:
+                                input#new_reference_name.form-control(type='text', placeholder='New reference name')
+
+                        .modal-footer
+                            button.btn.btn-default(type='button', data-dismiss='modal')
+                                | close
+                            button.btn.btn-primary(type='button', onclick ="reference_create()") Create
+
+
+
+
         //Directory
         div.form-group.row
             label.col-sm-12 Directory:
             div.col-sm-1
-                //link(rel='stylesheet', href='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css')
-                //script(src='http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js')
-                //script(src='http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js')
                 button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
                     | choose
 
@@ -80,11 +101,11 @@ block content
                             .modal-footer
                                 button.btn.btn-default(type='button', data-dismiss='modal')
                                     | close
-                                button.btn.btn-primary(data-toggle='modal', data-target='#myModal', data-dismiss='modal',onclick = 'save()') Save
+                                button.btn.btn-primary(data-toggle='modal',onclick = 'save()') Save
 
             div.col-sm-11
                 .input-group
-                    #directoryContent.input-group-addon Please choose a folder to save the asset
+                    #directory_content.input-group-addon Please choose a folder to save the asset
                     input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true' )
 
 
@@ -116,7 +137,7 @@ block content
             });
         });
 
-        $('#project_name').typeahead({source: projects});
+
 
         //select all project from the database
         function getAllProject() {
@@ -128,12 +149,58 @@ block content
                     //$("#test").html(req.responseText);
                     var responds = JSON.parse(req.responseText);
                     //alert(req.responseText);
+                    projects = [];
                     for (i = 0; i < responds.length; i++) {
 
                         projects.push(responds[i].name);
                     }
+                    $('#project_name').typeahead({source: projects});
                 }
             }
+            req.send();
+        }
+
+        function project_create() {
+            if($("#new_project_name").val() == ''){
+                alert('Please enter the project name!');
+                return;
+            }
+            var req = new XMLHttpRequest();
+            var url = "/catalog/projectcreate?name=" + $("#new_project_name").val();
+            req.open("GET",url );
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    //alert(req.responseText);
+                    alert(req.responseText);
+                    $("#project_create").modal('hide');
+                    $("#project_name").val($("#new_project_name").val());
+                }
+            }
+
+            req.send();
+        }
+
+        function reference_create() {
+            if ($("#new_reference_name").val() == '') {
+                alert('Please enter the reference name!');
+                return;
+            }
+            var req = new XMLHttpRequest();
+            var url = "/catalog/referencecreate?name=" + $("#new_reference_name").val();
+            req.open("GET", url);
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    //alert(req.responseText);
+                    var response = JSON.parse(req.responseText);
+                    alert(response.message);
+                    $("#reference_create").modal('hide');
+                    $("#reference_default_option").val(response.newReference._id);
+                    $("#reference_default_option").html(response.newReference.name);
+                    $("#reference").prepend('<option value="-1">No reference</option>')
+
+                }
+            }
+
             req.send();
         }
 
@@ -242,7 +309,8 @@ block content
 
                 if (req.readyState == 4) {
 
-                    $("#directoryContent").html('Root' + req.responseText);
+                    $("#directory_content").html('Root' + req.responseText);
+                    $("#directory_selector").modal('hide');
                 }
             }
             req.send();
@@ -257,3 +325,4 @@ block content
                 return true;
             }
         }
+

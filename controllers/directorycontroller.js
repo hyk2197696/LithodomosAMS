@@ -9,6 +9,11 @@ var json = require('json');
 var FakeDirectory = require('../models/fakeDirectory');
 var Asset = require('../models/asset');
 
+//get method for asset find(directory explore)
+//basically first find all folders in root directory.(asset can't be stored in root directory)
+//then find all subdirectory by the super attribute, which is all the subdirectory of a specific folder
+//find asset by the attribute of fakeDirectory at the same time
+//display all the folders and assets in a specific
 exports.find_get = function (req, res, next) {
     var folderDetail = {};
     var assetDetail = {};
@@ -71,31 +76,7 @@ exports.check_folder_existance = function (req, res, next) {
             res.end('Folder exist!');
         }
     });
-    // sql = 'select count(*) as count from sys.fakedirectory where name = \'' + req.query.name + '\' and super = ' + req.query.id;
-    // console.log('new query' + sql);
-    //
-    // query = con.query(sql);
-    // query.on('result', function (row) {
-    //     if (row.count == '0') {
-    //         sql = 'insert into sys.fakedirectory values (default, \'' + req.query.name + '\' , ';
-    //         if (req.query.id == 0) {
-    //             sql += 'null)';
-    //         } else {
-    //             sql += req.query.id + ')'
-    //         }
-    //         console.log('new query: ' + sql);
-    //         con.query(sql).on('end', function () {
-    //             res.end('success');
-    //         })
-    //     }
-    //     else {
-    //
-    //     }
-    //     res.end('Folder exist!');
-    //
-    // })
 
-    //res.end('success');
 };
 
 function get_folder_info(id, call_back, html_res) {

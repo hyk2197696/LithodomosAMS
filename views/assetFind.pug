@@ -67,19 +67,7 @@ block content
                 if (req.readyState == 4) {
 
                     if(req.responseText == 'success'){
-                        alert('New folde\n' +
-                            'reference Mixed\n' +
-                            'fileName String\n' +
-                            'project Mixed\n' +
-                            'name String\n' +
-                            '_id ObjectId\n' +
-                            '1\n' +
-                            '2\n' +
-                            '3\n' +
-                            '4\n' +
-                            '5\n' +
-                            '6\n' +
-                            '7\nr creation success');
+
                         window.location.reload();
                     }else{
                         alert(req.responseText);

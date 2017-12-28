@@ -5,22 +5,17 @@ var fs = require('fs');
 var Asset = require('../models/asset');
 var mongoose = require('mongoose');
 
+//index page
 exports.index = function(req, res, next){
-    // var query = con.query("select count(*) as countAsset from sys.asset");
-    // query.on('error', function(err) {
-    //     throw err;
-    // });
-    //
-    // query.on('result', function(row) {
-    //     //console.log(row);
-    //     res.render('homepage',{title : 'Lithodomos Asset Management System', assetnum: row.countAsset });
-    // });
+
     Asset.count((err, countAsset)=> {
         if (err) {return next(err);}
         res.render('homepage', {title: 'Lithodomos Asset Management System', assetnum: countAsset});
     });
 };
 
+
+//all of the following is for testing
 exports.test = function(req, res, next) {
     //res.download('/file/C&IS Graduate Attributes.pdf');
     res.render('test', {title: 'Lithodomos Asset Management System'});
@@ -33,11 +28,7 @@ exports.test_post = function(req, res, next) {
     con.query('result',function(){
         res.send('?')
     })
-    //res.download('/Users/Render4/WebstormProjects/lithodomosVR/file/C&IS Graduate Attributes.pdf');
-    //res.write('File uploaded and moved!');
-    //res.end();
 
-    //console.log(req.body.textload);
 }
 exports.typeahead_test = (req, res) => {
     res.render('typeaheadTest', {title: 'Lithodomos Asset Management System'});

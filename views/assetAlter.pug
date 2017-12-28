@@ -16,25 +16,65 @@ block content
             div.col-sm-9
                 input#project_name.form-control(type='text' ,placeholder='Input Project Name', name='project_name', data-provide='typeahead', data-items='4'  value=null == asset.project?null:asset.project.name)
             div.col-sm-3
-                a(href="/catalog/contentcreate?content_name=project" class="btn btn-default btn-md")
-                    span Create new project
+                button.btn.btn-default.btn-md(data-toggle='modal', data-target='#project_create' )
+                    | Create new project
+            // Modal
+            #project_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                | ×
+                            h4#project_create_label.modal-title.text-center
+                                | Create a new project
+                        .modal-body
 
+                            div.form-group
+                                label(for='new_project_name') name:
+                                br
+                                input#new_project_name.form-control(type='text', placeholder='New project name', name='new_project_name' )
+
+                        .modal-footer
+                            button.btn.btn-default(type='button', data-dismiss='modal')
+                                | close
+                            button.btn.btn-primary(type='botton', onclick ="project_create()") Create
         div.form-group.row
             label.col-sm-12(for='project_name') Reference:
             div.col-sm-9
                 //input#reference.form-control(type='text' ,data-provide='typeahead', data-items='4'  )
                 select#reference.form-control(type='select', placeholder='Select reference' name='reference' required='true' )
                     if(null == asset.reference)
-                        option(value= '-1') Please select a reference if there is one
+                        option#reference_default_option(value= '-1') Please select a reference if there is one
                     else
-                        option(value= asset.reference.id) #{asset.reference.name}
+                        option#reference_default_option(value= asset.reference.id) #{asset.reference.name}
                         option(value= '-1') No reference
                     for ref in reference_list
                         if ref.id != (null == asset.reference? null: asset.reference.id)
                             option(value=ref.id) #{ref.name}
             div.col-sm-3
-                a(href="/catalog/contentcreate?content_name=reference" class="btn btn-default btn-md")
-                    span Create new reference
+                button.btn.btn-default.btn-md(data-toggle='modal', data-target='#reference_create' )
+                    | Create new reference
+            // Modal
+            #reference_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='reference_create_label', aria-hidden='true')
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                | ×
+                            h4#reference_create_label.modal-title.text-center
+                                | Create a new reference
+                        .modal-body
+
+                            div.form-group
+                                label(for='new_project_name') name:
+                                input#new_reference_name.form-control(type='text', placeholder='New reference name')
+
+                        .modal-footer
+                            button.btn.btn-default(type='button', data-dismiss='modal')
+                                | close
+                            button.btn.btn-primary(type='button', onclick ="reference_create()") Create
+
+
 
         //Directory
         div.form-group.row
@@ -109,6 +149,51 @@ block content
                     }
                 }
             }
+            req.send();
+        }
+        function project_create() {
+            if ($("#new_project_name").val() == '') {
+                alert('Please enter the project name!');
+                return;
+            }
+            var req = new XMLHttpRequest();
+            var url = "/catalog/projectcreate?name=" + $("#new_project_name").val();
+            req.open("GET", url);
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    //alert(req.responseText);
+                    //alert(req.responseText);
+                    $("#project_create").modal('hide');
+                    $("#project_name").val($("#new_project_name").val());
+                }
+            }
+
+            req.send();
+        }
+
+        function reference_create() {
+            if ($("#new_reference_name").val() == '') {
+                alert('Please enter the reference name!');
+                return;
+            }
+            var req = new XMLHttpRequest();
+            var url = "/catalog/referencecreate?name=" + $("#new_reference_name").val();
+            req.open("GET", url);
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    //alert(req.responseText);
+                    var response = JSON.parse(req.responseText);
+                    //alert(response);
+                   // alert(response.message);
+                    $("#reference_create").modal('hide');
+                    //alert(response.newReference._id)
+                    $("#reference_default_option").val(response.newReference._id);
+                    $("#reference_default_option").html(response.newReference.name);
+                    //$("#reference").prepend('<option value="-1">No reference</option>')
+
+                }
+            }
+
             req.send();
         }
 

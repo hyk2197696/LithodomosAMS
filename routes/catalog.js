@@ -48,4 +48,8 @@ router.get('/assetdownload',asset_controller.asset_download);
 
 router.get('/typeaheadTest', homepage_controller.typeahead_test);
 
+router.get('/projectcreate', content_controller.project_create_get);
+
+router.get('/referencecreate', content_controller.reference_create_get)
+
 module.exports = router;
