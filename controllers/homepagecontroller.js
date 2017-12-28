@@ -4,7 +4,9 @@ var formidable = require('formidable');
 var fs = require('fs');
 var Asset = require('../models/asset');
 var mongoose = require('mongoose');
-
+var Model = require('../models/model');
+var extend = require('mongoose-schema-extend');
+var Schema = mongoose.Schema;
 //index page
 exports.index = function(req, res, next){
 
@@ -17,9 +19,44 @@ exports.index = function(req, res, next){
 
 //all of the following is for testing
 exports.test = function(req, res, next) {
-    //res.download('/file/C&IS Graduate Attributes.pdf');
-    res.render('test', {title: 'Lithodomos Asset Management System'});
 
+    // var PersonSchema = new Schema({
+    //     name : String
+    // }, { collection : 'users' });
+    //
+    // var EmployeeSchema = PersonSchema.extend({
+    //     department : String
+    // });
+    //
+    // var Person = mongoose.model('Person', PersonSchema),
+    //     Employee = mongoose.model('Employee', EmployeeSchema);
+    //
+    // var Brian = new Employee({
+    //     name : 'Brian Kirchoff',
+    //     department : 'Engineering'
+    // });
+
+    // var modelDetail = {
+    //     name: 'model 1',
+    //     fakeDirectory: '5a42cc65c506b50dcc52b18d',
+    //     trueLocation: 'null',
+    //     filename: 'null',
+    //     levelOfDetail:'high'
+    // };
+    // Asset
+    //
+    // var newmodel = new Model(modelDetail);
+    //
+    // newmodel.save(err => {
+    //     console.log('model:');
+    //     console.log(newmodel)
+    // });
+    //
+    //
+    // Asset.find({name:'model 1'}).exec((err,result) => {
+    //     console.log('all models');
+    //     console.log(result);
+    // })
 };
 
 exports.test_post = function(req, res, next) {
