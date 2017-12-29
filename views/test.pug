@@ -1,51 +1,42 @@
 extends layout
 
 block content
+    button.btn.peach-gradient.btn-rounded Peach
 
-    #the-basics.container-fluid
-        input.typeahead.form-control.col-sm-12(type='text', placeholder='States of USA', )
+    .container
+        ul.nav.nav-tabs
+            li.active
+                a(data-toggle='tab', href='#asset_form') Assets
+            li
+                a(data-toggle='tab', href='#statue_form') Statues
+            li
+                a(data-toggle='tab', href='#architectural_element_form') Architectural Elements
+            li
+                a(data-toggle='tab', href='#prop_form') Props
+            li
+                a(data-toggle='tab', href='#shader_form') Shader
+            li
+                a(data-toggle='tab', href='#diagram_form') Diagram
 
-    script.
-        var substringMatcher = function (strs) {
-            return function findMatches(q, cb) {
-                var matches, substringRegex;
 
-                // an array that will be populated with substring matches
-                matches = [];
 
-                // regex used to determine if a string contains the substring `q`
-                substrRegex = new RegExp(q, 'i');
+        p
+            | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        p
+            | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        p
+            | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-                // iterate through the pool of strings and for any string that
-                // contains the substring `q`, add it to the `matches` array
-                $.each(strs, function (i, str) {
-                    if (substrRegex.test(str)) {
-                        matches.push(str);
-                    }
-                });
-
-                cb(matches);
-            };
-        };
-
-        var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-            'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
-            'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-            'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-            'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-            'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-            'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
-            'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-            'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-        ];
-
-        $('#the-basics .typeahead').typeahead({
-                hint: true,
-                highlight: true,
-                minLength: 1
-            },
-            {
-                name: 'states',
-                source: substringMatcher(states)
-            });
-        $(".tt-hint").addClass("form-control");
+        .tab-content
+            #asset_form.tab-pane.fade
+                h3 HOME
+                p
+                    | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            #menu1.tab-pane.fade
+                h3 Menu 1
+                p
+                    | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            #menu2.tab-pane.fade
+                h3 Menu 2
+                p
+                    | Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.

@@ -12,6 +12,10 @@ exports.search_get = function(req, res, next) {
     res.render('searchForm', { title: 'Search Asset' });
 };
 
+exports.full_search_get = function(req, res, next) {
+    res.render('assetSearch', { title: 'Search Asset' });
+};
+
 
 
 // Handle Asset search on POST

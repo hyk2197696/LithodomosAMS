@@ -20,8 +20,18 @@ exports.create_get = function(req, res, next){
         .exec( (err, reference_list) => {
             if (err)  {return next(err);}
             //console.log(reference_list);
-            res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list});
+            res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list, shader_type_list:[]});
         })
+
+}
+
+exports.asset_create_get = function(req, res, next){
+    // Reference.find()
+    //     .exec( (err, reference_list) => {
+    //         if (err)  {return next(err);}
+    //         //console.log(reference_list);
+            res.render('assetCreate', {title: 'Create a New Asset', reference_list:[], shader_type_list:[]});
+        // })
 
 }
 

@@ -12,6 +12,7 @@ var AssetSchema = new Schema({
     fileName :{type: String, require: true},
     fileType: {type: Schema.ObjectId, ref: 'FileType', require: true},
     _type: {type: String, enum:['Asset', 'Model', 'Shader', 'Diagram', 'Statues', 'ArchitecturalElement', 'natural', 'manMade'], require: true, default: 'Asset'},
+    createTime: { type: Date, default: Date.now },
     period: {type: Schema.ObjectId , ref: 'Period'},
 
     //Shader

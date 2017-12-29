@@ -26,6 +26,8 @@ router.get('/asset', asset_controller.asset_get);
 
 router.get('/assetcreate', create_controller.create_get);
 
+router.get('/fullassetcreate', create_controller.asset_create_get);
+
 router.post('/assetcreate', create_controller.create_post);
 
 router.get('/assetalter', alter_controller.alter_get);
