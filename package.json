@@ -9,6 +9,7 @@
   "dependencies": {
     "async": "^2.6.0",
     "body-parser": "~1.18.2",
+    "bootstrap": "^3.3.7",
     "bson-objectid": "^1.2.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",

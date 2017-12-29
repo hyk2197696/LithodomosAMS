@@ -19,7 +19,7 @@ exports.index = function(req, res, next){
 
 //all of the following is for testing
 exports.test = function(req, res, next) {
-
+    res.render('test',{});
     // var PersonSchema = new Schema({
     //     name : String
     // }, { collection : 'users' });

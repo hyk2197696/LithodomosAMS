@@ -11,26 +11,25 @@ var AssetSchema = new Schema({
     trueLocation: {type: String, require: true},
     fileName :{type: String, require: true},
     fileType: {type: Schema.ObjectId, ref: 'FileType', require: true},
-    _type: {type: String, enum:['Asset', 'Model', 'Shader', 'Diagram', 'Status', 'ArchitecturalElement', 'natural', 'manMade'], require: true, default: 'Asset'},
+    _type: {type: String, enum:['Asset', 'Model', 'Shader', 'Diagram', 'Statues', 'ArchitecturalElement', 'natural', 'manMade'], require: true, default: 'Asset'},
     period: {type: Schema.ObjectId , ref: 'Period'},
 
     //Shader
-    shaderType: {type: Schema.ObjectId, ref: 'ShaderType'},
+    shaderType: {type: Schema.ObjectId, ref: 'ShaderType'},//selection
 
     //Diagram
     diagramType: {type: Schema.ObjectId, ref: 'DiagramType'},
-
     site: {type: Schema.ObjectId, ref: 'Site'},
     originalPublication: {type: Schema.ObjectId, ref: 'Publication' },
 
 
     //Model
-    levelOfDetail:{type: String, enum: ['high','low', 'optimised']},
-    culture: {type: Schema.ObjectId, ref: 'Culture'},
+    levelOfDetail:{type: String, enum: ['high','low', 'optimised']},//not useful
+    culture: {type: Schema.ObjectId, ref: 'Culture'},//sel
 
     //Statue
-    material: {type: String},
-    pose: {type: String},
+    material: {type: String},//sel
+    pose: {type: String},//not useful
     gender: {type: String, enum:['male', 'female', 'uncertain']},
     statueType: {type: Schema.ObjectId, ref: 'StatueType'},
     location: {type: String},

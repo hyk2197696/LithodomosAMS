@@ -15,13 +15,13 @@ block content
         //project name
         div.form-group.row
             label.col-sm-12(for='project_name') Project Name:
-            div.col-sm-9
-                input#project_name.form-control(type='text' ,placeholder='Input Project Name', name='project_name', data-provide='typeahead', data-items='4'  )
+            div#project_div.col-sm-9.container-fluid
+                input#project_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Project Name', name='project_name'  )
             div.col-sm-3
                 //a(href="/catalog/contentcreate?content_name=project" class="btn btn-default btn-md")
                 //    span Create new project
 
-                button.btn.btn-default.btn-md(data-toggle='modal', data-target='#project_create' )
+                button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#project_create' )
                     |Create new project
                     // Modal
                 #project_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
@@ -41,7 +41,7 @@ block content
                             .modal-footer
                                 button.btn.btn-default(type='button', data-dismiss='modal')
                                     | close
-                                button.btn.btn-primary(type='botton', onclick ="project_create()") Create
+                                button.btn.btn-primary(type='button', onclick ="project_create()") Create
         //Reference
         div.form-group.row
             label.col-sm-12(for='reference') Reference:
@@ -53,7 +53,7 @@ block content
                     for ref in reference_list
                         option(value=ref.id) #{ref.name}
             div.col-sm-3
-                button.btn.btn-default.btn-md(data-toggle='modal', data-target='#reference_create' )
+                button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#reference_create' )
                     | Create new reference
             // Modal
             #reference_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='reference_create_label', aria-hidden='true')
@@ -101,7 +101,7 @@ block content
                             .modal-footer
                                 button.btn.btn-default(type='button', data-dismiss='modal')
                                     | close
-                                button.btn.btn-primary(data-toggle='modal',onclick = 'save()') Save
+                                button.btn.btn-primary(type='button', data-toggle='modal',onclick = 'save()') Save
 
             div.col-sm-11
                 .input-group
@@ -135,8 +135,11 @@ block content
                 setDirectoryTableHeader('Root');
                 setDirectoryTableBody();
             });
+
         });
 
+
+        $(".tt-hint").addClass("form-control");
 
 
         //select all project from the database
@@ -154,7 +157,22 @@ block content
 
                         projects.push(responds[i].name);
                     }
-                    $('#project_name').typeahead({source: projects});
+
+                    var project = new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.whitespace,
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        local: projects
+                    });
+                    $('#project_div .typeahead').typeahead({
+                            hint: true,
+                            highlight: true,
+                            minLength: 1
+                        },
+                        {
+                            name: 'project',
+                            source: project
+                        })
+                    //$('#project_name').typeahead({source: projects});
                 }
             }
             req.send();
