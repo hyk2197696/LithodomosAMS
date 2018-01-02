@@ -20,19 +20,31 @@ exports.create_get = function(req, res, next){
         .exec( (err, reference_list) => {
             if (err)  {return next(err);}
             //console.log(reference_list);
-            res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list, shader_type_list:[]});
+            res.render('createForm', {title: 'Create a New Asset', reference_list: reference_list, shader_type_list:[], period_name_list:[]});
         })
 
 }
 
 exports.asset_create_get = function(req, res, next){
-    // Reference.find()
-    //     .exec( (err, reference_list) => {
-    //         if (err)  {return next(err);}
-    //         //console.log(reference_list);
-            res.render('assetCreate', {title: 'Create a New Asset', reference_list:[], shader_type_list:[]});
-        // })
-
+    Reference.find()
+        .exec( (err, reference_list) => {
+            if (err)  {return next(err);}
+            //console.log(reference_list);
+            res.render('assetCreate',
+                {title: 'Create a New Asset',
+                    reference_list:reference_list,
+                    shader_type_list:[],
+                    period_name_list:[],
+                    diagram_type_list:[],
+                    publication_name_list:[],
+                    prop_name_list:[],
+                    statue_type_list:[],
+                    culture_list:[],
+                    material_name_list:[],
+                    architectural_type_list:[],
+                    style_list:[],
+                });
+        })
 }
 
 //find the project which (partially) contains the name

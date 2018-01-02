@@ -5,30 +5,96 @@ block content
 
     //tabs for different subclass
     .container
+
+        //nav tabs
         ul.nav.nav-tabs
             li.active
-                a(data-toggle='tab', href='#asset_form') Assets
+                a(data-toggle='tab', href='#asset_form', onclick='asset();') Assets
             li
-                a(data-toggle='tab', href='#statue_form') Statues
+                a(data-toggle='tab', href='#statue_form', onclick='statue();') Statues
             li
-                a(data-toggle='tab', href='#architectural_element_form') Architectural Elements
+                a(data-toggle='tab', href='#architectural_element_form', onclick='archtecturalElement();') Architectural Elements
+            li.dropdown
+                a.dropdown_toggle(data-toggle = 'dropdown' href='#') Props
+                    span.caret
+                ul.dropdown-menu
+                    li
+                        a(data-toggle='tab', href='#prop_form', onclick='prop("manmade");') Manmade
+                    li
+                        a(data-toggle='tab', href='#prop_form', onclick='prop("animal");') Animals
+                    li
+                        a(data-toggle='tab', href='#prop_form', onclick='prop("plant");') Plants
             li
-                a(data-toggle='tab', href='#prop_form') Props
+                a(data-toggle='tab', href='#shader_form', onclick='shader();') Shader
             li
-                a(data-toggle='tab', href='#shader_form') Shader
-            li
-                a(data-toggle='tab', href='#diagram_form') Diagram
+                a(data-toggle='tab', href='#diagram_form', onclick='diagram();') Diagram
 
-        //the attributes shared by all asset
+
+
+
+        br
+
         form(method='POST' action='' enctype='multipart/form-data' onsubmit="return checkRequire();")
+
+            //the attributes shared by all asset
+
+            //asset type
+            div.form-group
+                label(for='asset_type') Asset Type:
+                    font(color="red")  *
+                input#asset_type.form-control(type='text', value='Asset', name='asset_name', required='true', disabled   )
+
+
             //asset name
             div.form-group
                 label(for='asset_name') Asset Name:
+                    font(color="red")  *
                 input#asset_name.form-control(type='text', placeholder='Input Asset Name' name='asset_name' required='true'   )
+
+                //Directory
+                div.form-group.row
+                    label.col-sm-12 Directory:
+                        font(color="red")  *
+                    div.col-sm-1
+                        button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
+                            | choose
+
+                        //modal
+                        #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#directory_selector_header.modal-title.text-center
+                                            | Select a directory
+                                    #directory_table.modal-body
+                                        table.table.table-sm.table-dark
+                                            tbody#directory_tbody
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', data-toggle='modal',onclick = 'save()') Save
+
+                    div.col-sm-11
+                        .input-group
+                            #directory_content.input-group-addon Please choose a folder to save the asset
+                            input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true' )
+
+
+            //file upload
+            div.form-group
+                label Upload asset:
+                    font(color="red")  *
+                input.form-control(type='file', name='file_upload', required='true')
+
 
             //project name
             div.form-group.row
-                label.col-sm-12(for='project_name') Project Name:
+                label.col-sm-12(for='project_name') Project Name
+
+
                 div#project_div.col-sm-9.container-fluid
                     input#project_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Project Name', name='project_name'  )
                 div.col-sm-3
@@ -52,7 +118,8 @@ block content
                                 .modal-footer
                                     button.btn.btn-default(type='button', data-dismiss='modal')
                                         | close
-                                    button.btn.btn-primary(type='button', onclick ="project_create()") Create
+                                    button.btn.btn-primary(type='button', onclick ="projectCreate()") Create
+
 
             //Reference
             div.form-group.row
@@ -83,74 +150,343 @@ block content
                             .modal-footer
                                 button.btn.btn-default(type='button', data-dismiss='modal')
                                     | close
-                                button.btn.btn-primary(type='button', onclick ="reference_create()") Create
+                                button.btn.btn-primary(type='button', onclick ="referenceCreate()") Create
 
-            //Directory
+
+
+
+
+            //Period of the asset
             div.form-group.row
-                label.col-sm-12 Directory:
-                div.col-sm-1
-                    button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
-                        | choose
+                label.col-sm-12(for='period_name') Period:
+                div.col-sm-9
+                    select#period_name.form-control(type='select', placeholder='Select a period of the asset' name='period_name'  )
+                        option#period_name_default(value= '-1') Please select a shader type if there is one
+                        for period in period_name_list
+                            option(value=period.id) #{period.name}
+                div.col-sm-3
+                    button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#period_create' )
+                        | Create new period
+                // Modal
+                #period_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='period_create_label', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                    | ×
+                                h4#period_create_label.modal-title.text-center
+                                    | Create a new period
+                            .modal-body
 
-                    //modal
-                    #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                        .modal-dialog
-                            .modal-content
-                                .modal-header
-                                    button.close(type='button', data-dismiss='modal', aria-hidden='true')
-                                        | ×
-                                    h4#directory_selector_header.modal-title.text-center
-                                        | Select a directory
-                                #directory_table.modal-body
-                                    table.table.table-sm.table-dark
-                                        tbody#directory_tbody
+                                div.form-group
+                                    label(for='new_period_name') name:
+                                    input#new_period_name.form-control(type='text', placeholder='New period name')
 
-                                .modal-footer
-                                    button.btn.btn-default(type='button', data-dismiss='modal')
-                                        | close
-                                    button.btn.btn-primary(type='button', data-toggle='modal',onclick = 'save()') Save
-
-                div.col-sm-11
-                    .input-group
-                        #directory_content.input-group-addon Please choose a folder to save the asset
-                        input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true' )
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal')
+                                    | close
+                                button.btn.btn-primary(type='button', onclick ="periodCreate()") Create
 
 
-            //file upload
-            div.form-group
-                label Upload asset:
-                input.form-control(type='file', name='file_upload', required='true')
+
+
 
 
             //tab contents
             .tab-content
+                //nothing special for asset
                 #asset_form.tab-pane.fade.in.active
 
+                //select statue culture, meterial, pose, gender, statue type and location for statue
                 #statue_form.tab-pane.fade
-                    h3 Menu 1
-                    p
-                        | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    //statue type
+                    div.form-group.row
+                        label.col-sm-12(for='statue_type_name') Statue Type:
+                        div.col-sm-9
+                            select#statue_type_name.form-control(type='select', placeholder='Select statue type' name='statue_type'  )
+                                option#statue_type_default(value= '-1') Please select a statue type if there is one
+                                for statueType in statue_type_list
+                                    option(value=statueType.id) #{statueType.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#statue_type_create' )
+                                | Create new statue type
+                        // Modal
+                        #statue_type_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='statue_type_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#statue_type_create_label.modal-title.text-center
+                                            | Create a new statue type
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='new_statue_type_name') name:
+                                            input#new_statue_type_name.form-control(type='text', placeholder='New statue type')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ="statueCreate()") Create
+
+                    //statue culture
+                    div.form-group.row
+                        label.col-sm-12(for='statue_culture_name') Statue Culture:
+                        div.col-sm-9
+                            select#statue_culture_name.form-control(type='select', placeholder='Select statue Element Culture' name='statue_culture_name'  )
+                                option#statue_culture_default(value= '-1') Please select a culture if there is one
+                                for statueCulture in culture_list
+                                    option(value=statueCulture.id) #{statueCulture.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#statue_culture_create ' )
+                                | Create new Culture
+                        // Modal
+                        #statue_culture_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='statue_culture_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#statue_culture_create_label.modal-title.text-center
+                                            | Create a new culture
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='statue_culture_create_name') name:
+                                            input#statue_culture_create_name.form-control(type='text', placeholder='New Culture Name')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ='statueCultureCreate();') Create
+
+                    //material of statue
+                    div.form-group.row
+                        label.col-sm-12(for='material_name') Material:
+                        div.col-sm-9
+                            select#material_name.form-control(type='select', placeholder='Select a material of the asset' name='material_name'  )
+                                option#material_name_default(value= '-1') Please select a shader type if there is one
+                                for material in material_name_list
+                                    option(value=material.id) #{material.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#material_create' )
+                                | Create new material
+                        // Modal
+                        #material_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='material_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#material_create_label.modal-title.text-center
+                                            | Create a new material
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='new_material_name') name:
+                                            input#new_material_name.form-control(type='text', placeholder='New material name')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ="materialCreate()") Create
+
+                    //pose
+                    div.form-group.row
+                        label.col-sm-12(for='pose_name') Pose of Statue
+
+
+                        div#pose_div.col-sm-9.container-fluid
+                            input#pose_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Pose Name', name='pose_name'  )
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#pose_create' )
+                                | Create new pose
+
+                            // Modal
+                            #pose_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='pose_create_label', aria-hidden='true')
+                                .modal-dialog
+                                    .modal-content
+                                        .modal-header
+                                            button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                                | ×
+                                            h4#pose_create_label.modal-title.text-center
+                                                | Create a new pose
+                                        .modal-body
+                                            div.form-group
+                                                label(for='new_pose_name') name:
+                                                input#new_pose_name.form-control(type='text', placeholder='New pose name')
+
+                                        .modal-footer
+                                            button.btn.btn-default(type='button', data-dismiss='modal')
+                                                | close
+                                            button.btn.btn-primary(type='button', onclick ="poseCreate()") Create
+
+                    //gender
+                    div.form-group.row
+                        label.col-sm-12(for='gender') Gender of Statue:
+                        div.col-sm-9
+                            select#gender.form-control(type='select', name='gender'  )
+                                option(value='uncertain') Select a gender
+                                option(value='male') Male
+                                option(value='female') Female
+
+
+
+
+
+                //select culture, type and style for an architectural element
                 #architectural_element_form.tab-pane.fade
-                    h3 Menu 2
-                    p
-                        | Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
+                    //Architectural Cultural
+                    div.form-group.row
+                        label.col-sm-12(for='architectural_culture_name') Architectural Element Culture:
+                        div.col-sm-9
+                            select#architectural_culture_name.form-control(type='select', placeholder='Select Architectural Element Culture' name='architectural_culture_name'  )
+                                option#architectural_culture_default(value= '-1') Please select a culture if there is one
+                                for architecturalCulture in culture_list
+                                    option(value=architecturalCulture.id) #{architecturalCulture.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#architectural_culture_create ' )
+                                | Create new Culture
+                        // Modal
+                        #architectural_culture_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='architectural_culture_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#architectural_culture_create_label.modal-title.text-center
+                                            | Create a new culture
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='architectural_culture_create_name') name:
+                                            input#architectural_culture_create_name.form-control(type='text', placeholder='New Culture Name')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ='architecturalCultureCreate()') Create
+
+                    //Architectural Element Type
+                    div.form-group.row
+                        label.col-sm-12(for='architectural_type_name') Architectural Element Type:
+                        div.col-sm-9
+                            select#architectural_type_name.form-control(type='select', placeholder='Select architectural type' name='architectural_type'  )
+                                option#architectural_type_default(value= '-1') Please select a architectural element type if there is one
+                                for architecturalType in architectural_type_list
+                                    option(value=architecturalType.id) #{architecturalType.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#architectural_type_create' )
+                                | Create new type
+                        // Modal
+                        #architectural_type_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='architectural_type_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#architectural_type_create_label.modal-title.text-center
+                                            | Create a new architectural element type
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='new_architectural_type_name') name:
+                                            input#new_architectural_type_name.form-control(type='text', placeholder='New architectural element type')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ="architecturalTypeCreate()") Create
+
+                    //style
+                    div.form-group.row
+                        label.col-sm-12(for='style_name') Style Name:
+                        div.col-sm-9
+                            select#style_name.form-control(type='select', placeholder='Select style' name='style'  )
+                                option#style_default(value= '-1') Please select an style if there is one
+                                for style in style_list
+                                    option(value=style.id) #{style.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#style_create' )
+                                | Create new style
+                        // Modal
+                        #style_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='style_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#style_create_label.modal-title.text-center
+                                            | Create a new style
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='new_style_name') name:
+                                            input#new_style_name.form-control(type='text', placeholder='New style')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ="styleCreate()") Create
+
+
+
+                //select prop type and prop name for a prop
                 #prop_form.tab-pane.fade
-                    h3 Menu 3
-                    p
-                        | Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
+                    //prop type
+                    div.form-group
+                        label(for='prop_type') Prop Type:
+                        input#prop_type.form-control(type='text', name='prop_type', required='true', disabled   )
+
+                    //Prop name
+                    div.form-group.row
+                        label.col-sm-12(for='prop_name') Prop Name:
+                        div.col-sm-9
+                            select#prop_name.form-control(type='select', placeholder='Select Prop name' name='prop_name'  )
+                                option#prop_name_default(value= '-1') Please select a prop name if there is one
+                                for propName in prop_name_list
+                                    option(value=propName.id) #{propName.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#prop_create' )
+                                | Create new prop
+                        // Modal
+                        #prop_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='prop_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#prop_create_label.modal-title.text-center
+                                            | Create a new prop name
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='new_prop_name') name:
+                                            input#new_prop_name.form-control(type='text', placeholder='New Prop Name')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ="PropCreate()") Create
+
+
+
+                //select type for shader
                 #shader_form.tab-pane.fade
+                    //shader type
                     div.form-group.row
                         label.col-sm-12(for='shader_type_name') Shader Type:
                         div.col-sm-9
                             select#shader_type_name.form-control(type='select', placeholder='Select Shader type' name='shader_type'  )
                                 option#shader_type_default(value= '-1') Please select a shader type if there is one
-                                for shadertype in shader_type_list
-                                    option(value=shadertype.id) #{shadertype.name}
+                                for shaderType in shader_type_list
+                                    option(value=shaderType.id) #{shaderType.name}
                         div.col-sm-3
                             button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#shader_type_create' )
                                 | Create new shader type
                         // Modal
-                        #shader_type_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='reference_create_label', aria-hidden='true')
+                        #shader_type_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='shader_type_create_label', aria-hidden='true')
                             .modal-dialog
                                 .modal-content
                                     .modal-header
@@ -161,229 +497,91 @@ block content
                                     .modal-body
 
                                         div.form-group
-                                            label(for='new_project_name') name:
+                                            label(for='new_shader_type_name') name:
                                             input#new_shader_type_name.form-control(type='text', placeholder='New shader type')
 
                                     .modal-footer
                                         button.btn.btn-default(type='button', data-dismiss='modal')
                                             | close
-                                        button.btn.btn-primary(type='button', onclick ="shader_type_create()") Create
+                                        button.btn.btn-primary(type='button', onclick ="shaderCreate()") Create
+
+
+                //select type, site, and original publication for diagram
                 #diagram_form.tab-pane.fade
+                    //diagram type
+                    div.form-group.row
+                        label.col-sm-12(for='diagram_type_name') Diagram Type:
+                        div.col-sm-9
+                            select#diagram_type_name.form-control(type='select', placeholder='Select diagram type' name='diagram_type'  )
+                                option#diagram_type_default(value= '-1') Please select a diagram type if there is one
+                                for diagramType in diagram_type_list
+                                    option(value=diagramType.id) #{diagramType.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#diagram_type_create' )
+                                | Create new diagram type
+                        // Modal
+                        #diagram_type_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='reference_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#diagram_type_create_label.modal-title.text-center
+                                            | Create a new diagram type
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='new_project_name') name:
+                                            input#new_diagram_type_name.form-control(type='text', placeholder='New diagram type')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ="diagramCreate()") Create
+
+                    //original Publication
+                    div.form-group.row
+                        label.col-sm-12(for='publication_name') Original Publication:
+                        div.col-sm-9
+                            select#publication_name.form-control(type='select', placeholder='Select an original Publication Name' name='publication_name'  )
+                                option#publication_name_default(value= '-1') Please select a publication name if there is one
+                                for publicationName in publication_name_list
+                                    option(value=publicationName.id) #{publicationName.name}
+                        div.col-sm-3
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#publication_name_create' )
+                                | Create new publication
+                        // Modal
+                        #publication_name_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='publication_create_label', aria-hidden='true')
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                            | ×
+                                        h4#publication_name_create_label.modal-title.text-center
+                                            | Create a new publication
+                                    .modal-body
+
+                                        div.form-group
+                                            label(for='new_project_name') name:
+                                            input#publication_name_create_name.form-control(type='text', placeholder='New publication name')
+
+                                    .modal-footer
+                                        button.btn.btn-default(type='button', data-dismiss='modal')
+                                            | close
+                                        button.btn.btn-primary(type='button', onclick ="publicationCreate()") Create
+                    //site
+                    div.form-group
+                        label(for='site_name') Site:
+                        input#site_name.form-control(type='text', placeholder='Input Site Name',name='site_name'  )
 
 
 
-            button.btn.btn-primary(type='submit') Submit
+
+
+            button.btn.btn-secondary(type='submit') Submit
 
 
 
-    script.
-        var projects = [];
-        var allDirectories = [];
-        var currentDirectory = null;
+    script(src='/javascripts/view/assetCreate.js')
 
-        //load all data before the loading the page
-        $(document).ready(function () {
-
-            getAllProject();
-
-            getAllDirectory(function (allDirectory) {
-                allDirectories = JSON.parse(allDirectory);
-                setDirectoryTableHeader('Root');
-                setDirectoryTableBody();
-            });
-
-        });
-
-        //for control the size of input bar
-        $(".tt-hint").addClass("form-control");
-
-        //select all project from the database and make it as typeahaed
-        function getAllProject() {
-            var req = new XMLHttpRequest();
-
-            req.open("GET", "/dynamic/selectallproject");
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-
-                    var responds = JSON.parse(req.responseText);
-                    //alert(req.responseText);
-                    projects = [];
-                    for (i = 0; i < responds.length; i++) {
-
-                        projects.push(responds[i].name);
-                    }
-
-                    var project = new Bloodhound({
-                        datumTokenizer: Bloodhound.tokenizers.whitespace,
-                        queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        local: projects
-                    });
-
-                    $('#project_div .typeahead').typeahead({
-                            hint: true,
-                            highlight: true,
-                            minLength: 1
-                        },
-                        {
-                            name: 'project',
-                            source: project
-                        })
-                }
-            }
-            req.send();
-        }
-
-        function project_create() {
-            if ($("#new_project_name").val() == '') {
-                alert('Please enter the project name!');
-                return;
-            }
-            var req = new XMLHttpRequest();
-            var url = "/catalog/projectcreate?name=" + $("#new_project_name").val();
-            req.open("GET", url);
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-                    //alert(req.responseText);
-                    alert(req.responseText);
-                    $("#project_create").modal('hide');
-                    $("#project_name").val($("#new_project_name").val());
-                }
-            }
-
-            req.send();
-        }
-
-        function reference_create() {
-            if ($("#new_reference_name").val() == '') {
-                alert('Please enter the reference name!');
-                return;
-            }
-            var req = new XMLHttpRequest();
-            var url = "/catalog/referencecreate?name=" + $("#new_reference_name").val();
-            req.open("GET", url);
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-                    //alert(req.responseText);
-                    var response = JSON.parse(req.responseText);
-                    alert(response.message);
-                    $("#reference_create").modal('hide');
-                    $("#reference_default_option").val(response.newReference._id);
-                    $("#reference_default_option").html(response.newReference.name);
-                    $("#reference").prepend('<option value="-1">No reference</option>')
-
-                }
-            }
-
-            req.send();
-        }
-
-        function getAllDirectory(callback) {
-            var req = new XMLHttpRequest();
-            req.open("GET", "/dynamic/selectalldirectory");
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-                    //alert(req.responseText);
-
-                    callback(req.responseText);
-
-                }
-            }
-
-            req.send();
-        };
-
-        function getFoldersById(id) {
-            var folders = [];
-
-            for (var i = 0; i < allDirectories.length; i++) {
-                if (allDirectories[i].super == id) {
-                    folders.push(allDirectories[i]);
-                }
-            }
-            //alert(folders);
-            return folders;
-        };
-
-        function getSuperFolderIdById(id) {
-            for (var i = 0; i < allDirectories.length; i++) {
-                if (allDirectories[i]._id == id) {
-                    return allDirectories[i].super;
-                }
-            }
-        }
-        function getFolderObjectById(id) {
-            for (var i = 0; i < allDirectories.length; i++) {
-                if (allDirectories[i]._id == id) {
-                    return allDirectories[i]
-                }
-            }
-        }
-        function back(id) {
-            if (id == null) {
-                return;
-            }
-            currentDirectory = getSuperFolderIdById(id);
-            var currentFolderName;
-            if (currentDirectory == null) {
-                currentFolderName = 'Root';
-            } else {
-                var currentFolder = getFolderObjectById(currentDirectory);
-                currentFolderName = currentFolder.name;
-            }
-            setDirectoryTableHeader(currentFolderName);
-            setDirectoryTableBody();
-
-        }
-
-        function explore(id) {
-            //alert();
-            currentDirectory = id;
-            var currentFolder = getFolderObjectById(id);
-            setDirectoryTableHeader(currentFolder.name);
-            setDirectoryTableBody();
-        }
-
-        function setDirectoryTableHeader(name) {
-            $("#directory_tbody").html('<th scope="row"><botton type="button" class="btn glyphicon glyphicon-arrow-left" onclick="back(\''
-                + currentDirectory + '\')"></botton>' +
-                '<botton type="button" class="btn-lg glyphicon glyphicon-folder-open" > ' + name + '</botton></th><th scope="row"/>');
-        }
-
-        function setDirectoryTableBody() {
-            var folders = getFoldersById(currentDirectory);
-            for (var i = 0, len = folders.length; i < len; i++) {
-                var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' + folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
-                //alert(html);
-                $("#directory_tbody").append(html);
-            }
-        }
-
-        function save() {
-            if (currentDirectory == null) {
-                alert('Can\'t save assets in root directory,\nplease choose another');
-                return;
-            }
-            $("#directory").val(currentDirectory);
-            var req = new XMLHttpRequest();
-            req.open("GET", "/dynamic/getfullfolderdirectory?id=" + currentDirectory);
-            req.onreadystatechange = function () {
-
-                if (req.readyState == 4) {
-
-                    $("#directory_content").html('Root' + req.responseText);
-                    $("#directory_selector").modal('hide');
-                }
-            }
-            req.send();
-        }
-
-        function checkRequire() {
-            if ($("#directory").val() == '') {
-                alert("please select a directory");
-                return false;
-            } else {
-
-                return true;
-            }
-        }
 
