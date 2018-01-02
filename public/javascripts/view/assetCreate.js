@@ -86,49 +86,6 @@ function diagram() {
 }
 
 
-function projectCreate() {
-    if ($("#new_project_name").val() == '') {
-        alert('Please enter the project name!');
-        return;
-    }
-    var req = new XMLHttpRequest();
-    var url = "/catalog/projectcreate?name=" + $("#new_project_name").val();
-    req.open("GET", url);
-    req.onreadystatechange = function () {
-        if (req.readyState == 4) {
-            //alert(req.responseText);
-            alert(req.responseText);
-            $("#project_create").modal('hide');
-            $("#project_name").val($("#new_project_name").val());
-        }
-    }
-
-    req.send();
-}
-
-function referenceCreate() {
-    if ($("#new_reference_name").val() == '') {
-        alert('Please enter the reference name!');
-        return;
-    }
-    var req = new XMLHttpRequest();
-    var url = "/catalog/referencecreate?name=" + $("#new_reference_name").val();
-    req.open("GET", url);
-    req.onreadystatechange = function () {
-        if (req.readyState == 4) {
-            //alert(req.responseText);
-            var response = JSON.parse(req.responseText);
-            alert(response.message);
-            $("#reference_create").modal('hide');
-            $("#reference_default_option").val(response.newReference._id);
-            $("#reference_default_option").html(response.newReference.name);
-            $("#reference").prepend('<option value="-1">No reference</option>')
-
-        }
-    }
-
-    req.send();
-}
 
 function getAllDirectory(callback) {
     var req = new XMLHttpRequest();
@@ -141,7 +98,6 @@ function getAllDirectory(callback) {
 
         }
     }
-
     req.send();
 };
 

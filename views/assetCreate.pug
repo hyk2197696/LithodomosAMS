@@ -162,7 +162,7 @@ block content
                 div.col-sm-9
                     select#period_name.form-control(type='select', placeholder='Select a period of the asset' name='period_name'  )
                         option#period_name_default(value= '-1') Please select a shader type if there is one
-                        for period in period_name_list
+                        for period in period_list
                             option(value=period.id) #{period.name}
                 div.col-sm-3
                     button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#period_create' )
@@ -228,7 +228,7 @@ block content
                                     .modal-footer
                                         button.btn.btn-default(type='button', data-dismiss='modal')
                                             | close
-                                        button.btn.btn-primary(type='button', onclick ="statueCreate()") Create
+                                        button.btn.btn-primary(type='button', onclick ="statueTypeCreate()") Create
 
                     //statue culture
                     div.form-group.row
@@ -253,8 +253,8 @@ block content
                                     .modal-body
 
                                         div.form-group
-                                            label(for='statue_culture_create_name') name:
-                                            input#statue_culture_create_name.form-control(type='text', placeholder='New Culture Name')
+                                            label(for='new_statue_culture_name') name:
+                                            input#new_statue_culture_name.form-control(type='text', placeholder='New Culture Name')
 
                                     .modal-footer
                                         button.btn.btn-default(type='button', data-dismiss='modal')
@@ -267,7 +267,7 @@ block content
                         div.col-sm-9
                             select#material_name.form-control(type='select', placeholder='Select a material of the asset' name='material_name'  )
                                 option#material_name_default(value= '-1') Please select a shader type if there is one
-                                for material in material_name_list
+                                for material in material_list
                                     option(value=material.id) #{material.name}
                         div.col-sm-3
                             button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#material_create' )
@@ -339,7 +339,7 @@ block content
                 #architectural_element_form.tab-pane.fade
                     //Architectural Cultural
                     div.form-group.row
-                        label.col-sm-12(for='architectural_culture_name') Architectural Element Culture:
+                        label.col-sm-12(for='architectural_culture_name') Culture:
                         div.col-sm-9
                             select#architectural_culture_name.form-control(type='select', placeholder='Select Architectural Element Culture' name='architectural_culture_name'  )
                                 option#architectural_culture_default(value= '-1') Please select a culture if there is one
@@ -360,8 +360,8 @@ block content
                                     .modal-body
 
                                         div.form-group
-                                            label(for='architectural_culture_create_name') name:
-                                            input#architectural_culture_create_name.form-control(type='text', placeholder='New Culture Name')
+                                            label(for='new_architectural_culture_name') name:
+                                            input#new_architectural_culture_name.form-control(type='text', placeholder='New Culture Name')
 
                                     .modal-footer
                                         button.btn.btn-default(type='button', data-dismiss='modal')
@@ -401,7 +401,7 @@ block content
 
                     //style
                     div.form-group.row
-                        label.col-sm-12(for='style_name') Style Name:
+                        label.col-sm-12(for='style_name') Style:
                         div.col-sm-9
                             select#style_name.form-control(type='select', placeholder='Select style' name='style'  )
                                 option#style_default(value= '-1') Please select an style if there is one
@@ -497,13 +497,13 @@ block content
                                     .modal-body
 
                                         div.form-group
-                                            label(for='new_shader_type_name') name:
-                                            input#new_shader_type_name.form-control(type='text', placeholder='New shader type')
+                                            label(for='new_shader_type') name:
+                                            input#new_shader_type.form-control(type='text', placeholder='New shader type')
 
                                     .modal-footer
                                         button.btn.btn-default(type='button', data-dismiss='modal')
                                             | close
-                                        button.btn.btn-primary(type='button', onclick ="shaderCreate()") Create
+                                        button.btn.btn-primary(type='button', onclick ="shaderTypeCreate()") Create
 
 
                 //select type, site, and original publication for diagram
@@ -531,13 +531,13 @@ block content
                                     .modal-body
 
                                         div.form-group
-                                            label(for='new_project_name') name:
-                                            input#new_diagram_type_name.form-control(type='text', placeholder='New diagram type')
+                                            label(for='new_diagram_type') name:
+                                            input#new_diagram_type.form-control(type='text', placeholder='New diagram type')
 
                                     .modal-footer
                                         button.btn.btn-default(type='button', data-dismiss='modal')
                                             | close
-                                        button.btn.btn-primary(type='button', onclick ="diagramCreate()") Create
+                                        button.btn.btn-primary(type='button', onclick ="diagramTypeCreate()") Create
 
                     //original Publication
                     div.form-group.row
@@ -545,13 +545,13 @@ block content
                         div.col-sm-9
                             select#publication_name.form-control(type='select', placeholder='Select an original Publication Name' name='publication_name'  )
                                 option#publication_name_default(value= '-1') Please select a publication name if there is one
-                                for publicationName in publication_name_list
+                                for publicationName in publication_list
                                     option(value=publicationName.id) #{publicationName.name}
                         div.col-sm-3
-                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#publication_name_create' )
+                            button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#publication_create' )
                                 | Create new publication
                         // Modal
-                        #publication_name_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='publication_create_label', aria-hidden='true')
+                        #publication_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='publication_create_label', aria-hidden='true')
                             .modal-dialog
                                 .modal-content
                                     .modal-header
@@ -562,8 +562,8 @@ block content
                                     .modal-body
 
                                         div.form-group
-                                            label(for='new_project_name') name:
-                                            input#publication_name_create_name.form-control(type='text', placeholder='New publication name')
+                                            label(for='new_publication_name') name:
+                                            input#new_publication_name.form-control(type='text', placeholder='New publication name')
 
                                     .modal-footer
                                         button.btn.btn-default(type='button', data-dismiss='modal')
@@ -583,5 +583,6 @@ block content
 
 
     script(src='/javascripts/view/assetCreate.js')
+    script(src='/javascripts/view/contentCreate.js')
 
 

@@ -9,6 +9,8 @@ var delete_controller = require('../controllers/assetdeletecontroller');
 var asset_controller = require('../controllers/assetcontroller');
 var content_controller = require('../controllers/contentcreatecontroller');
 var directory_controller = require('../controllers/directorycontroller');
+
+//all request in this page result in a jumping into another page
 /* GET catalog home page. */
 router.get('/', homepage_controller.index);
 
@@ -26,9 +28,11 @@ router.get('/asset', asset_controller.asset_get);
 
 router.get('/assetcreate', create_controller.create_get);
 
+router.post('/assetcreate', create_controller.create_post);
+
 router.get('/fullassetcreate', create_controller.asset_create_get);
 
-router.post('/assetcreate', create_controller.create_post);
+router.post('/fullassetcreate', create_controller.asset_create_post);
 
 router.get('/assetalter', alter_controller.alter_get);
 
@@ -36,22 +40,12 @@ router.post('/assetalter', alter_controller.alter_post);
 
 router.get('/assetdelete', delete_controller.delete_get);
 
-router.get('/contentcreate',content_controller.content_create_get);
-
-router.post('/contentcreate',content_controller.content_create_post);
-
 router.get('/test',homepage_controller.test);
 
 router.get('/success',homepage_controller.success_get);
 
 router.post('/test',homepage_controller.test_post);
 
-router.get('/assetdownload',asset_controller.asset_download);
-
 router.get('/typeaheadTest', homepage_controller.typeahead_test);
-
-router.get('/projectcreate', content_controller.project_create_get);
-
-router.get('/referencecreate', content_controller.reference_create_get)
 
 module.exports = router;
