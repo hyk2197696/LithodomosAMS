@@ -572,7 +572,8 @@ block content
                     //site
                     div.form-group
                         label(for='site_name') Site:
-                        input#site_name.form-control(type='text', placeholder='Input Site Name',name='site_name'  )
+                        div#site_div
+                            input#site_name.typeahead.form-control(type='text' ,placeholder='Input Site Name', name='site_name'  )
 
 
 

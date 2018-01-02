@@ -35,6 +35,8 @@ exports.create_get = function(req, res, next){
 
 };
 
+
+//get method for asset create. select all the information need to build up the page asynchronously and render the page
 exports.asset_create_get = function(req, res, next){
     // Reference.find()
     //     .exec( (err, reference_list) => {
@@ -119,6 +121,14 @@ exports.select_all_project = (req, res) => {
     find_all_project_from_db(results => {
         res.end(JSON.stringify(results));
     });
+};
+
+//get all distinct sites
+exports.select_all_site = (req, res) => {
+    Asset.distinct('site').exec((err, results) => {
+        console.log(results);
+        res.end(JSON.stringify(results));
+    })
 }
 
 //select all the reference for selection menu
@@ -178,6 +188,7 @@ exports.create_post = (req, res, next) =>  {
     });
 
 };
+
 exports.asset_create_post = (req, res, next) =>  {
 
     var form = new formidable.IncomingForm();

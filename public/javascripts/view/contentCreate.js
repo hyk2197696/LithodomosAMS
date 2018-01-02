@@ -13,7 +13,7 @@ function projectCreate() {
             $("#project_create").modal('hide');
             $("#project_name").val($("#new_project_name").val());
         }
-    }
+    };
     req.send();
 }
 
@@ -36,7 +36,7 @@ function referenceCreate() {
             $("#reference").prepend('<option value="-1">No reference</option>')
 
         }
-    }
+    };
     req.send();
 }
 
@@ -59,7 +59,7 @@ function periodCreate() {
             $("#period_name").prepend('<option value="-1">No period</option>')
 
         }
-    }
+    };
     req.send();
 }
 
@@ -82,7 +82,7 @@ function statueTypeCreate() {
             $("#statue_type_name").prepend('<option value="-1">No StatueType</option>')
 
         }
-    }
+    };
     req.send();
 }
 function statueCultureCreate() {
@@ -127,7 +127,7 @@ function materialCreate() {
             $("#material_name").prepend('<option value="-1">No material</option>')
 
         }
-    }
+    };
     req.send();
 }
 function architecturalCultureCreate() {
@@ -149,7 +149,7 @@ function architecturalCultureCreate() {
             $("#architectural_culture_name").prepend('<option value="-1">No Culture</option>')
 
         }
-    }
+    };
     req.send();
 }
 function architecturalTypeCreate() {
@@ -171,7 +171,7 @@ function architecturalTypeCreate() {
             $("#architectural_type_name").prepend('<option value="-1">No type</option>')
 
         }
-    }
+    };
     req.send();
 }
 function styleCreate() {
@@ -193,7 +193,7 @@ function styleCreate() {
             $("#style_name").prepend('<option value="-1">No style</option>')
 
         }
-    }
+    };
     req.send();
 }
 
@@ -216,7 +216,7 @@ function shaderTypeCreate() {
             $("#shader_type_name").prepend('<option value="-1">No shader type</option>')
 
         }
-    }
+    };
     req.send();
 }
 
@@ -239,7 +239,7 @@ function diagramTypeCreate() {
             $("#diagram_type_name").prepend('<option value="-1">No diagram type</option>')
 
         }
-    }
+    };
     req.send();
 }
 
@@ -262,6 +262,6 @@ function publicationCreate() {
             $("#publication_name").prepend('<option value="-1">No publication</option>')
 
         }
-    }
+    };
     req.send();
 }

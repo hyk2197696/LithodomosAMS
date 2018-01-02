@@ -1,17 +1,26 @@
 var projects = [];
+var poses = [];
+var sites = [];
 var allDirectories = [];
 var currentDirectory = null;
 
 //load all data before the loading the page
 $(document).ready(function () {
-
+    //get all project to be used in typeahead
     getAllProject();
 
+    //get all directories for directory selection
     getAllDirectory(function (allDirectory) {
         allDirectories = JSON.parse(allDirectory);
         setDirectoryTableHeader('Root');
         setDirectoryTableBody();
     });
+
+    //get All Pose to be used in typeahead
+    getAllPose();
+
+    //get all site to be us
+    getAllSite();
 
 });
 
@@ -29,7 +38,7 @@ function getAllProject() {
             var responds = JSON.parse(req.responseText);
             //alert(req.responseText);
             projects = [];
-            for (i = 0; i < responds.length; i++) {
+            for (var  i = 0; i < responds.length; i++) {
 
                 projects.push(responds[i].name);
             }
@@ -48,6 +57,72 @@ function getAllProject() {
                 {
                     name: 'project',
                     source: project
+                })
+        }
+    }
+    req.send();
+}
+//
+function getAllPose() {}
+//     var req = new XMLHttpRequest();
+//
+//     req.open("GET", "/dynamic/selectallpose");
+//     req.onreadystatechange = function () {
+//         if (req.readyState == 4) {
+//
+//             var responds = JSON.parse(req.responseText);
+//             //alert(req.responseText);
+//             projects = [];
+//             for (var i = 0; i < responds.length; i++) {
+//
+//                 poses.push(responds[i].name);
+//             }
+//
+//             var pose = new Bloodhound({
+//                 datumTokenizer: Bloodhound.tokenizers.whitespace,
+//                 queryTokenizer: Bloodhound.tokenizers.whitespace,
+//                 local: poses
+//             });
+//
+//             $('#pose_div .typeahead').typeahead({
+//                     hint: true,
+//                     highlight: true,
+//                     minLength: 1
+//                 },
+//                 {
+//                     name: 'pose',
+//                     source: pose
+//                 })
+//         }
+//     }
+//     req.send();
+// }
+
+function getAllSite() {
+    var req = new XMLHttpRequest();
+
+    req.open("GET", "/dynamic/selectallsite");
+    req.onreadystatechange = function () {
+        if (req.readyState == 4) {
+
+            var sites = JSON.parse(req.responseText);
+            alert(req.responseText);
+
+
+            var site = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: sites
+            });
+
+            $('#site_div .typeahead').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'site',
+                    source: site
                 })
         }
     }

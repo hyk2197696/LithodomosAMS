@@ -17,6 +17,8 @@ router.get('/selectproject',create_controller.select_project);
 
 router.get('/selectallproject',create_controller.select_all_project);
 
+router.get('/selectallsite',create_controller.select_all_site);
+
 router.get('/selectallreference',create_controller.select_all_reference);
 
 router.get('/selectalldirectory',directory_controller.select_all_directory);
