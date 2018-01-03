@@ -50,4 +50,6 @@ router.get('/typeaheadTest', homepage_controller.typeahead_test);
 
 router.get('/assetdownload', asset_controller.asset_download);
 
+router.get('/allasset', asset_controller.all_asset);
+
 module.exports = router;

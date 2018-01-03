@@ -25,7 +25,7 @@ var uniqid = require('uniqid');
 var ObjectID = require("bson-objectid");
 var path = require('path');
 //get method for asset create
-exports.create_get = function(req, res, next){
+exports.create_get = (req, res, next) => {
     Reference.find()
         .exec( (err, reference_list) => {
             if (err)  {return next(err);}
@@ -37,7 +37,7 @@ exports.create_get = function(req, res, next){
 
 
 //get method for asset create. select all the information need to build up the page asynchronously and render the page
-exports.asset_create_get = function(req, res, next){
+exports.asset_create_get =  (req, res, next) => {
     // Reference.find()
     //     .exec( (err, reference_list) => {
     //         if (err)  {return next(err);}

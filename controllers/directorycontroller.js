@@ -14,7 +14,7 @@ var Asset = require('../models/asset');
 //then find all subdirectory by the super attribute, which is all the subdirectory of a specific folder
 //find asset by the attribute of fakeDirectory at the same time
 //display all the folders and assets in a specific
-exports.find_get = function (req, res, next) {
+exports.find_get =   (req, res, next) => {
     var folderDetail = {};
     var assetDetail = {};
     if (req.query.id != 'null') {
@@ -50,12 +50,12 @@ exports.find_get = function (req, res, next) {
 
 };
 
-exports.find_post = function (req, res, next) {
+exports.find_post =   (req, res, next)  => {
     res.render('searchForm', {title: 'Search Asset'});
 };
 
 
-exports.check_folder_existance = function (req, res, next) {
+exports.check_folder_existance =   (req, res, next) =>  {
     var folderDetail = {
         name: req.query.name
     };
@@ -79,7 +79,7 @@ exports.check_folder_existance = function (req, res, next) {
 
 };
 
-function get_folder_info(id, call_back, html_res) {
+var get_folder_info = (id, call_back, html_res)  => {
     var sql = 'select name,ifnull(super,\'null\') as super from sys.fakedirectory where idfakedirectory = ' + id;
     console.log('new query :' + sql);
     var query = con.query(sql);
@@ -93,7 +93,7 @@ function get_folder_info(id, call_back, html_res) {
     });
 };
 
-function on_get_folder_info(name, super_id, html_res) {
+ var on_get_folder_info = (name, super_id, html_res) => {
     directory = name + '/' + directory;
     console.log('directory inside = ' + directory);
     id = super_id;
@@ -127,7 +127,7 @@ var folder_Directory = (id ,subDirectory, allDirectories, callback) => {
     }
 };
 
-exports.get_full_folder_directory = function (req, res, next) {
+exports.get_full_folder_directory =   (req, res, next) => {
     FakeDirectory.find().exec(
         (err, results) => {
             if (err) {

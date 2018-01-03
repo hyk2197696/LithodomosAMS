@@ -26,7 +26,7 @@ var path = require('path');
 
 
 //get method for asset search
-exports.search_get = function(req, res, next){
+exports.search_get =  (req, res, next) => {
     async.parallel({
         reference_list: callback => {
             Reference.find().exec(callback);
@@ -85,7 +85,7 @@ exports.search_get = function(req, res, next){
 
 
 // Handle Asset search on POST
-exports.search_post = function(req, res, next) {
+exports.search_post =  (req, res, next) => {
 
     // //Check that the id field is not empty
     // //req.checkBody('name', 'ID required').notEmpty();
@@ -137,7 +137,8 @@ exports.search_post = function(req, res, next) {
             console.log(fields);
             console.log( assetTemplate);
 
-            Asset.find( assetTemplate ).exec( (err, list_asset) => {
+            //find all satisfying assets, sort by asset name
+            Asset.find( {$query: assetTemplate, $orderby:{'name': 1}} ).exec( (err, list_asset) => {
                 if (err)  {return next(err);}
                 if(list_asset.length == 0) {
                      res.render('success', {title: 'empty', massage: 'empty!'});

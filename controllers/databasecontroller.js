@@ -35,7 +35,7 @@ var find_all_project_from_db = callback => {
         })
 };
 
-exports.select_project = function(req, res){
+exports.select_project =  (req, res) => {
 
     find_project_from_db(req.query.name, function(results){
         res.end(JSON.stringify(results));
@@ -70,8 +70,8 @@ exports.get_all_asset_name = (req, res) => {
 
 //select all the reference for selection menu
 //not used at the moment
-exports.select_all_reference = function(req, res){
-    find_all_reference_from_db( function(results){
+exports.select_all_reference =  (req, res) => {
+    find_all_reference_from_db(  results => {
         res.end(results);
     });
 };

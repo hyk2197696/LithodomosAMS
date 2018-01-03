@@ -8,7 +8,7 @@ var Asset = require('../models/asset');
 var Reference = require('../models/reference');
 var Project = require('../models/project');
 //asset alter page get method, select all attribute from the database and display in a form
-exports.alter_get = function(req, res, next){
+exports.alter_get = (req, res, next) => {
     async.parallel({
         asset: callback => {
             Asset.findById(req.query.id).populate('reference').populate('project').populate('fakeDirectory').exec(callback);
@@ -24,7 +24,7 @@ exports.alter_get = function(req, res, next){
 }
 
 //post method for asset alter
-exports.alter_post = function(req, res, next) {
+exports.alter_post = (req, res, next) =>  {
     Project.findOne({'name':req.body.project_name})
         .exec( (err, found_project) => {
             //judge if the following attributes of the asset is not defined
@@ -50,4 +50,4 @@ exports.alter_post = function(req, res, next) {
 
 
     })
-}
+};

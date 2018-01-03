@@ -27,7 +27,7 @@ var ObjectID = require("bson-objectid");
 var path = require('path');
 
 //get method for asset display, find an asset by id and send back asset details
-exports.asset_get = function(req, res, next){
+exports.asset_get = (req, res, next) => {
     console.log('New query: finding asset id = ' + req.query.id);
     Asset.findById( req.query.id )
         .populate('project', Project)
@@ -57,4 +57,18 @@ exports.asset_download = (req, res,next) => {
         if(err) {return next(err);}
         res.download(result.trueLocation,result.fileName);
     });
-}
+};
+
+//find all assets
+exports.all_asset = (req, res, next ) => {
+    Asset.find().sort({'name':1}).exec( (err, list_asset) => {
+        if (err)  {return next(err);}
+        if(list_asset.length == 0) {
+            res.render('success', {title: 'empty', massage: 'empty!'});
+        }
+        else {
+            //console.log(list_asset);
+            res.render('assetList', { list_asset : list_asset})
+        }
+    })
+};

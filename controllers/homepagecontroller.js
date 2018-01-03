@@ -8,7 +8,7 @@ var Model = require('../models/model');
 var extend = require('mongoose-schema-extend');
 var Schema = mongoose.Schema;
 //index page
-exports.index = function(req, res, next){
+exports.index =  (req, res, next) => {
 
     Asset.count((err, countAsset)=> {
         if (err) {return next(err);}
@@ -18,7 +18,7 @@ exports.index = function(req, res, next){
 
 
 //all of the following is for testing
-exports.test = function(req, res, next) {
+exports.test =  (req, res, next)  => {
     res.render('test',{});
     // var PersonSchema = new Schema({
     //     name : String

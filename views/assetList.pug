@@ -2,14 +2,29 @@ extends layout
 
 block content
 
-    h1 Asset list:
+    h1.text-center Asset list:
 
     div(style='margin-left:20px;margin-top:20px')
+        table.table.table-dark
+            thead.thead-dark
+                tr
+                    th(scope='col') #
+                    th(scope='col') Name
+                    th(scope='col') Type
+                    th(scope='col') File Type
+                    th(scope='col') Create Time
 
-
-
-        dl
-        each asset in list_asset
-            dt
-                - var asset_href = '/catalog/asset?id=' + asset.id
-                a(href= asset_href) #{asset.name}
+            tbody
+                dl
+                - var i = 1
+                each asset in list_asset
+                    dt
+                        - var asset_href = '/catalog/asset?id=' + asset.id
+                        tr
+                            th(scope='row') #{i}
+                            td
+                                a(href=asset_href) #{asset.name}
+                            td #{asset.type}
+                            td #{asset.fileType}
+                            td #{asset.createTimeFormatted}
+                        - i = i + 1;
