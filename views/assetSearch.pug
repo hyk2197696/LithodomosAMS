@@ -1,0 +1,230 @@
+extends layout
+block content
+    h1.text-center #{title}
+
+    //tabs for different subclass
+    .container
+
+        //nav tabs
+        ul.nav.nav-tabs
+            li.active
+                a(data-toggle='tab', href='#asset_form', onclick='asset();') Assets
+            li
+                a(data-toggle='tab', href='#statue_form', onclick='statue();') Statues
+            li
+                a(data-toggle='tab', href='#architectural_element_form', onclick='archtecturalElement();') Architectural Elements
+            li.dropdown
+                a.dropdown_toggle(data-toggle = 'dropdown' href='#') Props
+                    span.caret
+                ul.dropdown-menu
+                    li
+                        a(data-toggle='tab', href='#prop_form', onclick='prop("manmade");') Manmade
+                    li
+                        a(data-toggle='tab', href='#prop_form', onclick='prop("animal");') Animals
+                    li
+                        a(data-toggle='tab', href='#prop_form', onclick='prop("plant");') Plants
+            li
+                a(data-toggle='tab', href='#shader_form', onclick='shader();') Shader
+            li
+                a(data-toggle='tab', href='#diagram_form', onclick='diagram();') Diagram
+
+        br
+
+        //search form
+        form(method='POST', enctype='multipart/form-data', action='')
+
+            //attributes shared by all assets
+
+            //asset type
+            div.form-group
+                input#asset_type.form-control(type='hidden', value='Asset', name='asset_type' )
+
+
+            //asset name
+            div.form-group
+                label(for='asset_name') Asset Name:
+                div#asset_name_div
+                    input#asset_name.typeahead.form-control(type='text', placeholder='Input Asset Name', name='asset_name')
+
+            //Directory
+            div.form-group.row
+                label.col-sm-12 Directory:
+                div.col-sm-1
+                    button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
+                        | choose
+
+                    //modal
+                    #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                        .modal-dialog
+                            .modal-content
+                                .modal-header
+                                    button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                        | ×
+                                    h4#directory_selector_header.modal-title.text-center
+                                        | Select a directory
+                                #directory_table.modal-body
+                                    table.table.table-sm.table-dark
+                                        tbody#directory_tbody
+
+                                .modal-footer
+                                    button.btn.btn-default(type='button', data-dismiss='modal')
+                                        | close
+                                    button.btn.btn-primary(type='button', data-toggle='modal',onclick = 'save()') Save
+
+                div.col-sm-11
+                    .input-group
+                        #directory_content.input-group-addon Please choose a folder to save the asset
+                        input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory' )
+
+            //project
+            div.form-group.row
+                label.col-sm-12(for='project_name') Project Name
+
+                div#project_div.col-sm-12.container-fluid
+                    input#project_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Project Name', name='project_name'  )
+
+            //Reference
+            div.form-group.row
+                label.col-sm-12(for='reference') Reference:
+                div.col-sm-12
+                    select#reference.form-control(type='select', placeholder='Select reference' name='reference' )
+                        option#reference_default_option(value= '-1') Please select a reference if there is one
+                        for ref in reference_list
+                            option(value=ref.id) #{ref.name}
+
+            //Period of the asset
+            div.form-group.row
+                label.col-sm-12(for='period_name') Period:
+                div.col-sm-12
+                    select#period_name.form-control(type='select', placeholder='Select a period of the asset' name='period_name'  )
+                        option#period_name_default(value= '-1') Please select a shader type if there is one
+                        for period in period_list
+                            option(value=period.id) #{period.name}
+
+            //tab contents
+            .tab-content
+                //nothing special for asset
+                #asset_form.tab-pane.fade.in.active
+
+                #statue_form.tab-pane.fade
+
+                    //statue type
+                    div.form-group.row
+                        label.col-sm-12(for='statue_type_name') Statue Type:
+                        div.col-sm-12
+                            select#statue_type_name.form-control(type='select', placeholder='Select statue type' name='statue_type_name'  )
+                                option#statue_type_default(value= '-1') Please select a statue type if there is one
+                                for statueType in statue_type_list
+                                    option(value=statueType.id) #{statueType.name}
+
+                    //statue culture
+                    div.form-group.row
+                        label.col-sm-12(for='statue_culture_name') Statue Culture:
+                        div.col-sm-12
+                            select#statue_culture_name.form-control(type='select', placeholder='Select statue Element Culture' name='statue_culture_name'  )
+                                option#statue_culture_default(value= '-1') Please select a culture if there is one
+                                for statueCulture in culture_list
+                                    option(value=statueCulture.id) #{statueCulture.name}
+
+                    //material of statue
+                    div.form-group.row
+                        label.col-sm-12(for='material_name') Material:
+                        div.col-sm-12
+                            select#material_name.form-control(type='select', placeholder='Select a material of the asset' name='material_name'  )
+                                option#material_name_default(value= '-1') Please select a shader type if there is one
+                                for material in material_list
+                                    option(value=material.id) #{material.name}
+
+                    //pose
+                    div.form-group.row
+                        label.col-sm-12(for='pose_name') Pose of Statue
+                        div#pose_div.col-sm-12.container-fluid
+                            input#pose_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Pose Name', name='pose_name'  )
+
+                    //gender
+                    div.form-group.row
+                        label.col-sm-12(for='gender') Gender of Statue:
+                        div.col-sm-12
+                            select#gender.form-control(type='select', name='gender'  )
+                                option(value='uncertain') Select a gender
+                                option(value='male') Male
+                                option(value='female') Female
+
+                    //location
+                    div.form-group
+                        label(for='location') Location:
+                        input#location.form-control(type='text', placeholder='Input Statue location' name='location_name'  )
+
+                #architectural_element_form.tab-pane.fade
+                    //Architectural Cultural: architectural_culture_name
+                    div.form-group.row
+                        label.col-sm-12(for='architectural_culture_name') Culture:
+                        div.col-sm-12
+                            select#architectural_culture_name.form-control(type='select', placeholder='Select Architectural Element Culture' name='architectural_culture_name'  )
+                                option#architectural_culture_default(value= '-1') Please select a culture if there is one
+                                for architecturalCulture in culture_list
+                                    option(value=architecturalCulture.id) #{architecturalCulture.name}
+
+                    //Architectural Element Type: architectural_type_name
+                    div.form-group.row
+                        label.col-sm-12(for='architectural_type_name') Architectural Element Type:
+                        div.col-sm-12
+                            select#architectural_type_name.form-control(type='select', placeholder='Select architectural type' name='architectural_type_name'  )
+                                option#architectural_type_default(value= '-1') Please select a architectural element type if there is one
+                                for architecturalType in architectural_type_list
+                                    option(value=architecturalType.id) #{architecturalType.name}
+
+                    //style: style_name
+                    div.form-group.row
+                        label.col-sm-12(for='style_name') Style:
+                        div.col-sm-12
+                            select#style_name.form-control(type='select', placeholder='Select style' name='style_name'  )
+                                option#style_default(value= '-1') Please select an style if there is one
+                                for style in style_list
+                                    option(value=style.id) #{style.name}
+
+                #shader_form.tab-pane.fade
+                    //shader type
+                    div.form-group.row
+                        label.col-sm-12(for='shader_type_name') Shader Type:
+                        div.col-sm-12
+                            select#shader_type_name.form-control(type='select', placeholder='Select Shader type' name='shader_type_name'  )
+                                option#shader_type_default(value= '-1') Please select a shader type if there is one
+                                for shaderType in shader_type_list
+                                    option(value=shaderType.id) #{shaderType.name}
+
+                    //select type, site, and original publication for diagram
+
+                #diagram_form.tab-pane.fade
+                    //diagram type
+                    div.form-group.row
+                        label.col-sm-12(for='diagram_type_name') Diagram Type:
+                        div.col-sm-12
+                            select#diagram_type_name.form-control(type='select', placeholder='Select diagram type' name='diagram_type_name'  )
+                                option#diagram_type_default(value= '-1') Please select a diagram type if there is one
+                                for diagramType in diagram_type_list
+                                    option(value=diagramType.id) #{diagramType.name}
+
+                    //original Publication
+                    div.form-group.row
+                        label.col-sm-12(for='publication_name') Original Publication:
+                        div.col-sm-12
+                            select#publication_name.form-control(type='select', placeholder='Select an original Publication Name' name='publication_name'  )
+                                option#publication_name_default(value= '-1') Please select a publication name if there is one
+                                for publicationName in publication_list
+                                    option(value=publicationName.id) #{publicationName.name}
+
+                    //site
+                    div.form-group
+                        label(for='site_name') Site:
+                        div#site_div
+                            input#site_name.typeahead.form-control(type='text' ,placeholder='Input Site Name', name='site_name'  )
+            button.btn.btn-secondary(type='submit') Submit
+
+    script(src='/javascripts/view/assetSearch.js')
+    script(src='/javascripts/view/assetCreate.js')
+
+
+
+
+

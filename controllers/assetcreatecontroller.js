@@ -95,54 +95,13 @@ exports.asset_create_get = function(req, res, next){
         });
 };
 
-//find the project which (partially) contains the name
-//not used at the moment
-var find_all_project_from_db = callback => {
-    Project.find()
-        .exec( (err, project_list) => {
-            if (err)  {return next(err);}
-            //console.log(project_list);
-            callback(project_list)
-        })
-}
-exports.select_project = function(req, res){
-
-    find_project_from_db(req.query.name, function(results){
-        res.end(JSON.stringify(results));
-    });
-
-
-}
-
-//select all the project for typeahead of project field
-exports.select_all_project = (req, res) => {
-    find_all_project_from_db(results => {
-        res.end(JSON.stringify(results));
-    });
-};
-
-//get all distinct sites
-exports.select_all_site = (req, res) => {
-    Asset.distinct('site').exec((err, results) => {
-        console.log(results);
-        res.end(JSON.stringify(results));
-    })
-}
-
-//select all the reference for selection menu
-//not used at the moment
-exports.select_all_reference = function(req, res){
-    find_all_reference_from_db( function(results){
-        res.end(results);
-    });
-};
 
 //the post method for asset create
 exports.create_post = (req, res, next) =>  {
 
     var form = new formidable.IncomingForm();
     form.parse(req,  (err, fields, files) => {
-        console.log(fields.project_name == '');
+
         Project.findOne({'name':fields.project_name})
             .exec( (err, found_project) => {
                 //if the following attributes of the asset is not defined
@@ -233,44 +192,45 @@ exports.asset_create_post = (req, res, next) =>  {
     });
 
 };
+
 var getNewAssetTemplate = fields => {
     var assetTemplate = createNewAsset(fields);
     switch(fields.asset_type){
         case 'Asset':
             break;
         case 'Shader':
-            assetTemplate.shaderType = fields.shader_type_name == null? null: fields.shader_type_name;
+            assetTemplate.shaderType = fields.shader_type_name == '-1'? null: fields.shader_type_name;
 
             break;
         case 'Diagram':
-            assetTemplate.diagramType = fields.diagram_type_name == null? null: fields.diagram_type_name;
-            assetTemplate.originalPublication = fields.publication_name == null? null: fields.publication_name;
+            assetTemplate.diagramType = fields.diagram_type_name == '-1'? null: fields.diagram_type_name;
+            assetTemplate.originalPublication = fields.publication_name == '-1'? null: fields.publication_name;
             assetTemplate.site = fields.site_name == null? null: fields.site_name;
             break;
         case 'Statue':
-            assetTemplate.statueType = fields.statue_type_name == null? null: fields.statue_type_name;
-            assetTemplate.statueCulture = fields.statue_culture_name == null? null: fields.statue_culture_name;
-            assetTemplate.material = fields.material_name == null? null: fields.material_name;
+            assetTemplate.statueType = fields.statue_type_name == '-1'? null: fields.statue_type_name;
+            assetTemplate.statueCulture = fields.statue_culture_name == '-1'? null: fields.statue_culture_name;
+            assetTemplate.material = fields.material_name == '-1'? null: fields.material_name;
             assetTemplate.pose = fields.pose_name == null? null: fields.pose_name;
             assetTemplate.gender = fields.gender;
             assetTemplate.location = fields.location_name;
             break;
         case 'Architectural Element':
-            assetTemplate.architecturalCulture = fields.architectural_culture_name == null? null: fields.architectural_culture_name;
-            assetTemplate.architecturalElementType = fields.architectural_type_name == null? null: fields.architectural_type_name;
-            assetTemplate.style = fields.style_name == null? null: fields.style_name;
+            assetTemplate.architecturalCulture = fields.architectural_culture_name == '-1'? null: fields.architectural_culture_name;
+            assetTemplate.architecturalElementType = fields.architectural_type_name == '-1'? null: fields.architectural_type_name;
+            assetTemplate.style = fields.style_name == '-1'? null: fields.style_name;
             break;
         case 'Prop':
             break;
     }
     return assetTemplate;
+};
 
-
-}
 //create a new asset template based on the request
 var createNewAsset = fields => {
         var assetTemplate = {
             _id: ObjectID(),
+            name:fields.asset_name,
             type: fields.asset_type,
             reference: fields.reference == '-1'? null : fields.reference,
             fakeDirectory: fields.directory,

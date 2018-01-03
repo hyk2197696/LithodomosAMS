@@ -48,4 +48,6 @@ router.post('/test',homepage_controller.test_post);
 
 router.get('/typeaheadTest', homepage_controller.typeahead_test);
 
+router.get('/assetdownload', asset_controller.asset_download);
+
 module.exports = router;

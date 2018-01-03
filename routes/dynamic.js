@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var app = require('../app.js');
-var homepage_controller = require('../controllers/homepagecontroller');
-var search_controller = require('../controllers/assetsearchcontroller');
+var database_controller = require('../controllers/databasecontroller');
 var create_controller = require('../controllers/assetcreatecontroller');
 var alter_controller = require('../controllers/assetaltercontroller');
 var delete_controller = require('../controllers/assetdeletecontroller');
@@ -13,17 +12,19 @@ var directory_controller = require('../controllers/directorycontroller');
 //all request in this file aim for exchange data dynamically, without any page redirection
 
 //select/get
-router.get('/selectproject',create_controller.select_project);
+router.get('/selectproject',database_controller.select_project);
 
-router.get('/selectallproject',create_controller.select_all_project);
+router.get('/selectallproject',database_controller.select_all_project);
 
-router.get('/selectallsite',create_controller.select_all_site);
+router.get('/selectallsite',database_controller.select_all_site);
 
-router.get('/selectallreference',create_controller.select_all_reference);
+router.get('/selectallreference',database_controller.select_all_reference);
 
 router.get('/selectalldirectory',directory_controller.select_all_directory);
 
 router.get('/getfullfolderdirectory',directory_controller.get_full_folder_directory);
+
+router.get('/selectallassetname',database_controller.get_all_asset_name);
 
 //check
 router.get('/checkfolderexistance',directory_controller.check_folder_existance);
