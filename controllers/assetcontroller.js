@@ -49,7 +49,7 @@ exports.asset_get = (req, res, next) => {
             res.render('asset', { title: asset_datail.name, asset : asset_datail})
         })
 
-}
+};
 
 //method for asset downloading, find asset by id and rename the file as it was when uploaded
 exports.asset_download = (req, res,next) => {

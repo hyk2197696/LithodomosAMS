@@ -4,25 +4,6 @@ var sites = [];
 var allDirectories = [];
 var currentDirectory = null;
 
-//load all data before the loading the page
-$(document).ready(function () {
-    //get all project to be used in typeahead
-    getAllProject();
-
-    //get all directories for directory selection
-    getAllDirectory(function (allDirectory) {
-        allDirectories = JSON.parse(allDirectory);
-        setDirectoryTableHeader('Root');
-        setDirectoryTableBody();
-    });
-
-    //get All Pose to be used in typeahead
-    getAllPose();
-
-    //get all site to be us
-    getAllSite();
-
-});
 
 //for control the size of input bar
 $(".tt-hint").addClass("form-control");

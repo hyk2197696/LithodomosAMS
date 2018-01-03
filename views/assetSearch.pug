@@ -97,7 +97,7 @@ block content
                 label.col-sm-12(for='period_name') Period:
                 div.col-sm-12
                     select#period_name.form-control(type='select', placeholder='Select a period of the asset' name='period_name'  )
-                        option#period_name_default(value= '-1') Please select a shader type if there is one
+                        option#period_name_default(value= '-1') Please select a period if there is one
                         for period in period_list
                             option(value=period.id) #{period.name}
 

@@ -160,7 +160,7 @@ block content
                 label.col-sm-12(for='period_name') Period:
                 div.col-sm-9
                     select#period_name.form-control(type='select', placeholder='Select a period of the asset' name='period_name'  )
-                        option#period_name_default(value= '-1') Please select a shader type if there is one
+                        option#period_name_default(value= '-1') Please select a period if there is one
                         for period in period_list
                             option(value=period.id) #{period.name}
                 div.col-sm-3
@@ -588,5 +588,24 @@ block content
 
     script(src='/javascripts/view/assetCreate.js')
     script(src='/javascripts/view/contentCreate.js')
+    script.
+        //load all data before the loading the page
+        $(document).ready(function () {
+            //get all project to be used in typeahead
+            getAllProject();
 
+            //get all directories for directory selection
+            getAllDirectory(function (allDirectory) {
+                allDirectories = JSON.parse(allDirectory);
+                setDirectoryTableHeader('Root');
+                setDirectoryTableBody();
+            });
+
+            //get All Pose to be used in typeahead
+            getAllPose();
+
+            //get all site to be us
+            getAllSite();
+
+        });
 

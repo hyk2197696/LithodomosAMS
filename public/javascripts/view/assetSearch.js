@@ -1,7 +1,26 @@
 
+
+//load all data before the loading the page
 $(document).ready(function () {
     getAllAssetName();
+    //get all project to be used in typeahead
+    getAllProject();
+
+    //get all directories for directory selection
+    getAllDirectory(function (allDirectory) {
+        allDirectories = JSON.parse(allDirectory);
+        setDirectoryTableHeader('Root');
+        setDirectoryTableBody();
+    });
+
+    //get All Pose to be used in typeahead
+    getAllPose();
+
+    //get all site to be us
+    getAllSite();
+
 });
+
 
 
 function getAllAssetName() {
