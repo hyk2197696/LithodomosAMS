@@ -40,9 +40,8 @@ block content
 
             //asset type
             div.form-group
-                label(for='asset_type') Asset Type:
-                    font(color="red")  *
-                input#asset_type.form-control(type='text', value='Asset', name='asset_name', required='true', disabled   )
+
+                input#asset_type.form-control(type='hidden', value='Asset', name='asset_type', required='true', aria-hidden='true'  )
 
 
             //asset name
@@ -51,36 +50,36 @@ block content
                     font(color="red")  *
                 input#asset_name.form-control(type='text', placeholder='Input Asset Name' name='asset_name' required='true'   )
 
-                //Directory
-                div.form-group.row
-                    label.col-sm-12 Directory:
-                        font(color="red")  *
-                    div.col-sm-1
-                        button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
-                            | choose
+            //Directory
+            div.form-group.row
+                label.col-sm-12 Directory:
+                    font(color="red")  *
+                div.col-sm-1
+                    button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
+                        | choose
 
-                        //modal
-                        #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                            .modal-dialog
-                                .modal-content
-                                    .modal-header
-                                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
-                                            | ×
-                                        h4#directory_selector_header.modal-title.text-center
-                                            | Select a directory
-                                    #directory_table.modal-body
-                                        table.table.table-sm.table-dark
-                                            tbody#directory_tbody
+                    //modal
+                    #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                        .modal-dialog
+                            .modal-content
+                                .modal-header
+                                    button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                        | ×
+                                    h4#directory_selector_header.modal-title.text-center
+                                        | Select a directory
+                                #directory_table.modal-body
+                                    table.table.table-sm.table-dark
+                                        tbody#directory_tbody
 
-                                    .modal-footer
-                                        button.btn.btn-default(type='button', data-dismiss='modal')
-                                            | close
-                                        button.btn.btn-primary(type='button', data-toggle='modal',onclick = 'save()') Save
+                                .modal-footer
+                                    button.btn.btn-default(type='button', data-dismiss='modal')
+                                        | close
+                                    button.btn.btn-primary(type='button', data-toggle='modal',onclick = 'save()') Save
 
-                    div.col-sm-11
-                        .input-group
-                            #directory_content.input-group-addon Please choose a folder to save the asset
-                            input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true' )
+                div.col-sm-11
+                    .input-group
+                        #directory_content.input-group-addon Please choose a folder to save the asset
+                        input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true' )
 
 
             //file upload
@@ -203,7 +202,7 @@ block content
                     div.form-group.row
                         label.col-sm-12(for='statue_type_name') Statue Type:
                         div.col-sm-9
-                            select#statue_type_name.form-control(type='select', placeholder='Select statue type' name='statue_type'  )
+                            select#statue_type_name.form-control(type='select', placeholder='Select statue type' name='statue_type_name'  )
                                 option#statue_type_default(value= '-1') Please select a statue type if there is one
                                 for statueType in statue_type_list
                                     option(value=statueType.id) #{statueType.name}
@@ -335,9 +334,14 @@ block content
 
 
 
+                    //location
+                    div.form-group
+                        label(for='location') Location:
+                            font(color="red")  *
+                        input#location.form-control(type='text', placeholder='Input Statue location' name='location_name'  )
                 //select culture, type and style for an architectural element
                 #architectural_element_form.tab-pane.fade
-                    //Architectural Cultural
+                    //Architectural Cultural: architectural_culture_name
                     div.form-group.row
                         label.col-sm-12(for='architectural_culture_name') Culture:
                         div.col-sm-9
@@ -368,11 +372,11 @@ block content
                                             | close
                                         button.btn.btn-primary(type='button', onclick ='architecturalCultureCreate()') Create
 
-                    //Architectural Element Type
+                    //Architectural Element Type: architectural_type_name
                     div.form-group.row
                         label.col-sm-12(for='architectural_type_name') Architectural Element Type:
                         div.col-sm-9
-                            select#architectural_type_name.form-control(type='select', placeholder='Select architectural type' name='architectural_type'  )
+                            select#architectural_type_name.form-control(type='select', placeholder='Select architectural type' name='architectural_type_name'  )
                                 option#architectural_type_default(value= '-1') Please select a architectural element type if there is one
                                 for architecturalType in architectural_type_list
                                     option(value=architecturalType.id) #{architecturalType.name}
@@ -399,11 +403,11 @@ block content
                                             | close
                                         button.btn.btn-primary(type='button', onclick ="architecturalTypeCreate()") Create
 
-                    //style
+                    //style: style_name
                     div.form-group.row
                         label.col-sm-12(for='style_name') Style:
                         div.col-sm-9
-                            select#style_name.form-control(type='select', placeholder='Select style' name='style'  )
+                            select#style_name.form-control(type='select', placeholder='Select style' name='style_name'  )
                                 option#style_default(value= '-1') Please select an style if there is one
                                 for style in style_list
                                     option(value=style.id) #{style.name}
@@ -478,7 +482,7 @@ block content
                     div.form-group.row
                         label.col-sm-12(for='shader_type_name') Shader Type:
                         div.col-sm-9
-                            select#shader_type_name.form-control(type='select', placeholder='Select Shader type' name='shader_type'  )
+                            select#shader_type_name.form-control(type='select', placeholder='Select Shader type' name='shader_type_name'  )
                                 option#shader_type_default(value= '-1') Please select a shader type if there is one
                                 for shaderType in shader_type_list
                                     option(value=shaderType.id) #{shaderType.name}
@@ -512,7 +516,7 @@ block content
                     div.form-group.row
                         label.col-sm-12(for='diagram_type_name') Diagram Type:
                         div.col-sm-9
-                            select#diagram_type_name.form-control(type='select', placeholder='Select diagram type' name='diagram_type'  )
+                            select#diagram_type_name.form-control(type='select', placeholder='Select diagram type' name='diagram_type_name'  )
                                 option#diagram_type_default(value= '-1') Please select a diagram type if there is one
                                 for diagramType in diagram_type_list
                                     option(value=diagramType.id) #{diagramType.name}

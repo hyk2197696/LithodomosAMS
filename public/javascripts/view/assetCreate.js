@@ -39,7 +39,6 @@ function getAllProject() {
             //alert(req.responseText);
             projects = [];
             for (var  i = 0; i < responds.length; i++) {
-
                 projects.push(responds[i].name);
             }
 
@@ -106,7 +105,7 @@ function getAllSite() {
         if (req.readyState == 4) {
 
             var sites = JSON.parse(req.responseText);
-            alert(req.responseText);
+            //alert(req.responseText);
 
 
             var site = new Bloodhound({
@@ -262,11 +261,16 @@ function save() {
 }
 
 function checkRequire() {
+    //check if the directory is empty
     if ($("#directory").val() == '') {
         alert("please select a directory");
         return false;
-    } else {
+    } else if($("#project_name").val() != ''  && jQuery.inArray($("#project_name").val(),projects) == -1) {
 
+        alert("Project does not exist! \n" +
+            "please create project first!");
+        return false;
+    } else {
         return true;
     }
 }

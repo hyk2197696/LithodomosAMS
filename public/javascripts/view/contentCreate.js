@@ -12,6 +12,8 @@ function projectCreate() {
             alert(req.responseText);
             $("#project_create").modal('hide');
             $("#project_name").val($("#new_project_name").val());
+            //push the new project into all projects array in order to check the existence of input project
+            projects.push($("#new_project_name").val());
         }
     };
     req.send();
@@ -34,7 +36,6 @@ function referenceCreate() {
             $("#reference_default_option").val(response.newReference._id);
             $("#reference_default_option").html(response.newReference.name);
             $("#reference").prepend('<option value="-1">No reference</option>')
-
         }
     };
     req.send();

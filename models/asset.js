@@ -10,8 +10,8 @@ var AssetSchema = new Schema({
     fakeDirectory: {type: Schema.ObjectId, ref: 'FakeDirectory', require: true},
     trueLocation: {type: String, require: true},
     fileName :{type: String, require: true},
-    fileType: {type: Schema.ObjectId, ref: 'FileType', require: true},
-    _type: {type: String, enum:['Asset', 'Model', 'Shader', 'Diagram', 'Statues', 'Architectural Element', 'natural', 'manMade'], require: true, default: 'Asset'},
+    fileType: {type: String, require: true},
+    type: {type: String, enum:['Asset', 'Model', 'Shader', 'Diagram', 'Statue', 'Architectural Element', 'Prop', 'manMade'], require: true, default: 'Asset'},
     createTime: { type: Date, default: Date.now },
     period: {type: Schema.ObjectId , ref: 'Period'},
 
