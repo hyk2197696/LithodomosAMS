@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var extend = require('mongoose-schema-extend');
 var Schema = mongoose.Schema;
-
+var moment = require('moment');
 var AssetSchema = new Schema({
     //all Assets' attributes
     name: {type: String, require: true},
@@ -49,6 +49,11 @@ var AssetSchema = new Schema({
     manMadeType: {type: Schema.ObjectId, ref: 'ManMadeType'}
 });
 
+AssetSchema
+    .virtual('createTimeFormatted')
+    .get(function (){
+        return this.createTime ? moment(this.createTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
+    })
 module.exports = mongoose.model('Asset', AssetSchema);
 
 // var ModelSchema = AssetSchema.extend({

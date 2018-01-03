@@ -18,6 +18,7 @@
     "formidable": "^1.1.1",
     "js-lambda-expression": "^1.1.2",
     "json": "^9.0.6",
+    "moment": "^2.20.1",
     "mongoose": "^4.13.7",
     "mongoose-schema-extend": "^0.2.2",
     "morgan": "~1.9.0",

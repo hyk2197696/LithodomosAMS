@@ -4,11 +4,27 @@
 
 var con = require('./databasecontroller');
 var app = require('../app');
+var json = require('json');
+var exp = require('express');
+var async = require('async');
+var formidable = require('formidable');
+var fs = require('fs');
 var Asset = require('../models/asset');
-var Project = require('../models/project');
 var Reference = require('../models/reference');
+var Period = require('../models/period');
+var StatueType = require('../models/statueType');
+var ArchitecturalElementType = require('../models/architecturalElementType');
+var Culture = require('../models/culture');
+var Material = require('../models/material');
+var Style = require('../models/style');
+var ShaderType = require('../models/shaderType');
+var DiagramType = require('../models/diagramType');
+var Publication = require('../models/publication');
+var Project = require('../models/project');
 var FakeDirectory = require('../models/fakeDirectory');
-
+var uniqid = require('uniqid');
+var ObjectID = require("bson-objectid");
+var path = require('path');
 
 //get method for asset display, find an asset by id and send back asset details
 exports.asset_get = function(req, res, next){
@@ -17,6 +33,16 @@ exports.asset_get = function(req, res, next){
         .populate('project', Project)
         .populate('fakeDirectory',FakeDirectory)
         .populate('reference',Reference)
+        .populate('period',Period)
+        .populate('shaderType',ShaderType)
+        .populate('diagramType',DiagramType)
+        .populate('originalPublication',Publication)
+        .populate('statueType',StatueType)
+        .populate('statueCulture',Culture)
+        .populate('material',Material)
+        .populate('architecturalCulture',Culture)
+        .populate('architecturalElementType',ArchitecturalElementType)
+        .populate('style',Style)
         .exec((err, asset_datail) => {
             if (err)  {return next(err);}
             console.log(asset_datail);

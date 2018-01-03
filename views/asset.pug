@@ -5,16 +5,52 @@ block content
 
 
     div(style='margin-left:20px;margin-top:20px')
-        p Asset Name : #{asset.name}
-        if (asset.project != null )
-            p Project : #{asset.project.name}
-        else
-            p Project : Null
-        if (asset.reference != null )
-            p Reference : #{asset.reference.name}
-        else
-            p Reference : Null
+        p Asset Name :  #{asset.name}
+        p Type :  #{asset.type}
         p#directory
+        p FileType :  #{asset.fileType}
+        p CreateTime :  #{asset.createTimeFormatted}
+        if (asset.project != null )
+            p Project :  #{asset.project.name}
+        if (asset.reference != null )
+            p Reference :  #{asset.reference.name}
+        if (asset.period != null )
+            p Period:  #{asset.period.name}
+
+        //shader
+        if (asset.type == 'Shader')
+            if(asset.shaderType != null)
+                p Shader Type :  #{asset.shaderType.name}
+
+        //diagram
+        if (asset.type == 'Diagram')
+            if(asset.diagramType != null)
+                p Diagram Type :  #{asset.diagramType.name}
+            if(asset.site != null)
+                p Site :  #{asset.site}
+            if(asset.originalPublication != null)
+                p Original Publication :  #{asset.originalPublication.name}
+        if(asset.type == 'Statue')
+            if(asset.statueType != null)
+                p Statue Type :  #{asset.statueType.name}
+            if(asset.statueCulture != null)
+                p Statue Culture :  #{asset.statueCulture.name}
+            if(asset.material != null)
+                p Statue Material :  #{asset.material.name}
+            if(asset.pose != null)
+                p Pose :  #{asset.pose}
+            if(asset.gender != null)
+                p Gender :  #{asset.gender}
+            if(asset.location != null)
+                p Location :  #{asset.location}
+        if(asset.type == 'Architectural Element')
+            if(asset.architecturalElementType != null)
+                p Architectural Element Type :  #{asset.architecturalElementType.name}
+            if(asset.architecturalCulture != null)
+                p Culture :  #{asset.architecturalCulture.name}
+            if(asset.style != null)
+                p Style :  #{asset.style.name}
+
     - var alterhref = "/catalog/assetalter?id=" + asset.id
     - var deletehref = "/catalog/assetdelete?id=" + asset.id
     - var downloadhref = "/catalog/assetdownload?id=" + asset.id
@@ -24,19 +60,5 @@ block content
         span(class="glyphicon glyphicon-pencil") Alter
     a(href = deletehref class="btn btn-default btn-lg")
         span(class="glyphicon glyphicon-remove") Delete
-    script.
-        $(document).ready(function () {
-            getdirectory();
-            //getallreference();
-        });
+    script(src='/javascripts/view/asset.js')
 
-        function getdirectory() {
-            var req = new XMLHttpRequest();
-            req.open("get", "/dynamic/getfullfolderdirectory?id=#{asset.fakeDirectory.id}");
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-                    $('#directory').html('Directory: Root' +  req.responseText);
-                }
-            }
-            req.send();
-        }
