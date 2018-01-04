@@ -4,82 +4,101 @@ var sites = [];
 var allDirectories = [];
 var currentDirectory = null;
 
-
-
-
-function getallproject() {
+function setDefaultTabs(type){
+    switch(type) {
+        case 'Asset':
+            $("#asset_form").addClass('in active');
+            $("#asset_nav").addClass('active');
+            break;
+        case 'Statue':
+            $("#statue_form").addClass('in active');
+            $("#statue_nav").addClass('active');
+            break;
+        case 'Architectural Element':
+            $("#architectural_element_form").addClass('in active');
+            $("#architectural_element_nav").addClass(' active');
+            break;
+        case 'Prop':
+            $("#prop_form").addClass('in active');
+            $("#prop_form").addClass('in active');
+            break;
+        case 'Shader':
+            $("#shader_form").addClass('in active');
+            $("#shader_nav").addClass(' active');
+            break;
+        case 'Diagram':
+            $("#diagram_form").addClass('in active');
+            $("#diagram_nav").addClass(' active');
+            break;
+    }
+}
+function getAllProject() {
     var req = new XMLHttpRequest();
 
     req.open("GET", "/dynamic/selectallproject");
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
-            //$("#test").html(req.responseText);
+
             var responds = JSON.parse(req.responseText);
-            for (i = 0; i < responds.length; i++) {
-                project.push(responds[i].name);
+            //alert(req.responseText);
+            projects = [];
+            for (var i = 0; i < responds.length; i++) {
+                projects.push(responds[i].name);
             }
+
+            var project = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: projects
+            });
+
+            $('#project_div .typeahead').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'project',
+                    source: project
+                })
         }
     }
     req.send();
 }
-function project_create() {
-    if ($("#new_project_name").val() == '') {
-        alert('Please enter the project name!');
-        return;
-    }
-    var req = new XMLHttpRequest();
-    var url = "/catalog/projectcreate?name=" + $("#new_project_name").val();
-    req.open("GET", url);
-    req.onreadystatechange = function () {
-        if (req.readyState == 4) {
-            //alert(req.responseText);
-            //alert(req.responseText);
-            $("#project_create").modal('hide');
-            $("#project_name").val($("#new_project_name").val());
-        }
-    }
 
-    req.send();
+function getAllPose () {
+
 }
-
-function reference_create() {
-    if ($("#new_reference_name").val() == '') {
-        alert('Please enter the reference name!');
-        return;
-    }
-    var req = new XMLHttpRequest();
-    var url = "/catalog/referencecreate?name=" + $("#new_reference_name").val();
-    req.open("GET", url);
-    req.onreadystatechange = function () {
-        if (req.readyState == 4) {
-            //alert(req.responseText);
-            var response = JSON.parse(req.responseText);
-            //alert(response);
-            // alert(response.message);
-            $("#reference_create").modal('hide');
-            //alert(response.newReference._id)
-            $("#reference_default_option").val(response.newReference._id);
-            $("#reference_default_option").html(response.newReference.name);
-            //$("#reference").prepend('<option value="-1">No reference</option>')
-
-        }
-    }
-
-    req.send();
-}
-
-function getallreference() {
+function getAllSite() {
     var req = new XMLHttpRequest();
 
-    req.open("GET", "/dynamic/selectallreference");
+    req.open("GET", "/dynamic/selectallsite");
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
-            references = JSON.parse(req.responseText);
+
+            var sites = JSON.parse(req.responseText);
+            //alert(req.responseText);
+
+
+            var site = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: sites
+            });
+
+            $('#site_div .typeahead').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'site',
+                    source: site
+                })
         }
     }
     req.send();
 }
-
 function getAllDirectory(callback) {
 
     var req = new XMLHttpRequest();
@@ -95,6 +114,39 @@ function getAllDirectory(callback) {
 
     req.send();
 };
+
+
+//function for setting the type of the asset as 'Asset' when click the 'Assets' on the nav bar
+function asset() {
+    $("#asset_type").val("Asset");
+}
+
+//function for setting the type of the asset as 'Statue' when click the 'Statues' on the nav bar
+function statue() {
+    $("#asset_type").val("Statue");
+}
+
+//function for setting the type of the asset as 'Architectural Element' when click the 'Architectural Element' on the nav bar
+function archtecturalElement() {
+    $("#asset_type").val("Architectural Element");
+}
+
+//function for setting the type of the asset as 'Prop' when click the 'Props' on the nav bar
+function prop(type) {
+    $("#asset_type").val("Prop");
+    $("#prop_type").val(type);
+}
+
+//function for setting the type of the asset as 'Shader' when click the 'Shader' on the nav bar
+function shader() {
+    $("#asset_type").val("Shader");
+}
+
+//function for setting the type of the asset as 'Diagram' when click the 'Diagrams' on the nav bar
+function diagram() {
+    $("#asset_type").val("Diagram");
+}
+
 
 function getFoldersById(id) {
     var folders = [];
@@ -115,6 +167,7 @@ function getSuperFolderIdById(id) {
         }
     }
 }
+
 function getFolderObjectById(id) {
     for (var i = 0; i < allDirectories.length; i++) {
         if (allDirectories[i]._id == id) {
@@ -122,6 +175,7 @@ function getFolderObjectById(id) {
         }
     }
 }
+
 function back(id) {
     if (id == null) {
         return;
@@ -162,6 +216,7 @@ function setDirectoryTableBody() {
     }
 }
 
+
 function save() {
     if (currentDirectory == null) {
         alert('Can\'t save assets in root directory,\nplease choose another');
@@ -174,18 +229,10 @@ function save() {
 
         if (req.readyState == 4) {
 
-            $("#directoryContent").html('Root' + req.responseText);
+            $("#directory_content").html('Root' + req.responseText);
+            $("#directory_selector").modal('hide');
         }
     }
     req.send();
 }
 
-function checkRequire() {
-    if ($("#directory").val() == '') {
-        alert("please select a directory");
-        return false;
-    } else {
-
-        return true;
-    }
-}

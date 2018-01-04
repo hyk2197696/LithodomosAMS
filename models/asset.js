@@ -9,11 +9,16 @@ var AssetSchema = new Schema({
     reference: {type: Schema.ObjectId, ref: 'Reference'},
     fakeDirectory: {type: Schema.ObjectId, ref: 'FakeDirectory', require: true},
     trueLocation: {type: String, require: true},
-    fileName :{type: String, require: true},
+    fileName: {type: String, require: true},
     fileType: {type: String, require: true},
-    type: {type: String, enum:['Asset', 'Model', 'Shader', 'Diagram', 'Statue', 'Architectural Element', 'Prop', 'manMade'], require: true, default: 'Asset'},
-    createTime: { type: Date, default: Date.now },
-    period: {type: Schema.ObjectId , ref: 'Period'},
+    type: {
+        type: String,
+        enum: ['Asset', 'Model', 'Shader', 'Diagram', 'Statue', 'Architectural Element', 'Prop', 'manMade'],
+        require: true,
+        default: 'Asset'
+    },
+    createTime: {type: Date, default: Date.now},
+    period: {type: Schema.ObjectId, ref: 'Period'},
 
     //Shader
     shaderType: {type: Schema.ObjectId, ref: 'ShaderType'},//selection
@@ -21,7 +26,7 @@ var AssetSchema = new Schema({
     //Diagram
     diagramType: {type: Schema.ObjectId, ref: 'DiagramType'},
     site: {type: String},
-    originalPublication: {type: Schema.ObjectId, ref: 'Publication' },
+    originalPublication: {type: Schema.ObjectId, ref: 'Publication'},
 
 
     //Model
@@ -33,7 +38,7 @@ var AssetSchema = new Schema({
     statueCulture: {type: Schema.ObjectId, ref: 'Culture'},
     material: {type: Schema.ObjectId, ref: 'Material'},//sel
     pose: {type: String},//typeahead
-    gender: {type: String, enum:['male', 'female', 'uncertain']},
+    gender: {type: String, enum: ['male', 'female', 'uncertain']},
 
     location: {type: String},
 
@@ -51,7 +56,7 @@ var AssetSchema = new Schema({
 
 AssetSchema
     .virtual('createTimeFormatted')
-    .get(function (){
+    .get(function () {
         return this.createTime ? moment(this.createTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
     })
 module.exports = mongoose.model('Asset', AssetSchema);

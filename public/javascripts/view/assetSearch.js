@@ -1,5 +1,3 @@
-
-
 //load all data before the loading the page
 $(document).ready(function () {
     getAllAssetName();
@@ -20,7 +18,6 @@ $(document).ready(function () {
     getAllSite();
 
 });
-
 
 
 function getAllAssetName() {

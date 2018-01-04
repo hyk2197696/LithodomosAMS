@@ -8,11 +8,11 @@ block content
 
         //nav tabs
         ul.nav.nav-tabs
-            li.active
+            li#asset_nav
                 a(data-toggle='tab', href='#asset_form', onclick='asset();') Assets
-            li
+            li#statue_nav
                 a(data-toggle='tab', href='#statue_form', onclick='statue();') Statues
-            li
+            li#architectural_element_nav
                 a(data-toggle='tab', href='#architectural_element_form', onclick='archtecturalElement();') Architectural Elements
             li.dropdown
                 a.dropdown_toggle(data-toggle = 'dropdown' href='#') Props
@@ -24,9 +24,9 @@ block content
                         a(data-toggle='tab', href='#prop_form', onclick='prop("animal");') Animals
                     li
                         a(data-toggle='tab', href='#prop_form', onclick='prop("plant");') Plants
-            li
+            li#shader_nav
                 a(data-toggle='tab', href='#shader_form', onclick='shader();') Shader
-            li
+            li#diagram_nav
                 a(data-toggle='tab', href='#diagram_form', onclick='diagram();') Diagram
 
 
@@ -40,8 +40,8 @@ block content
 
             //asset type
             div.form-group
-
-                input#asset_type.form-control(type='hidden', name='asset_type', required='true', aria-hidden='true', value = asset.type  )
+                label(for='asset_type') Asset Type:
+                input#asset_type.form-control(type='text', name='asset_type', required='true', aria-hidden='true', value = asset.type ,readonly="readonly" )
 
 
             //asset name
@@ -199,7 +199,7 @@ block content
             //tab contents
             .tab-content
                 //nothing special for asset
-                #asset_form.tab-pane.fade.in.active
+                #asset_form.tab-pane.fade
 
                 //select statue culture, meterial, pose, gender, statue type and location for statue
                 #statue_form.tab-pane.fade
@@ -652,12 +652,14 @@ block content
 
 
     script(src='/javascripts/view/assetAlter.js')
-    script(src='javascripts/view/assetCreate.js')
     script(src='/javascripts/view/contentCreate.js')
     script.
 
         $(document).ready(function(){
-            getallproject();
+
+
+            setDefaultTabs('#{asset.type}');
+            getAllProject();
             currentDirectory ='#{asset.fakeDirectory.id}';
             //alert(currentDirectory);
             getAllDirectory(function (allDirectory) {

@@ -12,19 +12,7 @@ block content
 
 
             tbody
-                //dl
 
-                //each asset in list_asset
-                //    dt
-                        //- var asset_href = '/catalog/asset?id=' + asset.id
-                        //tr
-                        //    th(scope='row') #{i}
-                        //    td
-                        //        a(href=asset_href) #{asset.name}
-                        //    td #{asset.type}
-                        //    td #{asset.fileType}
-                        //    td #{asset.createTimeFormatted}
-                        //- i = i + 1;
                 tr
                     td Asset Name
                     td #{asset.name}
@@ -121,9 +109,18 @@ block content
             span(class="glyphicon glyphicon-download-alt") Download
         a(href = alterhref class="btn btn-default btn-lg")
             span(class="glyphicon glyphicon-pencil") Alter
-        a(href = deletehref class="btn btn-default btn-lg")
+        a(href ='#' data-href = deletehref, class="btn btn-default btn-lg", data-toggle='modal', data-target='#confirm-delete' )
             span(class="glyphicon glyphicon-remove") Delete
-
+        #confirm-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        h2.text-center WARNING!
+                    .modal-body
+                        h3 Are you sure to delete the asset?
+                    .modal-footer
+                        button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+                        a.btn.btn-danger.btn-ok Delete
     script.
         $(document).ready(function () {
             getdirectory();
@@ -142,4 +139,6 @@ block content
             }
             req.send();
         }
-
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });

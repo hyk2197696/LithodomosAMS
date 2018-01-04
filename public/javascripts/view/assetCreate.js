@@ -19,7 +19,7 @@ function getAllProject() {
             var responds = JSON.parse(req.responseText);
             //alert(req.responseText);
             projects = [];
-            for (var  i = 0; i < responds.length; i++) {
+            for (var i = 0; i < responds.length; i++) {
                 projects.push(responds[i].name);
             }
 
@@ -42,8 +42,11 @@ function getAllProject() {
     }
     req.send();
 }
+
 //
-function getAllPose() {}
+function getAllPose() {
+}
+
 //     var req = new XMLHttpRequest();
 //
 //     req.open("GET", "/dynamic/selectallpose");
@@ -110,7 +113,7 @@ function getAllSite() {
 }
 
 //function for setting the type of the asset as 'Asset' when click the 'Assets' on the nav bar
-function asset(){
+function asset() {
     $("#asset_type").val("Asset");
 }
 
@@ -139,7 +142,6 @@ function shader() {
 function diagram() {
     $("#asset_type").val("Diagram");
 }
-
 
 
 function getAllDirectory(callback) {
@@ -175,6 +177,7 @@ function getSuperFolderIdById(id) {
         }
     }
 }
+
 function getFolderObjectById(id) {
     for (var i = 0; i < allDirectories.length; i++) {
         if (allDirectories[i]._id == id) {
@@ -182,6 +185,7 @@ function getFolderObjectById(id) {
         }
     }
 }
+
 function back(id) {
     if (id == null) {
         return;
@@ -246,7 +250,7 @@ function checkRequire() {
     if ($("#directory").val() == '') {
         alert("please select a directory");
         return false;
-    } else if($("#project_name").val() != ''  && jQuery.inArray($("#project_name").val(),projects) == -1) {
+    } else if ($("#project_name").val() != '' && jQuery.inArray($("#project_name").val(), projects) == -1) {
 
         alert("Project does not exist! \n" +
             "please create project first!");

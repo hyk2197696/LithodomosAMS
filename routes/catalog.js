@@ -40,11 +40,11 @@ router.post('/assetalter', alter_controller.alter_post);
 
 router.get('/assetdelete', delete_controller.delete_get);
 
-router.get('/test',homepage_controller.test);
+router.get('/test', homepage_controller.test);
 
-router.get('/success',homepage_controller.success_get);
+router.get('/success', homepage_controller.success_get);
 
-router.post('/test',homepage_controller.test_post);
+router.post('/test', homepage_controller.test_post);
 
 router.get('/typeaheadTest', homepage_controller.typeahead_test);
 

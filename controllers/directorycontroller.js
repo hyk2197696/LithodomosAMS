@@ -14,7 +14,7 @@ var Asset = require('../models/asset');
 //then find all subdirectory by the super attribute, which is all the subdirectory of a specific folder
 //find asset by the attribute of fakeDirectory at the same time
 //display all the folders and assets in a specific
-exports.find_get =   (req, res, next) => {
+exports.find_get = (req, res, next) => {
     var folderDetail = {};
     var assetDetail = {};
     if (req.query.id != 'null') {
@@ -50,36 +50,40 @@ exports.find_get =   (req, res, next) => {
 
 };
 
-exports.find_post =   (req, res, next)  => {
+exports.find_post = (req, res, next) => {
     res.render('searchForm', {title: 'Search Asset'});
 };
 
 
-exports.check_folder_existance =   (req, res, next) =>  {
+exports.check_folder_existance = (req, res, next) => {
     var folderDetail = {
         name: req.query.name
     };
-    if(req.query.id != 'null'){
-        folderDetail.super = req.query.id ;
-    }else{
+    if (req.query.id != 'null') {
+        folderDetail.super = req.query.id;
+    } else {
         folderDetail.super = null;
     }
     FakeDirectory.count(folderDetail, (err, count) => {
-        if(err) {return next(err);}
-        if(count == '0'){
+        if (err) {
+            return next(err);
+        }
+        if (count == '0') {
             newFolder = new FakeDirectory(folderDetail);
-            newFolder.save(err =>{
-                if(err) {return next(err);}
+            newFolder.save(err => {
+                if (err) {
+                    return next(err);
+                }
                 res.end('success');
             })
-        }else{
+        } else {
             res.end('Folder exist!');
         }
     });
 
 };
 
-var get_folder_info = (id, call_back, html_res)  => {
+var get_folder_info = (id, call_back, html_res) => {
     var sql = 'select name,ifnull(super,\'null\') as super from sys.fakedirectory where idfakedirectory = ' + id;
     console.log('new query :' + sql);
     var query = con.query(sql);
@@ -93,7 +97,7 @@ var get_folder_info = (id, call_back, html_res)  => {
     });
 };
 
- var on_get_folder_info = (name, super_id, html_res) => {
+var on_get_folder_info = (name, super_id, html_res) => {
     directory = name + '/' + directory;
     console.log('directory inside = ' + directory);
     id = super_id;
@@ -104,30 +108,32 @@ var get_folder_info = (id, call_back, html_res)  => {
 
 exports.select_all_directory = (req, res, next) => {
     FakeDirectory.find().exec(
-        (err,results) => {
-            if (err) {return next(err);}
+        (err, results) => {
+            if (err) {
+                return next(err);
+            }
             //console.log(results);
             res.end(JSON.stringify(results));
         }
     )
 };
 
-var folder_Directory = (id ,subDirectory, allDirectories, callback) => {
-    var thisFolder = allDirectories.filter( item => {
+var folder_Directory = (id, subDirectory, allDirectories, callback) => {
+    var thisFolder = allDirectories.filter(item => {
         return item.id == id;
     });
-    if(thisFolder.length == 0){
+    if (thisFolder.length == 0) {
         return subDirectory;
     }
-    thisDirectory =  '/' + thisFolder[0].name  + subDirectory;
-    if(thisFolder[0].super != null){
-        folder_Directory(thisFolder[0].super, thisDirectory, allDirectories,callback);
-    }else{
+    thisDirectory = '/' + thisFolder[0].name + subDirectory;
+    if (thisFolder[0].super != null) {
+        folder_Directory(thisFolder[0].super, thisDirectory, allDirectories, callback);
+    } else {
         callback(thisDirectory);
     }
 };
 
-exports.get_full_folder_directory =   (req, res, next) => {
+exports.get_full_folder_directory = (req, res, next) => {
     FakeDirectory.find().exec(
         (err, results) => {
             if (err) {

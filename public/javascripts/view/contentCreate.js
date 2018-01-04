@@ -86,6 +86,7 @@ function statueTypeCreate() {
     };
     req.send();
 }
+
 function statueCultureCreate() {
     if ($("#new_statue_culture_name").val() == '') {
         alert('Please enter the culture name!');
@@ -131,6 +132,7 @@ function materialCreate() {
     };
     req.send();
 }
+
 function architecturalCultureCreate() {
     if ($("#new_architectural_culture_name").val() == '') {
         alert('Please enter the culture name!');
@@ -153,6 +155,7 @@ function architecturalCultureCreate() {
     };
     req.send();
 }
+
 function architecturalTypeCreate() {
     if ($("#new_architectural_type_name").val() == '') {
         alert('Please enter the new architectural type!');
@@ -175,6 +178,7 @@ function architecturalTypeCreate() {
     };
     req.send();
 }
+
 function styleCreate() {
     if ($("#new_style_name").val() == '') {
         alert('Please enter the new style name!');

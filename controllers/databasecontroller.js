@@ -28,16 +28,18 @@ var ObjectID = require("bson-objectid");
 //not used at the moment
 var find_all_project_from_db = callback => {
     Project.find()
-        .exec( (err, project_list) => {
-            if (err)  {return next(err);}
+        .exec((err, project_list) => {
+            if (err) {
+                return next(err);
+            }
             //console.log(project_list);
             callback(project_list)
         })
 };
 
-exports.select_project =  (req, res) => {
+exports.select_project = (req, res) => {
 
-    find_project_from_db(req.query.name, function(results){
+    find_project_from_db(req.query.name, function (results) {
         res.end(JSON.stringify(results));
     });
 
@@ -70,8 +72,8 @@ exports.get_all_asset_name = (req, res) => {
 
 //select all the reference for selection menu
 //not used at the moment
-exports.select_all_reference =  (req, res) => {
-    find_all_reference_from_db(  results => {
+exports.select_all_reference = (req, res) => {
+    find_all_reference_from_db(results => {
         res.end(results);
     });
 };

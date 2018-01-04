@@ -28,22 +28,22 @@ var path = require('path');
 exports.alter_get = (req, res, next) => {
     async.parallel({
         asset: callback => {
-            Asset.findById( req.query.id )
+            Asset.findById(req.query.id)
                 .populate('project', Project)
-                .populate('fakeDirectory',FakeDirectory)
-                .populate('reference',Reference)
-                .populate('period',Period)
-                .populate('shaderType',ShaderType)
-                .populate('diagramType',DiagramType)
-                .populate('originalPublication',Publication)
-                .populate('statueType',StatueType)
-                .populate('statueCulture',Culture)
-                .populate('material',Material)
-                .populate('architecturalCulture',Culture)
-                .populate('architecturalElementType',ArchitecturalElementType)
-                .populate('style',Style)
+                .populate('fakeDirectory', FakeDirectory)
+                .populate('reference', Reference)
+                .populate('period', Period)
+                .populate('shaderType', ShaderType)
+                .populate('diagramType', DiagramType)
+                .populate('originalPublication', Publication)
+                .populate('statueType', StatueType)
+                .populate('statueCulture', Culture)
+                .populate('material', Material)
+                .populate('architecturalCulture', Culture)
+                .populate('architecturalElementType', ArchitecturalElementType)
+                .populate('style', Style)
                 .exec(callback)
-            },
+        },
         reference_list: callback => {
             Reference.find().exec(callback);
         },
@@ -52,7 +52,7 @@ exports.alter_get = (req, res, next) => {
         },
         period_list: callback => {
             Period.find().exec(callback);
-            },
+        },
         statue_type_list: callback => {
             StatueType.find().exec(callback);
         },
@@ -78,51 +78,104 @@ exports.alter_get = (req, res, next) => {
             Publication.find().exec(callback);
         }
     }, (err, result) => {
-        if(err) {return next(err);  }
+        if (err) {
+            return next(err);
+        }
         //successful
         res.render('assetAlter',
-            {title: 'Asset Alter',
+            {
+                title: 'Asset Alter',
                 asset: result.asset,
-                reference_list:result.reference_list,
-                shader_type_list:result.shader_type_list,
-                period_list:result.period_list,
-                diagram_type_list:result.diagram_type_list,
-                publication_list:result.publication_list,
-                prop_name_list:[],
-                statue_type_list:result.statue_type_list,
-                culture_list:result.culture_list,
-                material_list:result.material_list,
-                architectural_type_list:result.architectural_type_list,
-                style_list:result.style_list,
+                reference_list: result.reference_list,
+                shader_type_list: result.shader_type_list,
+                period_list: result.period_list,
+                diagram_type_list: result.diagram_type_list,
+                publication_list: result.publication_list,
+                prop_name_list: [],
+                statue_type_list: result.statue_type_list,
+                culture_list: result.culture_list,
+                material_list: result.material_list,
+                architectural_type_list: result.architectural_type_list,
+                style_list: result.style_list,
             });
     })
 }
 
 //post method for asset alter
-exports.alter_post = (req, res, next) =>  {
-    Project.findOne({'name':req.body.project_name})
-        .exec( (err, found_project) => {
-            //judge if the following attributes of the asset is not defined
-        var projectId = found_project == null? null:found_project.id;
-        var referenceId = req.body.reference == '-1'? null : req.body.reference;
-        //var fakeDirectoryId = fields.directory == 'null'? null: fields.directory;
+exports.alter_post = (req, res, next) => {
+    var form = new formidable.IncomingForm();
+    form.parse(req, (err, fields) => {
+        async.parallel({
+            projectId: callback => {
+                Project.findOne({'name': fields.project_name}).exec(callback);
+            }
+        }, (err, results) => {
+            if (err) {
+                next(err);
+            }
 
-        if(err) {return next(err);}
+            //if nothing wrong, create a new template for the new asset
+            //get the asset template
+            var assetTemplate = getNewAssetTemplate(fields);
+            if (results.projectId != null) {
+                assetTemplate.project = results.projectId;
+            }
+            console.log('update asset:')
+            console.log(assetTemplate);
+            //update the database
+            Asset.findByIdAndUpdate(req.query.id, assetTemplate, {}, (err) => {
+                if (err) {
+                    return next(err);
+                }
 
-        //if nothing wrong, create a new template for the new asset
-        var assetDetail = {
-            name: req.body.asset_name,
-            project: projectId,
-            reference: referenceId,
-            fakeDirectory: req.body.directory,
-        };
-        //console.log(assetDetail);
-        //update the database
-        Asset.findByIdAndUpdate(req.query.id, assetDetail, {}, (err) => {
-            if (err) {return next(err); }
-            res.render('success', {title: 'Asset update success'});
+                res.render('homepage', {title: 'Asset update success'});
+            })
         })
-
-
     })
+}
+
+
+var getNewAssetTemplate = fields => {
+    var assetTemplate = createNewAsset(fields);
+    switch (fields.asset_type) {
+        case 'Asset':
+            break;
+        case 'Shader':
+            assetTemplate.shaderType = fields.shader_type_name == '-1' ? null : fields.shader_type_name;
+
+            break;
+        case 'Diagram':
+            assetTemplate.diagramType = fields.diagram_type_name == '-1' ? null : fields.diagram_type_name;
+            assetTemplate.originalPublication = fields.publication_name == '-1' ? null : fields.publication_name;
+            assetTemplate.site = fields.site_name == null ? null : fields.site_name;
+            break;
+        case 'Statue':
+            assetTemplate.statueType = fields.statue_type_name == '-1' ? null : fields.statue_type_name;
+            assetTemplate.statueCulture = fields.statue_culture_name == '-1' ? null : fields.statue_culture_name;
+            assetTemplate.material = fields.material_name == '-1' ? null : fields.material_name;
+            assetTemplate.pose = fields.pose_name == null ? null : fields.pose_name;
+            assetTemplate.gender = fields.gender;
+            assetTemplate.location = fields.location_name;
+            break;
+        case 'Architectural Element':
+            assetTemplate.architecturalCulture = fields.architectural_culture_name == '-1' ? null : fields.architectural_culture_name;
+            assetTemplate.architecturalElementType = fields.architectural_type_name == '-1' ? null : fields.architectural_type_name;
+            assetTemplate.style = fields.style_name == '-1' ? null : fields.style_name;
+            break;
+        case 'Prop':
+            break;
+    }
+    return assetTemplate;
+};
+
+//create a new asset template based on the request
+var createNewAsset = fields => {
+    var assetTemplate = {
+        name: fields.asset_name,
+        type: fields.asset_type,
+        reference: fields.reference == '-1' ? null : fields.reference,
+        fakeDirectory: fields.directory,
+        period: fields.period_name == '-1' ? null : fields.period_name,
+    };
+    return assetTemplate;
 };

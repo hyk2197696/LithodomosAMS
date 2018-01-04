@@ -12,22 +12,22 @@ var directory_controller = require('../controllers/directorycontroller');
 //all request in this file aim for exchange data dynamically, without any page redirection
 
 //select/get
-router.get('/selectproject',database_controller.select_project);
+router.get('/selectproject', database_controller.select_project);
 
-router.get('/selectallproject',database_controller.select_all_project);
+router.get('/selectallproject', database_controller.select_all_project);
 
-router.get('/selectallsite',database_controller.select_all_site);
+router.get('/selectallsite', database_controller.select_all_site);
 
-router.get('/selectallreference',database_controller.select_all_reference);
+router.get('/selectallreference', database_controller.select_all_reference);
 
-router.get('/selectalldirectory',directory_controller.select_all_directory);
+router.get('/selectalldirectory', directory_controller.select_all_directory);
 
-router.get('/getfullfolderdirectory',directory_controller.get_full_folder_directory);
+router.get('/getfullfolderdirectory', directory_controller.get_full_folder_directory);
 
-router.get('/selectallassetname',database_controller.get_all_asset_name);
+router.get('/selectallassetname', database_controller.get_all_asset_name);
 
 //check
-router.get('/checkfolderexistance',directory_controller.check_folder_existance);
+router.get('/checkfolderexistance', directory_controller.check_folder_existance);
 
 
 //create content

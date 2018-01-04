@@ -8,18 +8,20 @@ var Model = require('../models/model');
 var extend = require('mongoose-schema-extend');
 var Schema = mongoose.Schema;
 //index page
-exports.index =  (req, res, next) => {
+exports.index = (req, res, next) => {
 
-    Asset.count((err, countAsset)=> {
-        if (err) {return next(err);}
+    Asset.count((err, countAsset) => {
+        if (err) {
+            return next(err);
+        }
         res.render('homepage', {title: 'Lithodomos Asset Management System', assetnum: countAsset});
     });
 };
 
 
 //all of the following is for testing
-exports.test =  (req, res, next)  => {
-    res.render('test',{});
+exports.test = (req, res, next) => {
+    res.render('test', {});
     // var PersonSchema = new Schema({
     //     name : String
     // }, { collection : 'users' });
@@ -59,10 +61,10 @@ exports.test =  (req, res, next)  => {
     // })
 };
 
-exports.test_post = function(req, res, next) {
-    var sql = 'insert into sys.fakedirectory values (default, \'' +req.body.name + '\', 1)';
+exports.test_post = function (req, res, next) {
+    var sql = 'insert into sys.fakedirectory values (default, \'' + req.body.name + '\', 1)';
     console.log(sql);
-    con.query('result',function(){
+    con.query('result', function () {
         res.send('?')
     })
 
@@ -72,12 +74,11 @@ exports.typeahead_test = (req, res) => {
 }
 
 
-
-exports.check_folder_existance = function (req, res, next ){
+exports.check_folder_existance = function (req, res, next) {
     console.log("success");
     res.end('success');
 };
 
-exports.success_get = function(req, res, next) {
+exports.success_get = function (req, res, next) {
     res.render('success', {title: 'Lithodomos Asset Management System'});
 };

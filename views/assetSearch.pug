@@ -37,7 +37,10 @@ block content
 
             //asset type
             div.form-group
-                input#asset_type.form-control(type='hidden', value='Asset', name='asset_type' )
+                label(for='asset_type') Asset Type:
+                input#asset_type.form-control(type='text', name='asset_type', required='true', aria-hidden='true',readonly="readonly", value = 'Asset' )
+
+
 
 
             //asset name
