@@ -18,9 +18,9 @@ block content
                     th(scope='col') File Type
                         -var fileTypeHref = 'assetlist?page=1&sortBy=fileType&method=1&&' + assetTemplate
                         a#fileType.glyphicon.glyphicon-sort(type='button', href=fileTypeHref)
-                    th(scope='col') Create Time
-                        -var createTimeHref = 'assetlist?page=1&sortBy=createTime&method=1&&' + assetTemplate
-                        a#createTime.glyphicon.glyphicon-sort(type='button', href=createTimeHref)
+                    th(scope='col') Last Update
+                        -var lastUpdateTimeHref = 'assetlist?page=1&sortBy=lastUpdate&method=1&&' + assetTemplate
+                        a#lastUpdate.glyphicon.glyphicon-sort(type='button', href=lastUpdateTimeHref)
 
             tbody
                 dl
@@ -34,7 +34,7 @@ block content
                                 a(href=asset_href) #{asset.name}
                             td #{asset.type}
                             td #{asset.fileType}
-                            td #{asset.createTimeFormatted}
+                            td #{asset.lastAlterTimeFormatted}
                         - i = i + 1;
 
         -var order = method === '-1'?'Descending Order':'Ascending Order'
@@ -77,8 +77,8 @@ block content
                 case 'fileType':
                     $("#fileType").attr('href','assetlist?page=1&sortBy=fileType&#{assetTemplate}&method=' + order);
                     break;
-                case 'createTime':
-                    $("#createTime").attr('href','assetlist?page=1&sortBy=createTime&#{assetTemplate}&method=' + order);
+                case 'lastUpdate':
+                    $("#lastUpdate").attr('href','assetlist?page=1&sortBy=lastUpdate&#{assetTemplate}&method=' + order);
                     break;
             }
         });

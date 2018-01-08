@@ -1,20 +1,20 @@
 /**
  * Controller for content(different attributes of asset) creation
  */
-var con = require('./databasecontroller');
-var app = require('../app');
-var json = require('json');
-var Reference = require('../models/reference');
-var Period = require('../models/period');
-var StatueType = require('../models/statueType');
-var ArchitecturalElementType = require('../models/architecturalElementType');
-var Culture = require('../models/culture');
-var Material = require('../models/material');
-var Style = require('../models/style');
-var ShaderType = require('../models/shaderType');
-var DiagramType = require('../models/diagramType');
-var Publication = require('../models/publication');
-var Project = require('../models/project');
+const con = require('./databasecontroller');
+const app = require('../app');
+const json = require('json');
+const Reference = require('../models/reference');
+const Period = require('../models/period');
+const StatueType = require('../models/statueType');
+const ArchitecturalElementType = require('../models/architecturalElementType');
+const Culture = require('../models/culture');
+const Material = require('../models/material');
+const Style = require('../models/style');
+const ShaderType = require('../models/shaderType');
+const DiagramType = require('../models/diagramType');
+const Publication = require('../models/publication');
+const Project = require('../models/project');
 
 
 exports.project_create_get = (req, res, next) => {
@@ -48,21 +48,20 @@ exports.reference_create_get = (req, res, next) => {
     const referenceDetail = {name: req.query.name};
     Reference.count(referenceDetail, (err, referenceCount) => {
         if (err) {
-            next(err)
+            next(err);
         }
-        ;
         if (referenceCount > 0) {
             res.end('Reference exists!');
             return;
         }
 
         //if not exist, create new reference
-        var newReference = new Reference(referenceDetail);
+        const newReference = new Reference(referenceDetail);
         newReference.save(err => {
             if (err) {
                 next(err);
             }
-            var resText = {};
+            let resText = {};
             resText.message = 'New reference create successfully!';
             console.log('insert new reference : ');
             console.log(newReference);
@@ -74,26 +73,25 @@ exports.reference_create_get = (req, res, next) => {
 };
 
 exports.period_create_get = (req, res, next) => {
-    var periodDetail = {name: req.query.name};
+    const periodDetail = {name: req.query.name};
     Period.count(periodDetail, (err, periodCount) => {
         if (err) {
-            next(err)
+            next(err);
         }
-        ;
         if (periodCount > 0) {
             res.end('Period exists!');
             return;
         }
 
         //if not exist, create new period
-        var newPeriod = new Period(periodDetail);
+        const newPeriod = new Period(periodDetail);
         newPeriod.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            let resText = {};
             resText.message = 'New period create successfully!';
             resText.newPeriod = newPeriod;
             console.log('insert new period : ');
@@ -103,26 +101,25 @@ exports.period_create_get = (req, res, next) => {
     })
 };
 exports.statue_type_create_get = (req, res, next) => {
-    var statueTypeDetail = {name: req.query.name};
+    const statueTypeDetail = {name: req.query.name};
     StatueType.count(statueTypeDetail, (err, statueTypeCount) => {
         if (err) {
-            next(err)
+            next(err);
         }
-        ;
         if (statueTypeCount > 0) {
             res.end('Statue exists!');
             return;
         }
 
         //if not exist, create new statue
-        var newType = new StatueType(statueTypeDetail);
+        const newType = new StatueType(statueTypeDetail);
         newType.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            const resText = {};
             resText.message = 'New statue type create successfully!';
             resText.newType = newType;
             console.log('insert new statue type : ');
@@ -132,26 +129,25 @@ exports.statue_type_create_get = (req, res, next) => {
     })
 };
 exports.culture_create_get = (req, res, next) => {
-    var cultureDetail = {name: req.query.name};
+    const cultureDetail = {name: req.query.name};
     Culture.count(cultureDetail, (err, cultureCount) => {
         if (err) {
-            next(err)
+            next(err);
         }
-        ;
         if (cultureCount > 0) {
             res.end('Culture exists!');
             return;
         }
 
         //if not exist, create new culture
-        var newCulture = new Culture(cultureDetail);
+        const newCulture = new Culture(cultureDetail);
         newCulture.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            let resText = {};
             resText.message = 'New culture create successfully!';
             resText.newCulture = newCulture;
             console.log('insert new culture : ');
@@ -161,7 +157,7 @@ exports.culture_create_get = (req, res, next) => {
     })
 };
 exports.material_create_get = (req, res, next) => {
-    var materialDetail = {name: req.query.name};
+    const materialDetail = {name: req.query.name};
     Material.count(materialDetail, (err, materialCount) => {
         if (err) {
             next(err)
@@ -173,14 +169,14 @@ exports.material_create_get = (req, res, next) => {
         }
 
         //if not exist, create new material
-        var newMaterial = new Material(materialDetail);
+        const newMaterial = new Material(materialDetail);
         newMaterial.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            let resText = {};
             resText.message = 'New material create successfully!';
             resText.newMaterial = newMaterial;
             console.log('insert new material : ');
@@ -190,7 +186,7 @@ exports.material_create_get = (req, res, next) => {
     })
 };
 exports.architectural_type_create_get = (req, res, next) => {
-    var architecturalTypeDetail = {name: req.query.name};
+    const architecturalTypeDetail = {name: req.query.name};
     ArchitecturalElementType.count(architecturalTypeDetail, (err, architecturalTypeCount) => {
         if (err) {
             next(err)
@@ -202,14 +198,14 @@ exports.architectural_type_create_get = (req, res, next) => {
         }
 
         //if not exist, create new type
-        var newType = new ArchitecturalElementType(architecturalTypeDetail);
+        const newType = new ArchitecturalElementType(architecturalTypeDetail);
         newType.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            let resText = {};
             resText.message = 'New type create successfully!';
             resText.newArchitecturalElementType = newType;
             console.log('insert new architectural element type : ');
@@ -220,7 +216,7 @@ exports.architectural_type_create_get = (req, res, next) => {
 };
 
 exports.style_create_get = (req, res, next) => {
-    var styleDetail = {name: req.query.name};
+    const styleDetail = {name: req.query.name};
     Style.count(styleDetail, (err, styleCount) => {
         if (err) {
             next(err)
@@ -232,14 +228,14 @@ exports.style_create_get = (req, res, next) => {
         }
 
         //if not exist, create new Style
-        var newStyle = new Style(styleDetail);
+        const newStyle = new Style(styleDetail);
         newStyle.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            let resText = {};
             resText.message = 'New style create successfully!';
             resText.newStyle = newStyle;
             console.log('insert new style : ');
@@ -249,7 +245,7 @@ exports.style_create_get = (req, res, next) => {
     })
 };
 exports.shader_type_create_get = (req, res, next) => {
-    var shaderTypeDetail = {name: req.query.name};
+    const shaderTypeDetail = {name: req.query.name};
     ShaderType.count(shaderTypeDetail, (err, shaderTypeCount) => {
         if (err) {
             next(err)
@@ -261,14 +257,14 @@ exports.shader_type_create_get = (req, res, next) => {
         }
 
         //if not exist, create new shader type
-        var newType = new ShaderType(shaderTypeDetail);
+        const newType = new ShaderType(shaderTypeDetail);
         newType.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            let resText = {};
             resText.message = 'New shader type create successfully!';
             resText.newType = newType;
             console.log('insert new shader type : ');
@@ -279,7 +275,7 @@ exports.shader_type_create_get = (req, res, next) => {
 };
 
 exports.diagram_type_create_get = (req, res, next) => {
-    var diagramTypeDetail = {name: req.query.name};
+    const diagramTypeDetail = {name: req.query.name};
     DiagramType.count(diagramTypeDetail, (err, diagramTypeCount) => {
         if (err) {
             next(err)
@@ -291,14 +287,14 @@ exports.diagram_type_create_get = (req, res, next) => {
         }
 
         //if not exist, create new diagram type
-        var newType = new DiagramType(diagramTypeDetail);
+        const newType = new DiagramType(diagramTypeDetail);
         newType.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            let resText = {};
             resText.message = 'New diagram type create successfully!';
             resText.newType = newType;
             console.log('insert new diagram type : ');
@@ -309,26 +305,25 @@ exports.diagram_type_create_get = (req, res, next) => {
 };
 
 exports.publication_create_get = (req, res, next) => {
-    var publicationDetail = {name: req.query.name};
+    const publicationDetail = {name: req.query.name};
     Publication.count(publicationDetail, (err, publicationCount) => {
         if (err) {
-            next(err)
+            next(err);
         }
-        ;
         if (publicationCount > 0) {
             res.end('Publication exists!');
             return;
         }
 
         //if not exist, create new Publication
-        var newPublication = new Publication(publicationDetail);
+        const newPublication = new Publication(publicationDetail);
         newPublication.save(err => {
             if (err) {
                 next(err);
             }
 
             //success
-            var resText = {};
+            let resText = {};
             resText.message = 'New Publication create successfully!';
             resText.newPublication = newPublication;
             console.log('insert new publication : ');

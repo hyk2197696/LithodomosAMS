@@ -16,12 +16,13 @@ const AssetSchema = new Schema({
         require: true,
         default: 'Asset'
     },
-    createTime: {type: Date, default: Date.now},
     period: {type: Schema.ObjectId, ref: 'Period'},
     valid: {type: Boolean, default: true}, //for soft deletion
-    deletedTime: {type: Date}, //record delete time
-    lastAlterTime: {type: Date}, //record last update time
 
+    createTime: {type: Date, default: Date.now},
+    deletedTime: {type: Date}, //record delete time
+    lastAlterTime: {type: Date,default: this.createTime}, //record last update time
+    deletedBy: {type:String},
     //Shader
     shaderType: {type: Schema.ObjectId, ref: 'ShaderType'},//selection
 
@@ -61,4 +62,17 @@ AssetSchema
     .get(function () {
         return this.createTime ? moment(this.createTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
     });
+
+AssetSchema
+    .virtual('lastAlterTimeFormatted')
+    .get(function () {
+        return this.lastAlterTime ? moment(this.lastAlterTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
+    });
+
+AssetSchema
+    .virtual('deletedTimeFormatted')
+    .get(function () {
+        return this.deletedTime ? moment(this.deletedTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
+    });
+
 module.exports = mongoose.model('Asset', AssetSchema);

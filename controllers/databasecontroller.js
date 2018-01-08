@@ -1,32 +1,13 @@
 /**
  * Controller for database operation
  */
-
-var con = require('./databasecontroller');
-var app = require('../app');
-var json = require('json');
-var exp = require('express');
-var async = require('async');
-var formidable = require('formidable');
-var fs = require('fs');
-var Asset = require('../models/asset');
-var Reference = require('../models/reference');
-var Period = require('../models/period');
-var StatueType = require('../models/statueType');
-var ArchitecturalElementType = require('../models/architecturalElementType');
-var Culture = require('../models/culture');
-var Material = require('../models/material');
-var Style = require('../models/style');
-var ShaderType = require('../models/shaderType');
-var DiagramType = require('../models/diagramType');
-var Publication = require('../models/publication');
-var Project = require('../models/project');
-var uniqid = require('uniqid');
-var ObjectID = require("bson-objectid");
+const json = require('json');
+const Asset = require('../models/asset');
+const Project = require('../models/project');
 
 //find the project which (partially) contains the name
 //not used at the moment
-var find_all_project_from_db = callback => {
+const find_all_project_from_db = callback => {
     Project.find()
         .exec((err, project_list) => {
             if (err) {

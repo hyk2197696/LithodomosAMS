@@ -83,8 +83,8 @@ exports.asset_list = (req, res, next) => {
         case 'fileType':
             sortBy.fileType = method;
             break;
-        case 'createTime':
-            sortBy.createTime = method;
+        case 'lastUpdate':
+            sortBy.lastAlterTime = method;
             break;
     }
 

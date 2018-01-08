@@ -1,13 +1,12 @@
 /**
  * Controller for fake directory
  */
-
-var con = require('./databasecontroller');
-var async = require('async');
-var app = require('../app');
-var json = require('json');
-var FakeDirectory = require('../models/fakeDirectory');
-var Asset = require('../models/asset');
+const con = require('./databasecontroller');
+const async = require('async');
+const app = require('../app');
+const json = require('json');
+const FakeDirectory = require('../models/fakeDirectory');
+const Asset = require('../models/asset');
 
 //get method for asset find(directory explore)
 //basically first find all folders in root directory.(asset can't be stored in root directory)
@@ -15,8 +14,8 @@ var Asset = require('../models/asset');
 //find asset by the attribute of fakeDirectory at the same time
 //display all the folders and assets in a specific
 exports.find_get = (req, res, next) => {
-    var folderDetail = {};
-    var assetDetail = {};
+    let folderDetail = {};
+    let assetDetail = {};
     if (req.query.id != 'null') {
         folderDetail.super = req.query.id;
         assetDetail.fakeDirectory = req.query.id;
@@ -56,7 +55,7 @@ exports.find_post = (req, res, next) => {
 
 
 exports.check_folder_existance = (req, res, next) => {
-    var folderDetail = {
+    let folderDetail = {
         name: req.query.name
     };
     if (req.query.id != 'null') {
@@ -83,28 +82,6 @@ exports.check_folder_existance = (req, res, next) => {
 
 };
 
-var get_folder_info = (id, call_back, html_res) => {
-    var sql = 'select name,ifnull(super,\'null\') as super from sys.fakedirectory where idfakedirectory = ' + id;
-    console.log('new query :' + sql);
-    var query = con.query(sql);
-    var name, super_id;
-    query.on('result', function (row) {
-        name = row.name.toString();
-        super_id = row.super.toString();
-    });
-    query.on('end', function () {
-        call_back(name, super_id, html_res);
-    });
-};
-
-var on_get_folder_info = (name, super_id, html_res) => {
-    directory = name + '/' + directory;
-    console.log('directory inside = ' + directory);
-    id = super_id;
-    if (id != 'null') {
-
-    }
-}
 
 exports.select_all_directory = (req, res, next) => {
     FakeDirectory.find().exec(
@@ -118,8 +95,8 @@ exports.select_all_directory = (req, res, next) => {
     )
 };
 
-var folder_Directory = (id, subDirectory, allDirectories, callback) => {
-    var thisFolder = allDirectories.filter(item => {
+const folder_Directory = (id, subDirectory, allDirectories, callback) => {
+    const thisFolder = allDirectories.filter(item => {
         return item.id == id;
     });
     if (thisFolder.length == 0) {
