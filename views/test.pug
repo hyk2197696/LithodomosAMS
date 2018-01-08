@@ -1,20 +1,10 @@
 extends layout
 
 block content
-    a(href='#', data-href='delete.php?id=23', data-toggle='modal', data-target='#confirm-delete') Delete record #23
-    button.btn.btn-default(data-href='/delete.php?id=54', data-toggle='modal', data-target='#confirm-delete')
-        | Delete record #54
-    #confirm-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-        .modal-dialog
-            .modal-content
-                .modal-header
-                    | ...
-                .modal-body
-                    | ...
-                .modal-footer
-                    button.btn.btn-default(type='button', data-dismiss='modal') Cancel
-                    a.btn.btn-danger.btn-ok Delete
-    script.
-        $('#confirm-delete').on('show.bs.modal', function (e) {
-            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-        });
+    form(method='GET', action='/catalog/allasset' )
+        input(type='text', name='page', value=null)
+        input(type='text', name='sortBy', value=null)
+        input(type='text', name='method', value=null)
+
+
+        button(type='submit') submit

@@ -31,7 +31,7 @@ block content
         br
 
         //search form
-        form(method='POST', enctype='multipart/form-data', action='')
+        form(method='get', action='/catalog/assetlist')
 
             //attributes shared by all assets
 
@@ -47,7 +47,7 @@ block content
             div.form-group
                 label(for='asset_name') Asset Name:
                 div#asset_name_div
-                    input#asset_name.typeahead.form-control(type='text', placeholder='Input Asset Name', name='asset_name')
+                    input#asset_name.typeahead.form-control(type='text', placeholder='Input Asset Name', name='name')
 
             //Directory
             div.form-group.row

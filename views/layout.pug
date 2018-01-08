@@ -76,7 +76,8 @@ html(lang='en')
           li
             a(href='/catalog/assetfind?id=null') Find an asset
           li
-              a(href='/catalog/allasset') All the assets
+              -var assetListHref = "/catalog/assetlist?page=1&sortBy=name&method=1"
+              a(href=assetListHref) All the assets
           hr
           li
             a(href='/catalog/assetsearch') Delete an Asset

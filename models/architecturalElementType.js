@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var ArchitecturalElementTypeSchema = new Schema({
+const ArchitecturalElementTypeSchema = new Schema({
     name: {type: String, rquired: true}
-})
+});
 
 module.exports = mongoose.model('ArchitecturalElementType', ArchitecturalElementTypeSchema);

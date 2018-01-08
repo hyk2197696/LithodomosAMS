@@ -1,29 +1,23 @@
 /**
  * Controller for asset creation
  */
-
-var con = require('./databasecontroller');
-var app = require('../app');
-var json = require('json');
-var exp = require('express');
-var async = require('async');
-var formidable = require('formidable');
-var fs = require('fs');
-var Asset = require('../models/asset');
-var Reference = require('../models/reference');
-var Period = require('../models/period');
-var StatueType = require('../models/statueType');
-var ArchitecturalElementType = require('../models/architecturalElementType');
-var Culture = require('../models/culture');
-var Material = require('../models/material');
-var Style = require('../models/style');
-var ShaderType = require('../models/shaderType');
-var DiagramType = require('../models/diagramType');
-var Publication = require('../models/publication');
-var Project = require('../models/project');
-var uniqid = require('uniqid');
-var ObjectID = require("bson-objectid");
-var path = require('path');
+const async = require('async');
+const formidable = require('formidable');
+const fs = require('fs');
+const Asset = require('../models/asset');
+const Reference = require('../models/reference');
+const Period = require('../models/period');
+const StatueType = require('../models/statueType');
+const ArchitecturalElementType = require('../models/architecturalElementType');
+const Culture = require('../models/culture');
+const Material = require('../models/material');
+const Style = require('../models/style');
+const ShaderType = require('../models/shaderType');
+const DiagramType = require('../models/diagramType');
+const Publication = require('../models/publication');
+const Project = require('../models/project');
+const ObjectID = require("bson-objectid");
+const path = require('path');
 //get method for asset create
 exports.create_get = (req, res, next) => {
     Reference.find()
@@ -109,14 +103,14 @@ exports.asset_create_get = (req, res, next) => {
 //the post method for asset create
 exports.create_post = (req, res, next) => {
 
-    var form = new formidable.IncomingForm();
+    const form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
 
         Project.findOne({'name': fields.project_name})
             .exec((err, found_project) => {
                 //if the following attributes of the asset is not defined
-                var projectId = found_project == null ? null : found_project.id;
-                var referenceId = fields.reference == '-1' ? null : fields.reference;
+                const projectId = found_project === null ? null : found_project.id;
+                const referenceId = fields.reference === '-1' ? null : fields.reference;
                 //var fakeDirectoryId = fields.directory == 'null'? null: fields.directory;
 
                 if (err) {
@@ -124,7 +118,7 @@ exports.create_post = (req, res, next) => {
                 }
 
                 //if nothing wrong, create a new template for the new asset
-                var assetDetail = {
+                let assetDetail = {
                     _id: ObjectID(),
                     name: fields.asset_name,
                     project: projectId,
@@ -136,11 +130,11 @@ exports.create_post = (req, res, next) => {
                 console.log(assetDetail);
 
                 //save the uploaded file and rename it using it's id, add the really file name and true location into the asset template
-                var oldpath = files.file_upload.path;
-                var newpath = 'C:/Users/Render4/WebstormProjects/lithodomosAMS/file/' + assetDetail._id;
+                const oldpath = files.file_upload.path;
+                const newpath = 'C:/Users/Render4/WebstormProjects/lithodomosAMS/file/' + assetDetail._id;
                 assetDetail.trueLocation = newpath;
 
-                var newAsset = new Asset(assetDetail);
+                const newAsset = new Asset(assetDetail);
 
                 //insert the asset into the database
                 newAsset.save(err => {
@@ -164,7 +158,7 @@ exports.create_post = (req, res, next) => {
 
 exports.asset_create_post = (req, res, next) => {
 
-    var form = new formidable.IncomingForm();
+    const form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
         async.parallel({
             projectId: callback => {
@@ -176,10 +170,10 @@ exports.asset_create_post = (req, res, next) => {
             }
 
             //get the asset template
-            var assetTemplate = getNewAssetTemplate(fields);
+            let assetTemplate = getNewAssetTemplate(fields);
 
             //assetTemplate.project = results.projectId == null? null : results.projectId;
-            if (results.projectId != null) {
+            if (results.projectId !== null) {
                 assetTemplate.project = results.projectId;
             }
             assetTemplate.fileName = files.file_upload.name;
@@ -190,11 +184,11 @@ exports.asset_create_post = (req, res, next) => {
             console.log(assetTemplate);
 
             //save the uploaded file and rename it using it's id, add the really file name and true location into the asset template
-            var oldpath = files.file_upload.path;
-            var newpath = 'C:/Users/Render4/WebstormProjects/lithodomosAMS/file/' + assetTemplate._id;
+            const oldpath = files.file_upload.path;
+            const newpath = 'C:/Users/Render4/WebstormProjects/lithodomosAMS/file/' + assetTemplate._id;
             assetTemplate.trueLocation = newpath;
 
-            var newAsset = new Asset(assetTemplate);
+            const newAsset = new Asset(assetTemplate);
 
             //insert the asset into the database
             newAsset.save(err => {
@@ -207,7 +201,7 @@ exports.asset_create_post = (req, res, next) => {
                     if (err) {
                         return next(err);
                     }
-                    res.render('success', {title: 'Asset creation success'});
+                    res.render('homepage', {title: 'Asset creation success'});
                 });
             })
         });
@@ -215,32 +209,32 @@ exports.asset_create_post = (req, res, next) => {
 
 };
 
-var getNewAssetTemplate = fields => {
-    var assetTemplate = createNewAsset(fields);
+let getNewAssetTemplate = fields => {
+    let assetTemplate = createNewAsset(fields);
     switch (fields.asset_type) {
         case 'Asset':
             break;
         case 'Shader':
-            assetTemplate.shaderType = fields.shader_type_name == '-1' ? null : fields.shader_type_name;
+            assetTemplate.shaderType = fields.shader_type_name === '-1' ? null : fields.shader_type_name;
 
             break;
         case 'Diagram':
-            assetTemplate.diagramType = fields.diagram_type_name == '-1' ? null : fields.diagram_type_name;
-            assetTemplate.originalPublication = fields.publication_name == '-1' ? null : fields.publication_name;
-            assetTemplate.site = fields.site_name == null ? null : fields.site_name;
+            assetTemplate.diagramType = fields.diagram_type_name === '-1' ? null : fields.diagram_type_name;
+            assetTemplate.originalPublication = fields.publication_name === '-1' ? null : fields.publication_name;
+            assetTemplate.site = fields.site_name === null ? null : fields.site_name;
             break;
         case 'Statue':
-            assetTemplate.statueType = fields.statue_type_name == '-1' ? null : fields.statue_type_name;
-            assetTemplate.statueCulture = fields.statue_culture_name == '-1' ? null : fields.statue_culture_name;
-            assetTemplate.material = fields.material_name == '-1' ? null : fields.material_name;
-            assetTemplate.pose = fields.pose_name == null ? null : fields.pose_name;
+            assetTemplate.statueType = fields.statue_type_name === '-1' ? null : fields.statue_type_name;
+            assetTemplate.statueCulture = fields.statue_culture_name === '-1' ? null : fields.statue_culture_name;
+            assetTemplate.material = fields.material_name === '-1' ? null : fields.material_name;
+            assetTemplate.pose = fields.pose_name === null ? null : fields.pose_name;
             assetTemplate.gender = fields.gender;
             assetTemplate.location = fields.location_name;
             break;
         case 'Architectural Element':
-            assetTemplate.architecturalCulture = fields.architectural_culture_name == '-1' ? null : fields.architectural_culture_name;
-            assetTemplate.architecturalElementType = fields.architectural_type_name == '-1' ? null : fields.architectural_type_name;
-            assetTemplate.style = fields.style_name == '-1' ? null : fields.style_name;
+            assetTemplate.architecturalCulture = fields.architectural_culture_name === '-1' ? null : fields.architectural_culture_name;
+            assetTemplate.architecturalElementType = fields.architectural_type_name === '-1' ? null : fields.architectural_type_name;
+            assetTemplate.style = fields.style_name === '-1' ? null : fields.style_name;
             break;
         case 'Prop':
             break;
@@ -249,27 +243,14 @@ var getNewAssetTemplate = fields => {
 };
 
 //create a new asset template based on the request
-var createNewAsset = fields => {
-    var assetTemplate = {
+let createNewAsset = fields => {
+    return {
         _id: ObjectID(),
         name: fields.asset_name,
         type: fields.asset_type,
-        reference: fields.reference == '-1' ? null : fields.reference,
+        reference: fields.reference === '-1' ? null : fields.reference,
         fakeDirectory: fields.directory,
-        period: fields.period_name == '-1' ? null : fields.period_name,
-    };
-    return assetTemplate;
-};
-
-//check if the project exist in the database
-var projectExistance = (project, callback) => {
-    if (project == '') {
-        callback('', null);
+        period: fields.period_name === '-1' ? null : fields.period_name,
     }
-    Project.findOne({'name': project}).exec((err, result) => {
-        var projectId = result == null ? null : result.id;
-        callback(err, projectId);
-    })
-
 };
 

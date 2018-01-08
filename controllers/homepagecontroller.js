@@ -10,11 +10,13 @@ var Schema = mongoose.Schema;
 //index page
 exports.index = (req, res, next) => {
 
-    Asset.count((err, countAsset) => {
+    Asset.count({'valid': true}, (err, countAsset) => {
         if (err) {
             return next(err);
         }
-        res.render('homepage', {title: 'Lithodomos Asset Management System', assetnum: countAsset});
+
+        console.log(countAsset);
+        res.render('homepage', {title: 'Lithodomos Asset Management System', assetNum: countAsset});
     });
 };
 

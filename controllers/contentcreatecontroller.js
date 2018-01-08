@@ -18,19 +18,19 @@ var Project = require('../models/project');
 
 
 exports.project_create_get = (req, res, next) => {
-    var projectDetail = {name: req.query.name};
+    let projectDetail = {name: req.query.name};
     Project.count(projectDetail, (err, projectCount) => {
         if (err) {
-            next(err)
+            next(err);
         }
-        ;
+
         if (projectCount > 0) {
             res.end('Project exists!');
             return;
         }
 
         //if not exist, create new project
-        var newProject = new Project(projectDetail);
+        const newProject = new Project(projectDetail);
         newProject.save(err => {
             if (err) {
                 next(err);
@@ -45,7 +45,7 @@ exports.project_create_get = (req, res, next) => {
 };
 
 exports.reference_create_get = (req, res, next) => {
-    var referenceDetail = {name: req.query.name};
+    const referenceDetail = {name: req.query.name};
     Reference.count(referenceDetail, (err, referenceCount) => {
         if (err) {
             next(err)

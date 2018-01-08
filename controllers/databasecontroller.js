@@ -55,7 +55,7 @@ exports.select_all_project = (req, res) => {
 
 //get all distinct sites
 exports.select_all_site = (req, res) => {
-    Asset.distinct('site').exec((err, results) => {
+    Asset.find({valid:true}).distinct('site').exec((err, results) => {
         console.log(results);
         res.end(JSON.stringify(results));
     })
@@ -63,7 +63,7 @@ exports.select_all_site = (req, res) => {
 
 //get all asset name
 exports.get_all_asset_name = (req, res) => {
-    Asset.distinct('name').exec((err, results) => {
+    Asset.find({valid:true}).distinct('name').exec((err, results) => {
         // console.log('name:')
         // console.log(results);
         res.end(JSON.stringify(results));

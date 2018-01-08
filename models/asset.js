@@ -1,8 +1,7 @@
-var mongoose = require('mongoose');
-var extend = require('mongoose-schema-extend');
-var Schema = mongoose.Schema;
-var moment = require('moment');
-var AssetSchema = new Schema({
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const moment = require('moment');
+const AssetSchema = new Schema({
     //all Assets' attributes
     name: {type: String, require: true},
     project: {type: Schema.ObjectId, ref: 'Project'},
@@ -19,6 +18,9 @@ var AssetSchema = new Schema({
     },
     createTime: {type: Date, default: Date.now},
     period: {type: Schema.ObjectId, ref: 'Period'},
+    valid: {type: Boolean, default: true}, //for soft deletion
+    deletedTime: {type: Date}, //record delete time
+    lastAlterTime: {type: Date}, //record last update time
 
     //Shader
     shaderType: {type: Schema.ObjectId, ref: 'ShaderType'},//selection
@@ -58,26 +60,5 @@ AssetSchema
     .virtual('createTimeFormatted')
     .get(function () {
         return this.createTime ? moment(this.createTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
-    })
+    });
 module.exports = mongoose.model('Asset', AssetSchema);
-
-// var ModelSchema = AssetSchema.extend({
-//     levelOfDetail: {type: String, required: true, enum: ['high', 'low', 'optimised']}
-// });
-// var Asset = mongoose.model('Asset', AssetSchema);
-// var Model = mongoose.model('Model', ModelSchema);
-// var newmodel = {
-//     name: 'aaa',
-//     fakeDirectory:null,
-//     trueLocation:'aaa',
-//     fileName: 'aaa',
-//     levelOfDetail:'high'
-// }
-//
-// var newMod = new Model(newmodel);
-// console.log('begin');
-// newMod.save(err => {
-//     console.log('success');
-//     console.log(newMod);
-//     console.log('end');
-// });

@@ -11,13 +11,11 @@ var users = require('./routes/users');
 var catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
 var dynamic = require('./routes/dynamic');  //Import routes for "dynamic"
 
-
 // var con = mysql.createConnection({
 //     host: "localhost",
 //     user: "root",
 //     password: "123456"
 // });
-
 
 var app = express();
 

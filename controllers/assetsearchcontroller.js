@@ -1,29 +1,29 @@
 /**
  * Controller for asset search
  */
-var con = require('./databasecontroller');
-var app = require('../app');
-var json = require('json');
-var exp = require('express');
-var async = require('async');
-var formidable = require('formidable');
-var fs = require('fs');
-var Asset = require('../models/asset');
-var Reference = require('../models/reference');
-var Period = require('../models/period');
-var StatueType = require('../models/statueType');
-var ArchitecturalElementType = require('../models/architecturalElementType');
-var Culture = require('../models/culture');
-var Material = require('../models/material');
-var Style = require('../models/style');
-var ShaderType = require('../models/shaderType');
-var DiagramType = require('../models/diagramType');
-var Publication = require('../models/publication');
-var Project = require('../models/project');
-var uniqid = require('uniqid');
-var ObjectID = require("bson-objectid");
-var path = require('path');
-
+const con = require('./databasecontroller');
+const app = require('../app');
+const json = require('json');
+const exp = require('express');
+const async = require('async');
+const formidable = require('formidable');
+const fs = require('fs');
+const Asset = require('../models/asset');
+const Reference = require('../models/reference');
+const Period = require('../models/period');
+const StatueType = require('../models/statueType');
+const ArchitecturalElementType = require('../models/architecturalElementType');
+const Culture = require('../models/culture');
+const Material = require('../models/material');
+const Style = require('../models/style');
+const ShaderType = require('../models/shaderType');
+const DiagramType = require('../models/diagramType');
+const Publication = require('../models/publication');
+const Project = require('../models/project');
+const uniqid = require('uniqid');
+const ObjectID = require("bson-objectid");
+const path = require('path');
+const queryString = require('query-string');
 
 //get method for asset search
 exports.search_get = (req, res, next) => {
@@ -118,7 +118,7 @@ exports.search_post = (req, res, next) => {
     //                              }
     //         })
     //  }
-    var form = new formidable.IncomingForm();
+    let form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
         async.parallel({
             projectId: callback => {
@@ -130,7 +130,7 @@ exports.search_post = (req, res, next) => {
             }
 
             //get the asset template
-            var assetTemplate = getNewAssetTemplate(fields);
+            let assetTemplate = getNewAssetTemplate(fields);
 
             if (results.projectId != null) {
                 assetTemplate.project = results.projectId;
@@ -138,27 +138,35 @@ exports.search_post = (req, res, next) => {
             console.log("Search for assets : ");
             console.log(fields);
             console.log(assetTemplate);
-
+            return res.redirect('/catalog/assetlist?page=1&sortBy=name&method=1&assetTemplate=' + encodeURI(JSON.stringify(assetTemplate)));
             //find all satisfying assets, sort by asset name
-            Asset.find({$query: assetTemplate, $orderby: {'name': 1}}).exec((err, list_asset) => {
-                if (err) {
-                    return next(err);
-                }
-                if (list_asset.length == 0) {
-                    res.render('success', {title: 'empty', massage: 'empty!'});
-                }
-                else {
-                    console.log(list_asset);
-                    res.render('assetList', {list_asset: list_asset})
-                }
-            })
+            // Asset.find({$query: assetTemplate, $orderby: {'name': 1}}).exec((err, list_asset) => {
+            //     if (err) {
+            //         return next(err);
+            //     }
+            //     if (list_asset.length == 0) {
+            //         res.render('success', {title: 'empty', massage: 'empty!'});
+            //     }
+            //     else {
+            //         console.log(list_asset.length);
+            //         res.render('assetlist', {
+            //             list_asset: list_asset,
+            //             assetNum: list_asset.length,
+            //             assetTemplate:  encodeURI(JSON.stringify(assetTemplate)),
+            //             page:1,
+            //             sortBy:'name',
+            //             method: 1
+            //         });
+            //         return res.redirect('/catalog/assetlist?list_asset')
+            //     }
+            // })
         })
     });
 };
 
 
-var getNewAssetTemplate = fields => {
-    var assetTemplate = createNewAsset(fields);
+let getNewAssetTemplate = fields => {
+    let assetTemplate = createNewAsset(fields);
     switch (fields.asset_type) {
         case 'Asset':
             break;
@@ -216,8 +224,10 @@ var getNewAssetTemplate = fields => {
 };
 
 //create a new asset template based on the request
-var createNewAsset = fields => {
-    var assetTemplate = {};
+let createNewAsset = fields => {
+    let assetTemplate = {};
+
+    assetTemplate.valid=true;
 
     if (fields.asset_name != '') {
         assetTemplate.name = fields.asset_name;
@@ -237,4 +247,3 @@ var createNewAsset = fields => {
 
     return assetTemplate;
 };
-//

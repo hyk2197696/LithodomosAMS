@@ -347,7 +347,8 @@ block content
                         label.col-sm-12(for='gender') Gender of Statue:
                         div.col-sm-9
                             select#gender.form-control(type='select', name='gender'  )
-                                option(value=asset.gender) #{asset.gender}
+                                if asset.gender !== 'uncertain'
+                                    option(value=asset.gender) #{asset.gender}
                                 option(value='uncertain') Uncertain
                                 option(value='male') Male
                                 option(value='female') Female

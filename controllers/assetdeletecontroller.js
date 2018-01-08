@@ -1,16 +1,19 @@
 /**
  * Controller for asset deletion
  */
-var con = require('./databasecontroller');
-var app = require('../app');
-var Asset = require('../models/asset');
-
+const con = require('./databasecontroller');
+const app = require('../app');
+const Asset = require('../models/asset');
+const fs = require('fs')
 //get method for asset deletion delete the asset by id (collection.findByIdAndRemove())
 exports.delete_get = (req, res, next) => {
-    Asset.findByIdAndRemove(req.query.id, err => {
+    Asset.findByIdAndUpdate(req.query.id, {'valid':false},  (err,result) => {
         if (err) {
             return next(err);
         }
+        console.log(result.trueLocation);
+        fs.unlinkSync(result.trueLocation);
+        console.log('file deleted');
         Asset.count((err, countAsset) => {
             if (err) {
                 return next(err);
@@ -18,4 +21,4 @@ exports.delete_get = (req, res, next) => {
             res.render('homepage', {title: 'Asset Delete successfully', assetnum: countAsset});
         });
     });
-}
+};

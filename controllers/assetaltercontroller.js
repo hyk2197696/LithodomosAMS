@@ -1,29 +1,29 @@
 /**
  * Controller for asset alter
  */
-var con = require('./databasecontroller');
-var app = require('../app');
-var json = require('json');
-var exp = require('express');
-var async = require('async');
-var formidable = require('formidable');
-var fs = require('fs');
-var Asset = require('../models/asset');
-var Reference = require('../models/reference');
-var Period = require('../models/period');
-var StatueType = require('../models/statueType');
-var ArchitecturalElementType = require('../models/architecturalElementType');
-var Culture = require('../models/culture');
-var Material = require('../models/material');
-var Style = require('../models/style');
-var ShaderType = require('../models/shaderType');
-var DiagramType = require('../models/diagramType');
-var Publication = require('../models/publication');
-var Project = require('../models/project');
-var FakeDirectory = require('../models/fakeDirectory');
-var uniqid = require('uniqid');
-var ObjectID = require("bson-objectid");
-var path = require('path');
+const con = require('./databasecontroller');
+const app = require('../app');
+const json = require('json');
+const exp = require('express');
+const async = require('async');
+const formidable = require('formidable');
+const fs = require('fs');
+const Asset = require('../models/asset');
+const Reference = require('../models/reference');
+const Period = require('../models/period');
+const StatueType = require('../models/statueType');
+const ArchitecturalElementType = require('../models/architecturalElementType');
+const Culture = require('../models/culture');
+const Material = require('../models/material');
+const Style = require('../models/style');
+const ShaderType = require('../models/shaderType');
+const DiagramType = require('../models/diagramType');
+const Publication = require('../models/publication');
+const Project = require('../models/project');
+const FakeDirectory = require('../models/fakeDirectory');
+const uniqid = require('uniqid');
+const ObjectID = require("bson-objectid");
+const path = require('path');
 //asset alter page get method, select all attribute from the database and display in a form
 exports.alter_get = (req, res, next) => {
     async.parallel({
@@ -103,7 +103,7 @@ exports.alter_get = (req, res, next) => {
 
 //post method for asset alter
 exports.alter_post = (req, res, next) => {
-    var form = new formidable.IncomingForm();
+    const form = new formidable.IncomingForm();
     form.parse(req, (err, fields) => {
         async.parallel({
             projectId: callback => {
@@ -116,7 +116,7 @@ exports.alter_post = (req, res, next) => {
 
             //if nothing wrong, create a new template for the new asset
             //get the asset template
-            var assetTemplate = getNewAssetTemplate(fields);
+            const assetTemplate = getNewAssetTemplate(fields);
             if (results.projectId != null) {
                 assetTemplate.project = results.projectId;
             }
@@ -135,8 +135,8 @@ exports.alter_post = (req, res, next) => {
 }
 
 
-var getNewAssetTemplate = fields => {
-    var assetTemplate = createNewAsset(fields);
+let getNewAssetTemplate = fields => {
+    const assetTemplate = createNewAsset(fields);
     switch (fields.asset_type) {
         case 'Asset':
             break;
@@ -169,13 +169,11 @@ var getNewAssetTemplate = fields => {
 };
 
 //create a new asset template based on the request
-var createNewAsset = fields => {
-    var assetTemplate = {
-        name: fields.asset_name,
-        type: fields.asset_type,
-        reference: fields.reference == '-1' ? null : fields.reference,
-        fakeDirectory: fields.directory,
-        period: fields.period_name == '-1' ? null : fields.period_name,
-    };
-    return assetTemplate;
-};
+let createNewAsset = fields => ({
+    name: fields.asset_name,
+    type: fields.asset_type,
+    reference: fields.reference == '-1' ? null : fields.reference,
+    fakeDirectory: fields.directory,
+    period: fields.period_name == '-1' ? null : fields.period_name,
+});
+

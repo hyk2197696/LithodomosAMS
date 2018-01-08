@@ -10,16 +10,24 @@ block content
                 tr
                     th(scope='col') #
                     th(scope='col') Name
+                        -var nameHref = '?' + assetTemplate
+                        a#name.glyphicon.glyphicon-sort(type='button', href=nameHref)
                     th(scope='col') Type
+                        -var typeHref = 'assetlist?&sortBy=type&method=1&' + assetTemplate;
+                        a#type.glyphicon.glyphicon-sort(type='button', href=typeHref)
                     th(scope='col') File Type
+                        -var fileTypeHref = 'assetlist?page=1&sortBy=fileType&method=1&&' + assetTemplate
+                        a#fileType.glyphicon.glyphicon-sort(type='button', href=fileTypeHref)
                     th(scope='col') Create Time
+                        -var createTimeHref = 'assetlist?page=1&sortBy=createTime&method=1&&' + assetTemplate
+                        a#createTime.glyphicon.glyphicon-sort(type='button', href=createTimeHref)
 
             tbody
                 dl
-                - var i = 1
+                - var i = (parseInt(page) - 1) * 10 + 1;
                 each asset in list_asset
                     dt
-                        - var asset_href = '/catalog/asset?id=' + asset.id
+                        - const asset_href = '/catalog/asset?id=' + asset.id
                         tr
                             th(scope='row') #{i}
                             td
@@ -28,3 +36,49 @@ block content
                             td #{asset.fileType}
                             td #{asset.createTimeFormatted}
                         - i = i + 1;
+
+        -var order = method === '-1'?'Descending Order':'Ascending Order'
+        .text-right Sort by: #{sortBy.toUpperCase()}.  In: #{order}
+        .text-center
+            //font #{(assetNum / 10 + 1)}
+            ul.pagination
+                li.page-item
+                    if(page !== '1')
+                        - const preHref = '?page=' + (page - 1) + '&sortBy=' + sortBy + '&method=' + method + '&assetTemplate=' + assetTemplate;
+                        a.page-link(href=preHref ) Previous
+                    else
+                        a.page-link Previous
+
+                -for (var i = 1; i <= (assetNum / 10 + 1); i++)
+                    li.page-item
+                        if(i != page)
+                            -var itemHref = '?page=' + i + '&sortBy=' + sortBy + '&method=' + method + '&assetTemplate=' + assetTemplate;
+                            a.page-link(href=itemHref) #{i}
+                        else
+                            a.page-link
+                                font(color='black') #{i}
+
+                if(page < (assetNum / 10))
+                    li.page-item
+                        -var nextHref = '?page=' + (parseInt(page) + 1) + '&sortBy=' + sortBy + '&method=' + method + '&assetTemplate=' + assetTemplate;
+                        a.page-link(href=nextHref) Next
+
+    script.
+
+        $(document).ready(function () {
+            var order = '#{method}'==='-1'?'1':'-1';
+            switch('#{sortBy}') {
+                case 'name':
+                    $("#name").attr('href','assetlist?page=1&sortBy=name&#{assetTemplate}&method=' + order);
+                    break;
+                case 'type':
+                    $("#type").attr('href','assetlist?page=1&sortBy=type&#{assetTemplate}&method=' + order);
+                    break;
+                case 'fileType':
+                    $("#fileType").attr('href','assetlist?page=1&sortBy=fileType&#{assetTemplate}&method=' + order);
+                    break;
+                case 'createTime':
+                    $("#createTime").attr('href','assetlist?page=1&sortBy=createTime&#{assetTemplate}&method=' + order);
+                    break;
+            }
+        });
