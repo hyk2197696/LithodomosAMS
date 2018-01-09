@@ -90,15 +90,15 @@ html(lang='en')
       // /#sidebar-wrapper
       // Page Content
       #page-content-wrapper
-        .container-fluid
-          //h1 Simple Sidebar
-          //p
-          //    | This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.
-          //p
-          //    | Make sure to keep all page content within the
-          //    code #page-content-wrapper
-          //    | .
-          a#menu-toggle.btn.btn-secondary(href='#menu-toggle') Toggle Menu
+          .container-fluid
+              .col-sm-7
+                  a#menu-toggle.btn.btn-secondary.btn-lg.glyphicon.glyphicon-resize-horizontal(href='#menu-toggle ')
+              #userName.col-sm-4.text-right
+
+
+              .col-sm-1.text-right
+
+                  a.text-right.btn.btn-secondary.btn-sm(href='/logout') Logout
           block content
       // /#page-content-wrapper
     // /#wrapper
@@ -106,6 +106,21 @@ html(lang='en')
 
   // Menu Toggle Script
   script.
+      $(document).ready(function () {
+          getUser();
+      })
+
+      function getUser() {
+          let req = new XMLHttpRequest();
+
+          req.open("GET", "/dynamic/getUserName");
+          req.onreadystatechange = function() {
+              if (req.readyState === 4) {
+                  $("#userName").html('Hi, ' + req.responseText);
+              }
+          }
+          req.send();
+      }
       $("#menu-toggle").click(function(e) {
           e.preventDefault();
           $("#wrapper").toggleClass("toggled");

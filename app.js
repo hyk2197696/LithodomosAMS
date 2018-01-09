@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -10,6 +11,12 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
 var dynamic = require('./routes/dynamic');  //Import routes for "dynamic"
+
+//for authentication
+var port  = process.env.PORT || 3000;
+var passport = require('passport');
+var flash    = require('connect-flash');
+var session      = require('express-session');
 
 // var con = mysql.createConnection({
 //     host: "localhost",
@@ -44,6 +51,14 @@ app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//authentication
+// require('./config/passport')(passport); // pass passport for configuration
+app.use(session({ secret: 'lithodomos' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+//routes
+
 app.use('/', index);
 app.use('/users', users);
 app.use('/catalog', catalog);  // Add catalog routes to middleware chain.
@@ -55,6 +70,12 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
+
+
+// routes ======================================================================
+//require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
 
 // error handler
 app.use(function(err, req, res, next) {

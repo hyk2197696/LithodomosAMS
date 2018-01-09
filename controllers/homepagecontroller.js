@@ -7,15 +7,16 @@ const Model = require('../models/model');
 const extend = require('mongoose-schema-extend');
 const Schema = mongoose.Schema;
 //index page
-exports.index = (req, res, next) => {
 
+
+exports.index = (req, res, next) => {
+    console.log(req.user);
     Asset.count({'valid': true}, (err, countAsset) => {
         if (err) {
             return next(err);
         }
 
-        console.log(countAsset);
-        res.render('homepage', {title: 'Lithodomos Asset Management System', assetNum: countAsset});
+        res.render('homepage', {user : req.user, title: 'Lithodomos Asset Management System', assetNum: countAsset});
     });
 };
 
@@ -26,7 +27,7 @@ exports.test = (req, res, next) => {
 };
 
 exports.test_post = function (req, res, next) {
-
+    res.redirect('/')
 
 };
 exports.typeahead_test = (req, res) => {

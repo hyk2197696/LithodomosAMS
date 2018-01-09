@@ -40,6 +40,7 @@ exports.find_get = (req, res, next) => {
         }
 
         res.render('assetFind', {
+            user: req.user,
             title: 'Find an Asset',
             folder_list: results.folder_list,
             asset_list: results.asset_list,

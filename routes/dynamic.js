@@ -26,6 +26,8 @@ router.get('/getfullfolderdirectory', directory_controller.get_full_folder_direc
 
 router.get('/selectallassetname', database_controller.get_all_asset_name);
 
+router.get('/getusername', (req,res)=>{res.end(req.user.email)});
+
 //check
 router.get('/checkfolderexistance', directory_controller.check_folder_existance);
 

@@ -83,8 +83,8 @@ exports.asset_list = (req, res, next) => {
         case 'fileType':
             sortBy.fileType = method;
             break;
-        case 'lastUpdate':
-            sortBy.lastAlterTime = method;
+        case 'createTime':
+            sortBy.createTime = method;
             break;
     }
 
@@ -108,8 +108,7 @@ exports.asset_list = (req, res, next) => {
             res.render('homepage', {title: 'There are no asset at the moment!'});
         }
         else {
-            console.log("result:");
-            console.log(results.assetList);
+
             res.render('assetList', {
                 list_asset: results.assetList,
                 assetTemplate:queryString.stringify(assetTemplate),
@@ -189,8 +188,8 @@ let createNewAsset = fields => {
 
     assetTemplate.valid=true;
 
-    if (fields.name != '' && fields.name != null) {
-        assetTemplate.name = fields.name;
+    if (fields.asset_name != '' && fields.asset_name != null) {
+        assetTemplate.name = fields.asset_name;
     }
     if (fields.asset_type != 'Asset' && fields.asset_type != null) {
         assetTemplate.type = fields.asset_type;
