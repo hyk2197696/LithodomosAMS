@@ -50,11 +50,9 @@ const AssetSchema = new Schema({
     architecturalElementType: {type: Schema.ObjectId, ref: 'ArchitecturalElementType'},
     style: {type: Schema.ObjectId, ref: 'Style'},
 
-    //Natural
-    naturalType: {type: Schema.ObjectId, ref: 'NaturalType'},
-
-    //ManMade
-    manMadeType: {type: Schema.ObjectId, ref: 'ManMadeType'}
+    //Prop
+    propType: {type: String, enum:['manmade', 'plant', 'animal']},
+    propName: {type: Schema.ObjectId, ref: 'Prop'}
 });
 
 AssetSchema

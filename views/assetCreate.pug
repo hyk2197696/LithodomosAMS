@@ -440,7 +440,7 @@ block content
                     //prop type
                     div.form-group
                         label(for='prop_type') Prop Type:
-                        input#prop_type.form-control(type='text', name='prop_type', required='true', disabled   )
+                        input#prop_type.form-control(type='text', name='prop_type', required='true', readonly="readonly")
 
                     //Prop name
                     div.form-group.row
@@ -448,7 +448,7 @@ block content
                         div.col-sm-9
                             select#prop_name.form-control(type='select', placeholder='Select Prop name' name='prop_name'  )
                                 option#prop_name_default(value= '-1') Please select a prop name if there is one
-                                for propName in prop_name_list
+                                for propName in prop_list
                                     option(value=propName.id) #{propName.name}
                         div.col-sm-3
                             button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#prop_create' )
@@ -471,7 +471,7 @@ block content
                                     .modal-footer
                                         button.btn.btn-default(type='button', data-dismiss='modal')
                                             | close
-                                        button.btn.btn-primary(type='button', onclick ="PropCreate()") Create
+                                        button.btn.btn-primary(type='button', onclick ="propCreate()") Create
 
 
 

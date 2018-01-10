@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SiteSchema = new Schema({
-    name: {type: String, rquired: true},
+    name: {type: String, required: true},
     country: {type: Schema.objectId, ref: 'Country'}
 })
 

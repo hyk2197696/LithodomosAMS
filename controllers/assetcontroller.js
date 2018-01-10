@@ -130,15 +130,15 @@ let getNewAssetTemplate = fields => {
         case 'Asset':
             break;
         case 'Shader':
-            if (fields.shader_type_name != '-1') {
+            if (fields.shader_type_name != '-1' && fields.shader_type_name != null ) {
                 assetTemplate.shaderType = fields.shader_type_name;
             }
             break;
         case 'Diagram':
-            if (fields.diagram_type_name != '-1') {
+            if (fields.diagram_type_name != '-1' && fields.diagram_type_name != null) {
                 assetTemplate.diagramType = fields.diagram_type_name;
             }
-            if (fields.publication_name != '-1') {
+            if (fields.publication_name != '-1' && fields.publication_name != null) {
                 assetTemplate.originalPublication = fields.publication_name;
             }
             if (fields.site_name != '' && fields.site_name != null ) {
@@ -146,13 +146,13 @@ let getNewAssetTemplate = fields => {
             }
             break;
         case 'Statue':
-            if (fields.statue_type_name != '-1') {
+            if (fields.statue_type_name != '-1' && fields.statue_type_name != null) {
                 assetTemplate.statueType = fields.statue_type_name;
             }
-            if (fields.statue_culture_name != '-1') {
+            if (fields.statue_culture_name != '-1' && fields.statue_culture_name != null) {
                 assetTemplate.statueCulture = fields.statue_culture_name;
             }
-            if (fields.material_name != '-1') {
+            if (fields.material_name != '-1' && fields.material_name != null) {
                 assetTemplate.material = fields.material_name;
             }
             if (fields.pose_name != '' && fields.pose_name != null) {
@@ -161,18 +161,18 @@ let getNewAssetTemplate = fields => {
             if (fields.location_name != '' &&  fields.location_name != b) {
                 assetTemplate.location = fields.location_name;
             }
-            if (fields.gender != 'uncertain') {
+            if (fields.gender != 'uncertain' && fields.gender != null) {
                 assetTemplate.gender = fields.gender;
             }
             break;
         case 'Architectural Element':
-            if (fields.architectural_culture_name != '-1') {
+            if (fields.architectural_culture_name != '-1' && fields.architectural_culture_name != null) {
                 assetTemplate.architecturalCulture = fields.architectural_culture_name;
             }
-            if (fields.architectural_type_name != '-1') {
+            if (fields.architectural_type_name != '-1' && fields.architectural_type_name != null) {
                 assetTemplate.architecturalElementType = fields.architectural_type_name;
             }
-            if (fields.style_name != '-1') {
+            if (fields.style_name != '-1' && fields.style_name != null) {
                 assetTemplate.style = fields.style_name;
             }
             break;
@@ -194,13 +194,13 @@ let createNewAsset = fields => {
     if (fields.asset_type != 'Asset' && fields.asset_type != null) {
         assetTemplate.type = fields.asset_type;
     }
-    if (fields.reference != '-1') {
+    if (fields.reference != '-1' && fields.reference != null) {
         assetTemplate.reference = fields.reference;
     }
     if (fields.directory != '' && fields.directory != null) {
         assetTemplate.fakeDirectory = fields.directory;
     }
-    if (fields.period_name != '-1') {
+    if (fields.period_name != '-1' && fields.period_name != null) {
         assetTemplate.period = fields.period_name;
     }
 

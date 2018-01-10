@@ -15,6 +15,7 @@ const ShaderType = require('../models/shaderType');
 const DiagramType = require('../models/diagramType');
 const Publication = require('../models/publication');
 const Project = require('../models/project');
+const Prop = require('../models/prop');
 
 
 exports.project_create_get = (req, res, next) => {
@@ -328,6 +329,35 @@ exports.publication_create_get = (req, res, next) => {
             resText.newPublication = newPublication;
             console.log('insert new publication : ');
             console.log(newPublication);
+            res.end(JSON.stringify(resText));
+        })
+    })
+};
+
+exports.prop_create_get = (req, res, next) => {
+    const propDetail = {name: req.query.name, type: req.query.type};
+    Prop.count(propDetail, (err, propCount) => {
+        if (err) {
+            next(err);
+        }
+        if (propCount > 0) {
+            res.end('Prop Name exists!');
+            return;
+        }
+
+        //if not exist, create new Prop
+        const newProp = new Prop(propDetail);
+        newProp.save(err => {
+            if (err) {
+                next(err);
+            }
+
+            //success
+            let resText = {};
+            resText.message = 'New Prop Name create successfully!';
+            resText.newProp = newProp;
+            console.log('insert new Prop : ');
+            console.log(newProp);
             res.end(JSON.stringify(resText));
         })
     })

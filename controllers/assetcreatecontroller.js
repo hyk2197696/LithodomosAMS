@@ -16,6 +16,7 @@ const ShaderType = require('../models/shaderType');
 const DiagramType = require('../models/diagramType');
 const Publication = require('../models/publication');
 const Project = require('../models/project');
+const Prop = require('../models/prop');
 const ObjectID = require("bson-objectid");
 const path = require('path');
 //get method for asset create
@@ -73,6 +74,9 @@ exports.asset_create_get = (req, res, next) => {
         },
         publication_list: callback => {
             Publication.find().exec(callback);
+        },
+        prop_list: callback => {
+            Prop.find().exec(callback);
         }
 
     }, (err, result) => {
@@ -95,6 +99,7 @@ exports.asset_create_get = (req, res, next) => {
                 material_list: result.material_list,
                 architectural_type_list: result.architectural_type_list,
                 style_list: result.style_list,
+                prop_list: result.prop_list
             });
     });
 };
@@ -261,12 +266,14 @@ let getNewAssetTemplate = fields => {
 
 //create a new asset template based on the request
 let createNewAsset = fields => {
+
     return {
         _id: ObjectID(),
         name: fields.asset_name,
         type: fields.asset_type,
         reference: fields.reference === '-1' ? null : fields.reference,
         fakeDirectory: fields.directory,
+
         period: fields.period_name === '-1' ? null : fields.period_name,
     }
 };

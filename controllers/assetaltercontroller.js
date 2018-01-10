@@ -117,7 +117,7 @@ exports.alter_post = (req, res, next) => {
             //if nothing wrong, create a new template for the new asset
             //get the asset template
             const assetTemplate = getNewAssetTemplate(fields);
-            assetTemplate.lastA
+            assetTemplate.lastAlterTime = Date.now();
             if (results.projectId != null) {
                 assetTemplate.project = results.projectId;
             }

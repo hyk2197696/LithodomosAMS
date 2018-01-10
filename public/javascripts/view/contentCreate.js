@@ -270,3 +270,25 @@ function publicationCreate() {
     };
     req.send();
 }
+function propCreate() {
+    if ($("#new_prop_name").val() == '') {
+        alert('Please enter the new prop name !');
+        return;
+    }
+    var req = new XMLHttpRequest();
+    var url = "/dynamic/propcreate?name=" + $("#new_prop_name").val() + '&type=' + $("#prop_type").val();
+    req.open("GET", url);
+    req.onreadystatechange = function () {
+        if (req.readyState == 4) {
+            //alert(req.responseText);
+            var response = JSON.parse(req.responseText);
+            alert(response.message);
+            $("#prop_create").modal('hide');
+            $("#prop_name_default").val(response.newProp._id);
+            $("#prop_name_default").html(response.newProp.name);
+            $("#prop_name").prepend('<option value="-1">No Name</option>')
+
+        }
+    };
+    req.send();
+}

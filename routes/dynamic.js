@@ -60,5 +60,7 @@ router.get('/diagramtypecreate', permission.checkCreatePermission, content_contr
 
 router.get('/publicationcreate', permission.checkCreatePermission, content_controller.publication_create_get);
 
+router.get('/propcreate', permission.checkCreatePermission, content_controller.prop_create_get);
+
 module.exports = router;
 
