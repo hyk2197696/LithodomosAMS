@@ -1,6 +1,2 @@
-var Model = require('../models/model');
-var Asset = require('../models/asset');
 
-
-
-exports.test =
+console.log(process.cwd().replace(/\\/g,'/') + '/../file/')

@@ -15,6 +15,7 @@ exports.checkSearchPermission = (req,res,next) =>  {
         }
         else{
             res.render('homepage',{title:'You don\'t have permission to do that, please connect the administrator!'});
+            return;
         }
     }
     res.redirect('/');
@@ -28,6 +29,7 @@ exports.checkCreatePermission = (req,res,next) =>  {
         }
         else{
             res.render('homepage',{title:'You don\'t have permission to do that, please connect the administrator!'});
+            return;
         }
     }
     res.redirect('/');
@@ -41,6 +43,7 @@ exports.checkUpdatePermission = (req,res,next) =>  {
         }
         else{
             res.render('homepage',{title:'You don\'t have permission to do that, please connect the administrator!'});
+            return;
         }
     }
     res.redirect('/');
@@ -54,6 +57,7 @@ exports.checkDeletePermission = (req,res,next) =>  {
         }
         else{
             res.render('homepage',{title:'You don\'t have permission to do that, please connect the administrator!'});
+            return;
         }
     }
     res.redirect('/');
@@ -67,6 +71,7 @@ exports.isAdmin = (req, res, next) => {
         }
         else{
             res.render('homepage',{title:'Only admin user can access that!'});
+            return;
 
         }
     }

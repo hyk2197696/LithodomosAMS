@@ -21,7 +21,7 @@ const AssetSchema = new Schema({
 
     createTime: {type: Date, default: Date.now},
     deletedTime: {type: Date}, //record delete time
-    lastAlterTime: {type: Date,default: this.createTime}, //record last update time
+    lastAlterTime: {type: Date,default: Date.now}, //record last update time
     deletedBy: {type:String},
     //Shader
     shaderType: {type: Schema.ObjectId, ref: 'ShaderType'},//selection
@@ -66,6 +66,11 @@ AssetSchema
 AssetSchema
     .virtual('lastAlterTimeFormatted')
     .get(function () {
+        // if(this.lastAlterTime == null){
+        //     console.log('this one has not been updated yet');
+        //     console.log(this.createTimeFormatted);
+        //     return this.createTimeFormatted;
+        // }
         return this.lastAlterTime ? moment(this.lastAlterTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
     });
 

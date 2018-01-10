@@ -131,7 +131,7 @@ exports.create_post = (req, res, next) => {
 
                 //save the uploaded file and rename it using it's id, add the really file name and true location into the asset template
                 const oldpath = files.file_upload.path;
-                const newpath = 'C:/Users/Render4/WebstormProjects/lithodomosAMS/file/' + assetDetail._id;
+                const newpath = '/file/' + assetDetail._id;
                 assetDetail.trueLocation = newpath;
 
                 const newAsset = new Asset(assetDetail);
@@ -185,9 +185,26 @@ exports.asset_create_post = (req, res, next) => {
 
             //save the uploaded file and rename it using it's id, add the really file name and true location into the asset template
             const oldpath = files.file_upload.path;
-            const newpath = 'C:/Users/Render4/WebstormProjects/lithodomosAMS/file/' + assetTemplate._id;
-            assetTemplate.trueLocation = newpath;
+            let dir = process.cwd().replace(/\\/g,'/') + '/./file';
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir);
+            }
 
+            dir += '/' + assetTemplate._id.toString().charAt(assetTemplate._id.toString().length - 1);
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir);
+            }
+            dir += '/' + assetTemplate._id.toString().charAt(assetTemplate._id.toString().length - 2);
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir);
+            }
+            const newpath = dir + '/' + assetTemplate._id;
+            // const newpath = process.cwd().replace(/\\/g,'/') + '/../file/' +
+            //     assetTemplate._id[assetTemplate._id.length - 1] + '/' +
+            //     assetTemplate._id[assetTemplate._id.length - 2] + '/' +
+            //     assetTemplate._id;
+            assetTemplate.trueLocation = newpath;
+            console.log('directory' + newpath);
             const newAsset = new Asset(assetTemplate);
 
             //insert the asset into the database
