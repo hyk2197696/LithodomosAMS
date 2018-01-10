@@ -28,6 +28,9 @@ block content
                 tr
                     td CreateTime
                     td #{asset.createTimeFormatted}
+                tr
+                    td Last Update Time
+                    td #{asset.lastAlterTimeFormatted}
 
                 if (asset.project != null )
                     tr
@@ -101,26 +104,34 @@ block content
                         tr
                             td Style
                             td #{asset.style.name}
-    .text-center
-        - var alterhref = "/catalog/assetalter?id=" + asset.id
-        - var deletehref = "/catalog/assetdelete?id=" + asset.id
-        - var downloadhref = "/catalog/assetdownload?id=" + asset.id
-        a(href = downloadhref class="btn btn-default btn-lg")
-            span(class="glyphicon glyphicon-download-alt") Download
-        a(href = alterhref class="btn btn-default btn-lg")
-            span(class="glyphicon glyphicon-pencil") Alter
-        a(href ='#' data-href = deletehref, class="btn btn-default btn-lg", data-toggle='modal', data-target='#confirm-delete' )
-            span(class="glyphicon glyphicon-remove") Delete
-        #confirm-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-            .modal-dialog
-                .modal-content
-                    .modal-header
-                        h2.text-center WARNING!
-                    .modal-body
-                        h3 If delete, the file will be completely deleted and there is no way to get it back. Are you sure to delete the asset?
-                    .modal-footer
-                        button.btn.btn-default(type='button', data-dismiss='modal') Cancel
-                        a.btn.btn-danger.btn-ok Delete
+                if(asset.valid == false)
+                    tr
+                        td Deleted by :
+                        td #{asset.deletedBy}
+                    tr
+                        td Deleted Time:
+                        td #{asset.deletedTimeFormatted}
+    if( asset.valid != false)
+        .text-center
+            - var alterhref = "/catalog/assetalter?id=" + asset.id
+            - var deletehref = "/catalog/assetdelete?id=" + asset.id
+            - var downloadhref = "/catalog/assetdownload?id=" + asset.id
+            a(href = downloadhref class="btn btn-default btn-lg")
+                span(class="glyphicon glyphicon-download-alt") Download
+            a(href = alterhref class="btn btn-default btn-lg")
+                span(class="glyphicon glyphicon-pencil") Alter
+            a(href ='#' data-href = deletehref, class="btn btn-default btn-lg", data-toggle='modal', data-target='#confirm-delete' )
+                span(class="glyphicon glyphicon-remove") Delete
+            #confirm-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            h2.text-center WARNING!
+                        .modal-body
+                            h3 If delete, the file will be completely deleted and there is no way to get it back. Are you sure to delete the asset?
+                        .modal-footer
+                            button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+                            a.btn.btn-danger.btn-ok Delete
     script.
         $(document).ready(function () {
             getdirectory();

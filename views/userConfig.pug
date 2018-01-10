@@ -1,0 +1,140 @@
+extends layout
+block content
+        h1.text-center User list:
+
+        div(style='margin-left:20px;margin-top:20px')
+            table.table.table-dark
+                thead.thead-dark
+                    tr
+                        th(scope='col') #
+                        th(scope='col') Email
+                            a#email.glyphicon.glyphicon-sort(type='button')
+                        th(scope='col') Search
+
+                        th(scope='col') Create
+
+                        th(scope='col') Update
+
+                        th(scope='col') Delete
+
+                        th(scope='col') Config
+
+                -function checkSearch ( permission){return permission.indexOf('search')  !== -1;}
+                -function checkCreate ( permission){return permission.indexOf('create')  !== -1;}
+                -function checkUpdate ( permission){return permission.indexOf('update')  !== -1;}
+                -function checkDelete ( permission){return permission.indexOf('delete')  !== -1;}
+
+                tbody
+                    dl
+                    - var i = (parseInt(page) - 1) * 10 + 1;
+                    each user in userList
+                        dt
+
+                            tr
+                                th(scope='row') #{i}
+                                //th(scope='row')
+                                td
+                                   p #{user.email}
+
+                                td
+                                    -var searchPermission = checkSearch(user.permission);
+                                    if searchPermission
+                                        .glyphicon.glyphicon-ok
+                                td
+                                    -var createPermission = checkCreate(user.permission);
+                                    if createPermission
+                                        .glyphicon.glyphicon-ok
+                                td
+                                    -var updatePermission = checkUpdate(user.permission);
+                                    if updatePermission
+                                        .glyphicon.glyphicon-ok
+                                td
+                                    -var deletePermission = checkDelete(user.permission);
+                                    if deletePermission
+                                        .glyphicon.glyphicon-ok
+                                td
+                                    -var info = 'setModalInfo(\'' + user.id + '\',\'' + user.email + '\',\'[' + user.permission + ']\')';
+                                    -console.log(info)
+                                    button.btn.btn-default.glyphicon.glyphicon-cog(type='button', data-toggle='modal', data-target='#config_user',onclick=info)
+                                    if user.role !== 'admin'
+                                        button.btn.btn-default.glyphicon.glyphicon-minus(type='button', data-toggle='modal', data-target='#confirm_delete')
+                                        #confirm_delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                                            .modal-dialog
+                                                .modal-content
+                                                    .modal-header
+                                                        h2.text-center WARNING!
+                                                    .modal-body
+                                                        h3.text-center Are you sure to delete the user?
+                                                        br
+                                                    .modal-footer
+                                                        button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+                                                        button.btn.btn-danger.btn-ok(type='button' onclick='deleteUser(\'' + user.id + '\')') Delete
+                            - i = i + 1;
+                // Modal
+                #config_user.modal.fade(tabindex='-1', role='dialog', aria-labelledby='config_user_label', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                    | ×
+                                h4#config_user_label.modal-title.text-center
+                                    | Config the User
+                            .modal-body
+
+                                form.form-group
+                                    label#config_email
+                                    br
+                                    input#user_id(type='hidden')
+                                    input#searchPermission(type='checkbox')
+                                    label.form-check-label Search Permission
+                                    br
+                                    input#createPermission(type='checkbox')
+                                    label.form-check-label Create Permission
+                                    br
+                                    input#updatePermission(type='checkbox')
+                                    label.form-check-label Update Permission
+                                    br
+                                    input#deletePermission(type='checkbox')
+                                    label.form-check-label Delete Permission
+                                    br
+                                    //input#.form-control(type='text', placeholder='New publication name')
+                                    //input#.form-control(type='text', placeholder='New publication name')
+
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal')
+                                    | close
+                                button.btn.btn-primary(type='button', onclick ="changePermission()") Submit
+            -var sortOrder = order === '-1'?'Descending Order':'Ascending Order'
+            .text-right Sort by: Email.  In: #{sortOrder}
+            .text-center
+                //font #{(parseInt(userNum) / 10 + 1)}
+                ul.pagination
+                    li.page-item
+                        if(page !== '1')
+                            - const preHref = '?page=' + (page - 1) + '&order=' + order;
+                            a.page-link(href=preHref ) Previous
+                        else
+                            a.page-link Previous
+
+                    -for (var i = 1; i <= (parseInt(userNum) / 10 + 1); i++)
+                        li.page-item
+                            if(i != page)
+                                -var itemHref = '?page=' + i + '&order=' + order;
+                                a.page-link(href=itemHref) #{i}
+                            else
+                                a.page-link
+                                    font(color='black') #{i}
+
+
+                    if(page < (userNum / 10))
+                        li.page-item
+                            -var nextHref = '?page=' + (parseInt(page) + 1) + '&order=' + order;
+                            a.page-link(href=nextHref) Next
+        script(src='/javascripts/view/userConfig.js')
+        script.
+            $(document).ready(function () {
+                var newOrder = '#{order}'=='-1'?'1':'-1';
+                $("#email").attr('href','?page=1&order=' + newOrder);
+
+            });
+

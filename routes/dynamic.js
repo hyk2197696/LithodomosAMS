@@ -8,7 +8,7 @@ var delete_controller = require('../controllers/assetdeletecontroller');
 var asset_controller = require('../controllers/assetcontroller');
 var content_controller = require('../controllers/contentcreatecontroller');
 var directory_controller = require('../controllers/directorycontroller');
-
+const user_controller = require('../controllers/user_controller');
 //all request in this file aim for exchange data dynamically, without any page redirection
 
 //select/get
@@ -31,6 +31,10 @@ router.get('/getusername', (req,res)=>{res.end(req.user.email)});
 //check
 router.get('/checkfolderexistance', directory_controller.check_folder_existance);
 
+//change user permission
+router.get('/changepermission', isAdmin, user_controller.change_permission);
+
+router.get('/deleteuser', isAdmin, user_controller.delete_user);
 
 //create content
 router.get('/projectcreate', content_controller.project_create_get);
@@ -56,3 +60,16 @@ router.get('/diagramtypecreate', content_controller.diagram_type_create_get);
 router.get('/publicationcreate', content_controller.publication_create_get);
 
 module.exports = router;
+
+function isAdmin(req, res, next){
+    if(req.isAuthenticated()){
+        if(req.user.role === 'admin'){
+            return next();
+        }
+        else{
+            res.render('homepage',{title:'Only admin user can access that!'});
+
+        }
+    }
+    res.redirect('/');
+}

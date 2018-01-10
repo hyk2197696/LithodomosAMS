@@ -85,8 +85,7 @@ html(lang='en')
             a(href='/catalog/fullassetcreate') Create Asset
           li
             a(href='/catalog/book/create') To be added
-          li
-            a(href='/catalog/bookinstance/create') To be added
+          #config
       // /#sidebar-wrapper
       // Page Content
       #page-content-wrapper
@@ -117,6 +116,9 @@ html(lang='en')
           req.onreadystatechange = function() {
               if (req.readyState === 4) {
                   $("#userName").html('Hi, ' + req.responseText);
+                  if(req.responseText === 'admin'){
+                      $("#config").html('<li><a href="/catalog/config?page=1&order=1">User Control</a></li>')
+                  }
               }
           }
           req.send();

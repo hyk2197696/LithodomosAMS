@@ -1,7 +1,6 @@
 /**
  * Controller for fake directory
  */
-const con = require('./databasecontroller');
 const async = require('async');
 const app = require('../app');
 const json = require('json');
