@@ -158,7 +158,7 @@ let getNewAssetTemplate = fields => {
             if (fields.pose_name != '' && fields.pose_name != null) {
                 assetTemplate.pose = fields.pose_name;
             }
-            if (fields.location_name != '' &&  fields.location_name != null) {
+            if (fields.location_name != '' &&  fields.location_name != b) {
                 assetTemplate.location = fields.location_name;
             }
             if (fields.gender != 'uncertain') {

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 require('../config/passport')(passport); // pass passport for configuration
+const permission = require('../config/permission');
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
@@ -17,7 +18,7 @@ router.get('/signup', function(req, res) {
     res.render('signup', { message: req.flash('signupMessage') });
 });
 
-router.get('/profile', isLoggedIn, function(req, res) {
+router.get('/profile', permission.isLoggedIn, function(req, res) {
     console.log(req.user);
     res.render('profile', {
         user : req.user // get the user out of session and pass to template
@@ -43,14 +44,5 @@ router.post('/login', passport.authenticate('local-login', {
 }));
 
 
-// route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
 
-    // if user is authenticated in the session, carry on
-    if (req.isAuthenticated())
-        return next();
-
-    // if they aren't redirect them to the home page
-    res.redirect('/');
-}
 module.exports = router;

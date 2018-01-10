@@ -9,67 +9,56 @@ var asset_controller = require('../controllers/assetcontroller');
 var content_controller = require('../controllers/contentcreatecontroller');
 var directory_controller = require('../controllers/directorycontroller');
 const user_controller = require('../controllers/user_controller');
+const permission = require('../config/permission');
 //all request in this file aim for exchange data dynamically, without any page redirection
 
 //select/get
-router.get('/selectproject', database_controller.select_project);
+router.get('/selectproject', permission.checkSearchPermission, database_controller.select_project);
 
-router.get('/selectallproject', database_controller.select_all_project);
+router.get('/selectallproject', permission.checkSearchPermission, database_controller.select_all_project);
 
-router.get('/selectallsite', database_controller.select_all_site);
+router.get('/selectallsite', permission.checkSearchPermission, database_controller.select_all_site);
 
-router.get('/selectallreference', database_controller.select_all_reference);
+router.get('/selectallreference', permission.checkSearchPermission, database_controller.select_all_reference);
 
-router.get('/selectalldirectory', directory_controller.select_all_directory);
+router.get('/selectalldirectory', permission.checkSearchPermission, directory_controller.select_all_directory);
 
-router.get('/getfullfolderdirectory', directory_controller.get_full_folder_directory);
+router.get('/getfullfolderdirectory', permission.checkSearchPermission, directory_controller.get_full_folder_directory);
 
-router.get('/selectallassetname', database_controller.get_all_asset_name);
+router.get('/selectallassetname', permission.checkSearchPermission, database_controller.get_all_asset_name);
 
-router.get('/getusername', (req,res)=>{res.end(req.user.email)});
+router.get('/getusername', permission.isLoggedIn, (req,res)=>{res.end(req.user.email)});
 
 //check
-router.get('/checkfolderexistance', directory_controller.check_folder_existance);
+router.get('/checkfolderexistance', permission.checkSearchPermission, directory_controller.check_folder_existance);
 
 //change user permission
-router.get('/changepermission', isAdmin, user_controller.change_permission);
+router.get('/changepermission', permission.isAdmin, user_controller.change_permission);
 
-router.get('/deleteuser', isAdmin, user_controller.delete_user);
+router.get('/deleteuser', permission.isAdmin, user_controller.delete_user);
 
 //create content
-router.get('/projectcreate', content_controller.project_create_get);
+router.get('/projectcreate', permission.checkCreatePermission, content_controller.project_create_get);
 
-router.get('/referencecreate', content_controller.reference_create_get);
+router.get('/referencecreate', permission.checkCreatePermission, content_controller.reference_create_get);
 
-router.get('/periodcreate', content_controller.period_create_get);
+router.get('/periodcreate', permission.checkCreatePermission, content_controller.period_create_get);
 
-router.get('/statuetypecreate', content_controller.statue_type_create_get);
+router.get('/statuetypecreate', permission.checkCreatePermission, content_controller.statue_type_create_get);
 
-router.get('/culturecreate', content_controller.culture_create_get);
+router.get('/culturecreate', permission.checkCreatePermission, content_controller.culture_create_get);
 
-router.get('/materialcreate', content_controller.material_create_get);
+router.get('/materialcreate', permission.checkCreatePermission, content_controller.material_create_get);
 
-router.get('/architecturaltypecreate', content_controller.architectural_type_create_get);
+router.get('/architecturaltypecreate', permission.checkCreatePermission, content_controller.architectural_type_create_get);
 
-router.get('/stylecreate', content_controller.style_create_get);
+router.get('/stylecreate', permission.checkCreatePermission, content_controller.style_create_get);
 
-router.get('/shadertypecreate', content_controller.shader_type_create_get);
+router.get('/shadertypecreate', permission.checkCreatePermission, content_controller.shader_type_create_get);
 
-router.get('/diagramtypecreate', content_controller.diagram_type_create_get);
+router.get('/diagramtypecreate', permission.checkCreatePermission, content_controller.diagram_type_create_get);
 
-router.get('/publicationcreate', content_controller.publication_create_get);
+router.get('/publicationcreate', permission.checkCreatePermission, content_controller.publication_create_get);
 
 module.exports = router;
 
-function isAdmin(req, res, next){
-    if(req.isAuthenticated()){
-        if(req.user.role === 'admin'){
-            return next();
-        }
-        else{
-            res.render('homepage',{title:'Only admin user can access that!'});
-
-        }
-    }
-    res.redirect('/');
-}

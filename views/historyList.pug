@@ -1,0 +1,91 @@
+extends layout
+
+block content
+
+    h1.text-center Delete History:
+
+    div(style='margin-left:20px;margin-top:20px')
+        table.table.table-dark
+            thead.thead-dark
+                tr
+                    th(scope='col') #
+                    th(scope='col') Name
+                        -var nameHref = '?page=1&sortBy=name&method=1';
+                        a#name.glyphicon.glyphicon-sort(type='button', href=nameHref)
+                    th(scope='col') Type
+                        -var typeHref = '?page=1&sortBy=type&method=1';
+                        a#type.glyphicon.glyphicon-sort(type='button', href=typeHref)
+                    th(scope='col') File Type
+                        -var fileTypeHref = '?page=1&sortBy=fileType&method=1';
+                        a#fileType.glyphicon.glyphicon-sort(type='button', href=fileTypeHref)
+                    th(scope='col') Delete Time
+                        -var deletedTimeHref = '?page=1&sortBy=deletedTime&method=1';
+                        a#deletedTime.glyphicon.glyphicon-sort(type='button', href=deletedTimeHref)
+                    th(scope='col') Deleted By
+                        -var deletedByHref = '?page=1&sortBy=deletedBy&method=1';
+                        a#deletedBy.glyphicon.glyphicon-sort(type='button', href=deletedByHref)
+
+            tbody
+                dl
+                - var i = (parseInt(page) - 1) * 10 + 1;
+                each asset in list_asset
+                    dt
+                        - const asset_href = '/catalog/asset?id=' + asset.id
+                        tr
+                            th(scope='row') #{i}
+                            td
+                                a(href=asset_href) #{asset.name}
+                            td #{asset.type}
+                            td #{asset.fileType}
+                            td #{asset.deletedTimeFormatted}
+                            td #{asset.deletedBy}
+                        - i = i + 1;
+
+        -var order = method === '-1'?'Descending Order':'Ascending Order'
+        .text-right Sort by: #{sortBy.toUpperCase()}.  In: #{order}
+        .text-center
+            //font #{(assetNum / 10 + 1)}
+            ul.pagination
+                li.page-item
+                    if(page !== '1')
+                        - const preHref = '?page=' + (page - 1) + '&sortBy=' + sortBy + '&method=' + method ;
+                        a.page-link(href=preHref ) Previous
+                    else
+                        a.page-link Previous
+
+                -for (var i = 1; i <= (assetNum / 10 + 1); i++)
+                    li.page-item
+                        if(i != page)
+                            -var itemHref = '?page=' + i + '&sortBy=' + sortBy + '&method=' + method ;
+                            a.page-link(href=itemHref) #{i}
+                        else
+                            a.page-link
+                                font(color='black') #{i}
+
+                if(page < (assetNum / 10))
+                    li.page-item
+                        -var nextHref = '?page=' + (parseInt(page) + 1) + '&sortBy=' + sortBy + '&method=' + method;
+                        a.page-link(href=nextHref) Next
+
+    script.
+
+        $(document).ready(function () {
+            var order = '#{method}'==='-1'?'1':'-1';
+            switch('#{sortBy}') {
+                case 'name':
+                    $("#name").attr('href','historylist?page=1&sortBy=name&method=' + order);
+                    break;
+                case 'type':
+                    $("#type").attr('href','historylist?page=1&sortBy=type&method=' + order);
+                    break;
+                case 'fileType':
+                    $("#fileType").attr('href','historylist?page=1&sortBy=fileType&method=' + order);
+                    break;
+                case 'deletedTime':
+                    $("#deletedTime").attr('href','historylist?page=1&sortBy=deletedTime&method=' + order);
+                    break;
+                case 'deletedBy':
+                    $("#deletedBy").attr('href','historylist?page=1&sortBy=deletedBy&method=' + order);
+                    break;
+            }
+        });

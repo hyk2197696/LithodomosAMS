@@ -16,7 +16,7 @@ exports.index = (req, res, next) => {
             return next(err);
         }
 
-        res.render('homepage', {user : req.user, title: 'Lithodomos Asset Management System', assetNum: countAsset});
+        res.render('homepage', {user : req.user, title: 'Welcome to Lithodomos Asset Management System', assetNum: countAsset});
     });
 };
 
