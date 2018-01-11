@@ -259,6 +259,8 @@ let getNewAssetTemplate = fields => {
             assetTemplate.style = fields.style_name === '-1' ? null : fields.style_name;
             break;
         case 'Prop':
+            assetTemplate.propType = fields.prop_type;
+            assetTemplate.propName = fields.prop_name === '-1'? null: fields.prop_name;
             break;
     }
     return assetTemplate;

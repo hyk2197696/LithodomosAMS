@@ -481,7 +481,7 @@ block content
                     //prop type
                     div.form-group
                         label(for='prop_type') Prop Type:
-                        input#prop_type.form-control(type='text', name='prop_type', required='true', disabled   )
+                        input#prop_type.form-control(type='text', name='prop_type', required='true', readonly='readonly', value=asset.propType   )
 
                     //Prop name
                     div.form-group.row
@@ -493,8 +493,8 @@ block content
                                     option#prop_name_default(value= '-1') Please select a propName if there is one
                                 else
                                     option#prop_name_default(value= asset.propName.id) #{asset.propName.name}
-                                    option(value= '-1') No propName
-                                for ref in prop_name_list
+                                    option(value= '-1') No Prop Name
+                                for ref in prop_list
                                     if ref.id != (null == asset.propName ? null : asset.propName.id)
                                         option(value=ref.id) #{ref.name}
                         div.col-sm-3

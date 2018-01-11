@@ -20,6 +20,7 @@ const ShaderType = require('../models/shaderType');
 const DiagramType = require('../models/diagramType');
 const Publication = require('../models/publication');
 const Project = require('../models/project');
+const Prop = require('../models/prop');
 const uniqid = require('uniqid');
 const ObjectID = require("bson-objectid");
 const path = require('path');
@@ -57,6 +58,9 @@ exports.search_get = (req, res, next) => {
         },
         publication_list: callback => {
             Publication.find().exec(callback);
+        },
+        prop_list: callback => {
+            Prop.find().exec(callback);
         }
 
     }, (err, result) => {
@@ -79,6 +83,8 @@ exports.search_get = (req, res, next) => {
                 material_list: result.material_list,
                 architectural_type_list: result.architectural_type_list,
                 style_list: result.style_list,
+                prop_list: result.prop_list
+
             });
     });
 };
@@ -218,6 +224,10 @@ let getNewAssetTemplate = fields => {
             }
             break;
         case 'Prop':
+            assetTemplate.propType = fields.prop_type;
+            if (fields.prop_name != '-1'){
+                assetTemplate.propName = fields.prop_name;
+            }
             break;
     }
     return assetTemplate;

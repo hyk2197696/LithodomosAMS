@@ -21,6 +21,7 @@ const DiagramType = require('../models/diagramType');
 const Publication = require('../models/publication');
 const Project = require('../models/project');
 const FakeDirectory = require('../models/fakeDirectory');
+const Prop = require('../models/prop');
 const ObjectID = require("bson-objectid");
 const path = require('path');
 const queryString = require('query-string');
@@ -42,6 +43,7 @@ exports.asset_get = (req, res, next) => {
         .populate('architecturalCulture', Culture)
         .populate('architecturalElementType', ArchitecturalElementType)
         .populate('style', Style)
+        .populate('propName', Prop)
         .exec((err, asset_datail) => {
             if (err) {
                 return next(err);
@@ -177,6 +179,12 @@ let getNewAssetTemplate = fields => {
             }
             break;
         case 'Prop':
+            if (fields.prop_type != '-1' && fields.prop_type != null) {
+                assetTemplate.propType = fields.prop_type;
+            }
+            if (fields.prop_name != '-1' && fields.prop_name != null) {
+                assetTemplate.propName = fields.prop_name;
+            }
             break;
     }
     return assetTemplate;

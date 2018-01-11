@@ -47,7 +47,7 @@ block content
             div.form-group
                 label(for='asset_name') Asset Name:
                 div#asset_name_div
-                    input#asset_name.typeahead.form-control(type='text', placeholder='Input Asset Name', name='name')
+                    input#asset_name.typeahead.form-control(type='text', placeholder='Input Asset Name', name='asset_name')
 
             //Directory
             div.form-group.row
@@ -222,6 +222,22 @@ block content
                         label(for='site_name') Site:
                         div#site_div
                             input#site_name.typeahead.form-control(type='text' ,placeholder='Input Site Name', name='site_name'  )
+
+                #prop_form.tab-pane.fade
+                    //prop type
+                    div.form-group
+                        label(for='prop_type') Prop Type:
+                        input#prop_type.form-control(type='text', name='prop_type', required='true', readonly="readonly")
+
+                    //Prop name
+                    div.form-group.row
+                        label.col-sm-12(for='prop_name') Prop Name:
+                        div.col-sm-12
+                            select#prop_name.form-control(type='select', placeholder='Select Prop name' name='prop_name'  )
+                                option#prop_name_default(value= '-1') Please select a prop name if there is one
+                                for propName in prop_list
+                                    option(value=propName.id) #{propName.name}
+
             button.btn.btn-secondary(type='submit') Submit
 
     script(src='/javascripts/view/assetSearch.js')

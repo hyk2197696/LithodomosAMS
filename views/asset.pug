@@ -79,7 +79,7 @@ block content
                         tr
                             td Statue Material
                             td #{asset.material.name}
-                    if(asset.pose != null)
+                    if(asset.pose != null && asset.pose != '')
                         tr
                             td Pose
                             td #{asset.pose}
@@ -87,7 +87,7 @@ block content
                         tr
                             td Gender
                             td #{asset.gender}
-                    if(asset.location != null)
+                    if(asset.location != null && asset.pose != '')
                         tr
                             td Location :
                             td #{asset.location}
@@ -104,6 +104,14 @@ block content
                         tr
                             td Style
                             td #{asset.style.name}
+                if(asset.type == 'Prop')
+                    tr
+                        td Prop Type
+                        td #{asset.propType}
+                    if(asset.propName != null)
+                        tr
+                            td Prop Name
+                            td #{asset.propName.name}
                 if(asset.valid == false)
                     tr
                         td Deleted by :

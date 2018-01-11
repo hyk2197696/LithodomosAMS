@@ -21,6 +21,7 @@ const DiagramType = require('../models/diagramType');
 const Publication = require('../models/publication');
 const Project = require('../models/project');
 const FakeDirectory = require('../models/fakeDirectory');
+const Prop = require('../models/prop');
 const uniqid = require('uniqid');
 const ObjectID = require("bson-objectid");
 const path = require('path');
@@ -42,6 +43,7 @@ exports.alter_get = (req, res, next) => {
                 .populate('architecturalCulture', Culture)
                 .populate('architecturalElementType', ArchitecturalElementType)
                 .populate('style', Style)
+                .populate('propName', Prop)
                 .exec(callback)
         },
         reference_list: callback => {
@@ -76,6 +78,9 @@ exports.alter_get = (req, res, next) => {
         },
         publication_list: callback => {
             Publication.find().exec(callback);
+        },
+        prop_list: callback => {
+            Prop.find().exec(callback);
         }
     }, (err, result) => {
         if (err) {
@@ -97,6 +102,7 @@ exports.alter_get = (req, res, next) => {
                 material_list: result.material_list,
                 architectural_type_list: result.architectural_type_list,
                 style_list: result.style_list,
+                prop_list: result.prop_list
             });
     })
 }
@@ -164,6 +170,8 @@ let getNewAssetTemplate = fields => {
             assetTemplate.style = fields.style_name == '-1' ? null : fields.style_name;
             break;
         case 'Prop':
+            assetTemplate.propType = fields.prop_type;
+            assetTemplate.propName = fields.prop_name === '-1'? null: fields.prop_name;
             break;
     }
     return assetTemplate;

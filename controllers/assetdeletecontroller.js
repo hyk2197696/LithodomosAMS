@@ -1,8 +1,6 @@
 /**
  * Controller for asset deletion
  */
-const con = require('./databasecontroller');
-const app = require('../app');
 const Asset = require('../models/asset');
 const fs = require('fs');
 const async = require('async');
