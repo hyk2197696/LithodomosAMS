@@ -44,12 +44,13 @@ block content
                                 a(href= folder_href)   #{folder.name}
                 dl
                 each asset in asset_list
-                    dt
-                        - var asset_href = '/catalog/asset?id=' + asset.id
-                        tr
-                            th(scope='row')
-                                span.glyphicon.glyphicon-text-background
-                                a(href= asset_href)   #{asset.name}
+                    if asset.valid == true
+                        dt
+                            - var asset_href = '/catalog/asset?id=' + asset.id
+                            tr
+                                th(scope='row')
+                                    span.glyphicon.glyphicon-text-background
+                                    a(href= asset_href)   #{asset.name}
                 th(scope='row')
 
 

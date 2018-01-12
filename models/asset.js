@@ -16,6 +16,8 @@ const AssetSchema = new Schema({
         require: true,
         default: 'Asset'
     },
+    version: Number,
+    history:{ type: [JSON] },
     period: {type: Schema.ObjectId, ref: 'Period'},
     valid: {type: Boolean, default: true}, //for soft deletion
 
@@ -77,5 +79,27 @@ AssetSchema
     .get(function () {
         return this.deletedTime ? moment(this.deletedTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
     });
+
+AssetSchema
+    .virtual('downloadLink')
+    .get(function () {
+
+        for(let i = 0; i < this.history.length; i++){
+            if(this.history[i].activated === true){
+                return this.trueLocation + this.history[i].name;
+            }
+        }
+    });
+
+AssetSchema
+    .virtual('activatedVersion')
+    .get(function() {
+        for (let i = 0; i < this.history.length; i++) {
+            if (this.history[i].activated === true) {
+                return this.history[i]
+            }
+        }
+    });
+
 
 module.exports = mongoose.model('Asset', AssetSchema);

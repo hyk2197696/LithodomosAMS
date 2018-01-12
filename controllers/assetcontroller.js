@@ -60,7 +60,8 @@ exports.asset_download = (req, res, next) => {
         if (err) {
             return next(err);
         }
-        res.download(result.trueLocation, result.fileName);
+        console.log(result.downloadLink)
+        res.download(result.downloadLink, result.fileName);
     });
 };
 
@@ -124,6 +125,16 @@ exports.asset_list = (req, res, next) => {
 
 };
 
+exports.history_version_download = (req, res, next) => {
+    Asset.findById(req.query.id, (err, result) => {
+        if (err) {
+            return next(err);
+        }
+        const location = result.trueLocation + result._id + '_version' + req.query.version;
+        console.log(location);
+        res.download(location, result.fileName);
+    });
+};
 
 
 let getNewAssetTemplate = fields => {

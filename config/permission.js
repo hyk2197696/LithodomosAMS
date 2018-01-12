@@ -5,7 +5,7 @@ exports.isLoggedIn = (req, res, next)=> {
         return next();
 
     // if they aren't redirect them to the home page
-    res.redirect('/');
+    res.render('index',{});
 };
 
 exports.checkSearchPermission = (req,res,next) =>  {
@@ -18,7 +18,7 @@ exports.checkSearchPermission = (req,res,next) =>  {
             return;
         }
     }
-    res.redirect('/');
+    res.render('index',{});
     //console.log(req)
 };
 
@@ -32,7 +32,7 @@ exports.checkCreatePermission = (req,res,next) =>  {
             return;
         }
     }
-    res.redirect('/');
+    res.render('index',{});
     //console.log(req)
 };
 
@@ -46,7 +46,7 @@ exports.checkUpdatePermission = (req,res,next) =>  {
             return;
         }
     }
-    res.redirect('/');
+    res.render('index',{});
     //console.log(req)
 };
 
@@ -60,7 +60,7 @@ exports.checkDeletePermission = (req,res,next) =>  {
             return;
         }
     }
-    res.redirect('/');
+    res.render('index',{});
     //console.log(req)
 };
 
@@ -75,5 +75,5 @@ exports.isAdmin = (req, res, next) => {
 
         }
     }
-    res.redirect('/');
+    res.render('index',{});
 };

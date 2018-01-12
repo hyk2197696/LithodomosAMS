@@ -1,0 +1,65 @@
+extends layout
+
+block content
+    h2 Choose a previous version
+    .col-sm-12
+        form(action='/catalog/changeversion', method='post')
+
+            div.col-sm-9
+                input#id(type='hidden',value=asset.id,name='id')
+                select#version_select.form-control.col-sm-10(  name='version'  )
+                    option(value= asset.activatedVersion.version - 1) Activated--Version #{asset.activatedVersion.version}, Updated by: #{asset.activatedVersion.updatedBy}, #{asset.activatedVersion.updateTime}  (#{asset.activatedVersion.description})
+                    for history in asset.history
+                        if(history.activated !== true)
+                            option(value=history.version - 1) Version #{history.version}, Updated by: #{history.updatedBy}, #{asset.activatedVersion.updateTime}  (#{history.description})
+            div.col-sm-3
+                button.btn.btn-default.btn-md(type='sumit' )
+                    | Activate
+    hr.col-sm-12
+
+
+    h2 Upload a new version
+    .col-sm-12
+        form(action='/catalog/updatefile', method='post', enctype='multipart/form-data')
+            input(type='hidden',value=asset.id,name='id')
+            label.col-sm-12 Upload A new File:
+            div.form-group.col-sm-9.text-center
+
+                input.form-control(type='file', name='file_upload', required='true')
+
+            label.col-sm-12 Description
+            .col-sm-9
+                textarea.form-control(rows='5', required='true', name='description')
+            .col-sm-12
+                br
+                button.btn.btn-default.btn-md(type='sumit' )
+                    | Submit
+    hr.col-sm-12
+
+    h2 Check all versions
+    .col-sm-12
+        table.table.table-dark
+            thead.thead-dark
+                tr
+                    th(scope='col') Version
+                    th(scope='col') Updated By
+                    th(scope='col') Update Time
+                    th(scope='col') Description
+                    th(scope='col') Activated
+
+            tbody
+                dl
+                each history in asset.history
+                    dt
+                        - const downloadHref = '/dynamic/historydownload?version=' + history.version + '&id=' + asset.id;
+                        tr
+                            th(scope='row')
+                                a(href=downloadHref) version#{history.version}
+                            td #{history.description}
+                            td #{history.updatedBy}
+                            td #{history.updateTime}
+
+                            td
+                                if history.activated === true
+                                    .glyphicon.glyphicon-ok
+

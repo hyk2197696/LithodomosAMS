@@ -59,9 +59,9 @@ html(lang='en')
           li
             a(href='/catalog/fullassetcreate') Create a new Asset
           li
-            a(href='/catalog/assetfind?id=null') Find an asset
+            a(href='/catalog/assetfind?id=null') Browse
           li
-              -var assetListHref = "/catalog/assetlist?page=1&sortBy=name&method=1"
+              -var assetListHref = "/catalog/assetlist?page=1&sortBy=lastUpdate&valid=true&method=-1"
               a(href=assetListHref) All the assets
           hr
           li

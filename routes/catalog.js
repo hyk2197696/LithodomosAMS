@@ -56,6 +56,21 @@ router.get('/assetlist', permission.checkSearchPermission, asset_controller.asse
 router.get('/historylist', permission.checkSearchPermission, delete_controller.history_list);
 
 router.get('/config', permission.isAdmin, user_controller.config_get);
+
+router.get('/assetrestore', permission.checkCreatePermission, delete_controller.asset_restore);
+
+router.get('/assetshiftdelete', permission.checkDeletePermission, delete_controller.asset_shift_delete);
+
+router.get('/versioncontrol', permission.checkUpdatePermission, alter_controller.version_control_get);
+
+router.post('/changeversion', permission.checkUpdatePermission, alter_controller.version_change);
+
+router.post('/updatefile', permission.checkUpdatePermission, alter_controller.file_update);
+
+router.post('/versionlist', permission.checkUpdatePermission, alter_controller.version_list);
+
+
+
 // route middleware to make sure a user is logged in
 module.exports = router;
 

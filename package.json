@@ -14,6 +14,8 @@
     "bson-objectid": "^1.2.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
+    "dataformat": "^1.0.0",
+    "dateformat": "^3.0.2",
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "express-session": "^1.15.6",

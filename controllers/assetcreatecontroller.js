@@ -19,6 +19,7 @@ const Project = require('../models/project');
 const Prop = require('../models/prop');
 const ObjectID = require("bson-objectid");
 const path = require('path');
+const dateFormat = require('dateformat');
 //get method for asset create
 exports.create_get = (req, res, next) => {
     Reference.find()
@@ -131,8 +132,7 @@ exports.create_post = (req, res, next) => {
                     fakeDirectory: fields.directory,
                     fileName: files.file_upload.name,
                 };
-                console.log("Insert new asset : ");
-                console.log(assetDetail);
+
 
                 //save the uploaded file and rename it using it's id, add the really file name and true location into the asset template
                 const oldpath = files.file_upload.path;
@@ -147,7 +147,11 @@ exports.create_post = (req, res, next) => {
                         return next(err);
                     }
 
+
+
                     //success, save and rename the file
+                    console.log("Insert new asset : ");
+                    console.log(newAsset);
                     fs.rename(oldpath, newpath, err => {
                         if (err) {
                             return next(err);
@@ -185,8 +189,7 @@ exports.asset_create_post = (req, res, next) => {
             assetTemplate.fileType = path.extname(files.file_upload.name);
 
 
-            console.log("Insert new asset : ");
-            console.log(assetTemplate);
+
 
             //save the uploaded file and rename it using it's id, add the really file name and true location into the asset template
             const oldpath = files.file_upload.path;
@@ -203,12 +206,27 @@ exports.asset_create_post = (req, res, next) => {
             if (!fs.existsSync(dir)){
                 fs.mkdirSync(dir);
             }
-            const newpath = dir + '/' + assetTemplate._id;
+
+            assetTemplate.trueLocation = dir + '/';
+
+            //for version control
+            let prototypeName = assetTemplate._id + '_version' +assetTemplate.version;
+            let newHistory = {
+                name: prototypeName,
+                version: assetTemplate.version,
+                activated: true,
+                description: 'First uploaded version',
+                updateTime: dateFormat(Date.now(),'yyyy-mm-dd hh:MM:ss'),
+                updatedBy: req.user.email
+            };
+            assetTemplate.history = [];
+            assetTemplate.history.push(newHistory);
+            const newpath = assetTemplate.trueLocation + prototypeName;
             // const newpath = process.cwd().replace(/\\/g,'/') + '/../file/' +
             //     assetTemplate._id[assetTemplate._id.length - 1] + '/' +
             //     assetTemplate._id[assetTemplate._id.length - 2] + '/' +
             //     assetTemplate._id;
-            assetTemplate.trueLocation = newpath;
+
             console.log('directory' + newpath);
             const newAsset = new Asset(assetTemplate);
 
@@ -217,7 +235,8 @@ exports.asset_create_post = (req, res, next) => {
                 if (err) {
                     return next(err);
                 }
-
+                console.log("Insert new asset : ");
+                console.log(assetTemplate);
                 //success, save and rename the file
                 fs.rename(oldpath, newpath, err => {
                     if (err) {
@@ -275,7 +294,7 @@ let createNewAsset = fields => {
         type: fields.asset_type,
         reference: fields.reference === '-1' ? null : fields.reference,
         fakeDirectory: fields.directory,
-
+        version : 1,
         period: fields.period_name === '-1' ? null : fields.period_name,
     }
 };

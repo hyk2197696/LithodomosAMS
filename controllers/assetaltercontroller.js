@@ -25,6 +25,7 @@ const Prop = require('../models/prop');
 const uniqid = require('uniqid');
 const ObjectID = require("bson-objectid");
 const path = require('path');
+const dateFormat = require('dateformat')
 //asset alter page get method, select all attribute from the database and display in a form
 exports.alter_get = (req, res, next) => {
     async.parallel({
@@ -105,7 +106,7 @@ exports.alter_get = (req, res, next) => {
                 prop_list: result.prop_list
             });
     })
-}
+};
 
 //post method for asset alter
 exports.alter_post = (req, res, next) => {
@@ -139,9 +140,80 @@ exports.alter_post = (req, res, next) => {
             })
         })
     })
-}
+};
+
+exports.version_control_get = (req, res, next) => {
+    let assetTemplate = {_id:req.query.id, valid:true};
+    //console.log(assetTemplate)
+    Asset.findOne(assetTemplate).exec( (err,result) => {
+        //console.log(result);
+        //console.log(result.activedVersion);
+        res.render('versionControl',{asset:result});
+    })
+
+};
+exports.version_change = (req, res, next) => {
+    Asset.findOne({_id:req.body.id, valid:true}).exec( (err, result) => {
+        for(let i = 0; i < result.history.length; i++ ){
+            result.history[i].activated = false;
+        }
+        result.history[req.body.version].activated = true;
+
+        Asset.findByIdAndUpdate(req.body.id, result , {}, err => {
+            if (err) {
+                return next(err);
+            }
+            res.redirect('/catalog/asset?id=' + req.body.id);
+        })
+    })
+};
+exports.file_update = (req, res, next ) => {
+    const form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files) => {
+        if(err) {
+            return next(err);
+        }
 
 
+        Asset.findOne({_id:fields.id, valid:true}).exec( (err, result) => {
+
+            result.version += 1;
+            const oldpath = files.file_upload.path;
+            const newpath = result.trueLocation + result._id +  '_version' + result.version;
+            let newHistory = {
+                name: result._id + '_version' + result.version,
+                version: result.version,
+                activated: true,
+                description: fields.description,
+                updateTime: dateFormat(Date.now(),'yyyy-mm-dd hh:MM:ss'),
+                updatedBy: req.user.email
+            };
+
+            for(let i = 0; i < result.history.length; i++ ){
+                result.history[i].activated = false;
+            }
+            result.history.push(newHistory);
+
+            Asset.findByIdAndUpdate(fields.id, result, {}, err => {
+                if(err) {
+                    return next(err);
+                }
+
+
+                fs.rename(oldpath, newpath, err => {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.render('homepage',{title:'Version Updated'});
+                });
+            })
+        });
+
+    });
+};
+exports.version_list = (req, res, next ) => {
+    asset
+};
 let getNewAssetTemplate = fields => {
     const assetTemplate = createNewAsset(fields);
     switch (fields.asset_type) {

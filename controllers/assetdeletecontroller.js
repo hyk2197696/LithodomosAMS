@@ -11,9 +11,9 @@ exports.delete_get = (req, res, next) => {
         if (err) {
             return next(err);
         }
-        console.log(result.trueLocation);
-        fs.unlinkSync(result.trueLocation);
-        console.log('file deleted');
+
+        //fs.unlinkSync(result.trueLocation);
+        //console.log('file deleted');
         Asset.count((err, countAsset) => {
             if (err) {
                 return next(err);
@@ -22,6 +22,36 @@ exports.delete_get = (req, res, next) => {
         });
     });
 };
+exports.asset_shift_delete = (req, res, next) => {
+
+    Asset.findByIdAndRemove(req.query.id ,  (err,result) => {
+        if (err) {
+            return next(err);
+        }
+        console.log(result);
+        //console.log(result.trueLocation);
+        //fs.unlinkSync(result.trueLocation);
+        //console.log('file deleted');
+        Asset.count((err, countAsset) => {
+            if (err) {
+                return next(err);
+            }
+            res.render('homepage', {title: 'Asset Delete successfully', assetnum: countAsset});
+        });
+    });
+};
+
+exports.asset_restore = (req, res, next) => {
+    Asset.findByIdAndUpdate(req.query.id, {'valid':true, deletedTime: null, deletedBy: null},  (err,result) => {
+        if (err) {
+            return next(err);
+        }
+        //console.log(result.trueLocation);
+        //fs.unlinkSync(result.trueLocation);
+        //console.log('file deleted');
+        res.redirect('/catalog/asset?id=' + req.query.id);
+    });
+}
 
 exports.history_list = (req, res, next ) => {
     const method = req.query.method===undefined?1:req.query.method;

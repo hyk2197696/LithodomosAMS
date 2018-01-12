@@ -15,12 +15,14 @@ const Asset = require('../models/asset');
 exports.find_get = (req, res, next) => {
     let folderDetail = {};
     let assetDetail = {};
+    assetDetail.valid = true;
     if (req.query.id != 'null') {
         folderDetail.super = req.query.id;
         assetDetail.fakeDirectory = req.query.id;
     } else {
         folderDetail.super = null;
         assetDetail.fakeDirectory = null;
+
     }
 
 

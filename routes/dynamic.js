@@ -62,5 +62,9 @@ router.get('/publicationcreate', permission.checkCreatePermission, content_contr
 
 router.get('/propcreate', permission.checkCreatePermission, content_controller.prop_create_get);
 
+
+//download
+router.get('/historydownload', permission.checkSearchPermission, asset_controller.history_version_download);
+
 module.exports = router;
 
