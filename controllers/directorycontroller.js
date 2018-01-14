@@ -125,3 +125,33 @@ exports.get_full_folder_directory = (req, res, next) => {
         }
     )
 };
+
+
+exports.delete_folder = (req, res, next) => {
+    async.parallel({
+        folder_list: callback => {
+            FakeDirectory.find({super:req.query.id})
+                .exec(callback);
+        },
+        asset_list: callback => {
+            Asset.find({valid:true, fakeDirectory:req.query.id})
+                .exec(callback);
+        }
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+
+        if(results.folder_list.length !== 0 || results.asset_list.length !== 0 ){
+            res.end('You need to delete the assets and folders inside before you can delete this folder!')
+        }else{
+            FakeDirectory.findByIdAndRemove(req.query.id).exec( err => {
+                if(err) {
+                    return next(err);
+                }
+
+                res.end('success');
+            })
+        }
+    })
+};

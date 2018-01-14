@@ -43,44 +43,44 @@ block content
                 label(for='asset_type') Asset Type:
                 input#asset_type.form-control(type='text', name='asset_type', required='true', aria-hidden='true', value = asset.type ,readonly="readonly" )
 
+            ////Directory
+            //div.form-group.row
+            //    label.col-sm-12 Directory:
+            //        font(color="red")  *
+            //    div.col-sm-1
+            //        button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
+            //            | choose
+            //
+            //        //modal
+            //        #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+            //            .modal-dialog
+            //                .modal-content
+            //                    .modal-header
+            //                        button.close(type='button', data-dismiss='modal', aria-hidden='true')
+            //                            | ×
+            //                        h4#directory_selector_header.modal-title.text-center
+            //                            | Select a directory
+            //                    #directory_table.modal-body
+            //                        table.table.table-sm.table-dark
+            //                            tbody#directory_tbody
+            //
+            //                    .modal-footer
+            //                        button.btn.btn-default(type='button', data-dismiss='modal')
+            //                            | close
+            //                        button.btn.btn-primary(type='button', data-toggle='modal',onclick = 'save()') Save
+            //
+            //    div.col-sm-11
+            //        .input-group
+            //            #directory_content.input-group-addon Please choose a folder to save the asset
+            //            input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true', value=asset.fakeDirectory.id  )
+            //
+
 
             //asset name
             div.form-group
                 label(for='asset_name') Asset Name:
                     font(color="red")  *
                 input#asset_name.form-control(type='text', placeholder='Input Asset Name', name='asset_name', required='true', value=asset.name   )
-
-            //Directory
-            div.form-group.row
-                label.col-sm-12 Directory:
-                    font(color="red")  *
-                div.col-sm-1
-                    button.btn.btn-default.btn-md(type='button' data-toggle='modal', data-target='#directory_selector' )
-                        | choose
-
-                    //modal
-                    #directory_selector.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                        .modal-dialog
-                            .modal-content
-                                .modal-header
-                                    button.close(type='button', data-dismiss='modal', aria-hidden='true')
-                                        | ×
-                                    h4#directory_selector_header.modal-title.text-center
-                                        | Select a directory
-                                #directory_table.modal-body
-                                    table.table.table-sm.table-dark
-                                        tbody#directory_tbody
-
-                                .modal-footer
-                                    button.btn.btn-default(type='button', data-dismiss='modal')
-                                        | close
-                                    button.btn.btn-primary(type='button', data-toggle='modal',onclick = 'save()') Save
-
-                div.col-sm-11
-                    .input-group
-                        #directory_content.input-group-addon Please choose a folder to save the asset
-                        input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true', value=asset.fakeDirectory.id  )
-
 
 
             //project name

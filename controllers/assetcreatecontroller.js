@@ -100,7 +100,8 @@ exports.asset_create_get = (req, res, next) => {
                 material_list: result.material_list,
                 architectural_type_list: result.architectural_type_list,
                 style_list: result.style_list,
-                prop_list: result.prop_list
+                prop_list: result.prop_list,
+                folderId: (req.query.folderId===null || req.query.folderId === '' )?null:req.query.folderId
             });
     });
 };

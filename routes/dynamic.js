@@ -66,5 +66,7 @@ router.get('/propcreate', permission.checkCreatePermission, content_controller.p
 //download
 router.get('/historydownload', permission.checkSearchPermission, asset_controller.history_version_download);
 
+router.get('/deletefolder', permission.checkDeletePermission, directory_controller.delete_folder);
+
 module.exports = router;
 

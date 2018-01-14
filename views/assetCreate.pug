@@ -43,13 +43,6 @@ block content
                 label(for='asset_type') Asset Type:
                 input#asset_type.form-control(type='text', name='asset_type', required='true', aria-hidden='true',readonly="readonly", value = 'Asset' )
 
-
-            //asset name
-            div.form-group
-                label(for='asset_name') Asset Name:
-                    font(color="red")  *
-                input#asset_name.form-control(type='text', placeholder='Input Asset Name' name='asset_name' required='true'   )
-
             //Directory
             div.form-group.row
                 label.col-sm-12 Directory:
@@ -80,6 +73,13 @@ block content
                     .input-group
                         #directory_content.input-group-addon Please choose a folder to save the asset
                         input#directory.form-control(type='hidden', placeholder='Please choose a folder', name='directory', required = 'true' )
+
+
+            //asset name
+            div.form-group
+                label(for='asset_name') Asset Name:
+                    font(color="red")  *
+                input#asset_name.form-control(type='text', placeholder='Input Asset Name' name='asset_name' required='true'   )
 
 
             //file upload
@@ -595,17 +595,30 @@ block content
             getAllProject();
 
             //get all directories for directory selection
-            getAllDirectory(function (allDirectory) {
-                allDirectories = JSON.parse(allDirectory);
-                setDirectoryTableHeader('Root');
-                setDirectoryTableBody();
-            });
+            if('#{folderId}' !== null && '#{folderId}' !== ''){
+                getAllDirectory(function (allDirectory) {
+                    currentDirectory = '#{folderId}';
+                    allDirectories = JSON.parse(allDirectory);
+                    var currentFolder = getFolderObjectById(currentDirectory)
+                    setDirectoryTableHeader(currentFolder.name);
+                    setDirectoryTableBody();
+                    save();
+                });
+            }
+            else {
+                getAllDirectory(function (allDirectory) {
+                    allDirectories = JSON.parse(allDirectory);
+                    setDirectoryTableHeader('Root');
+                    setDirectoryTableBody();
+                });
+            }
 
             //get All Pose to be used in typeahead
             getAllPose();
 
             //get all site to be us
             getAllSite();
+
 
         });
 

@@ -35,26 +35,54 @@ block content
                                     button.btn.btn-primary(type='submit' onclick ="exist();") Submit
 
                 dl
-                each folder in folder_list
-                    dt
-                        - var folder_href = '/catalog/assetfind?id=' + folder.id
-                        tr
-                            th(scope='row')
-                                span.glyphicon.glyphicon-folder-close
-                                a(href= folder_href)   #{folder.name}
-                dl
-                each asset in asset_list
-                    if asset.valid == true
+                    each folder in folder_list
                         dt
-                            - var asset_href = '/catalog/asset?id=' + asset.id
+                            - var folder_href = '/catalog/assetfind?id=' + folder.id
                             tr
                                 th(scope='row')
-                                    span.glyphicon.glyphicon-text-background
-                                    a(href= asset_href)   #{asset.name}
-                th(scope='row')
+                                    .col-sm-6
+                                        span.glyphicon.glyphicon-folder-close
+                                        a(href= folder_href)   #{folder.name}
+                                    .text-right.col-sm-6
 
+                                        button.btn.btn-xs.glyphicon.glyphicon-trash(type='button' data-toggle='modal', data-target='#folder_delete', onclick='setFolder(\'' + folder.id + '\')')
+                                        //modal
+                #folder_delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                                    | ×
+                                h2#directory_selector_header.modal-title.text-center
+                                    | Warning
+                            .modal-body.text-center
+                                h3 Are you sure to delete the folder?
+                            br
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal')
+                                    | close
+                                button.btn.btn-primary.btn-danger(type='button', data-toggle='modal', data-dismiss='modal',onclick='deleteFolder()') confirm
+                dl
+                    each asset in asset_list
+                        if asset.valid == true
+                            dt
+                                - var asset_href = '/catalog/asset?id=' + asset.id
+                                tr
+                                    th(scope='row')
+                                        .col-sm-12
+                                            span.glyphicon.glyphicon-text-background
+                                            a(href= asset_href)   #{asset.name}
+
+                tr
+                    th(scope='row')
+
+                        if folderId !== 'null'
+                            .col-sm-12
+                                a.glyphicon.glyphicon-asterisk(href='/catalog/fullassetcreate?folderId=' +folderId)
+                                    |  Create new asset here
 
     script.
+        var FolderId = null;
         function exist() {
             //alert();
             if($("#name").val() == ''){
@@ -72,6 +100,27 @@ block content
                         window.location.reload();
                     }else{
                         alert(req.responseText);
+                    }
+                }
+            }
+            req.send();
+        }
+        function setFolder(id){
+            FolderId = id;
+        }
+
+        function deleteFolder() {
+            var req = new XMLHttpRequest();
+
+            req.open("get", "/dynamic/deletefolder?id=" + FolderId);
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+
+                    if (req.responseText == 'success') {
+                        window.location.reload();
+                    } else {
+                        alert(req.responseText);
+                        //$("#folder_delete").modal('hide');
                     }
                 }
             }
