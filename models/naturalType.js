@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var NaturalTypeSchema = new Schema({
+const NaturalTypeSchema = new Schema({
     name: {type: String, required: true}
-})
+});
 
 module.exports = mongoose.model('NaturalType', NaturalTypeSchema);

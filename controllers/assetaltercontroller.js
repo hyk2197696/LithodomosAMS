@@ -1,10 +1,6 @@
 /**
  * Controller for asset alter
  */
-const con = require('./databasecontroller');
-const app = require('../app');
-const json = require('json');
-const exp = require('express');
 const async = require('async');
 const formidable = require('formidable');
 const fs = require('fs');
@@ -22,11 +18,10 @@ const Publication = require('../models/publication');
 const Project = require('../models/project');
 const FakeDirectory = require('../models/fakeDirectory');
 const Prop = require('../models/prop');
-const uniqid = require('uniqid');
-const ObjectID = require("bson-objectid");
-const path = require('path');
-const dateFormat = require('dateformat')
-//asset alter page get method, select all attribute from the database and display in a form
+const dateFormat = require('dateformat');
+
+//asset alter page get method, select all attribute from the database and display in form
+//all the lists are for input selection
 exports.alter_get = (req, res, next) => {
     async.parallel({
         asset: callback => {
@@ -46,9 +41,6 @@ exports.alter_get = (req, res, next) => {
                 .populate('style', Style)
                 .populate('propName', Prop)
                 .exec(callback)
-        },
-        reference_list: callback => {
-            Reference.find().exec(callback);
         },
         reference_list: callback => {
             Reference.find().exec(callback);
@@ -87,7 +79,9 @@ exports.alter_get = (req, res, next) => {
         if (err) {
             return next(err);
         }
+
         //successful
+        //render the form page with all the information selected
         res.render('assetAlter',
             {
                 title: 'Asset Alter',
@@ -112,6 +106,7 @@ exports.alter_get = (req, res, next) => {
 exports.alter_post = (req, res, next) => {
     const form = new formidable.IncomingForm();
     form.parse(req, (err, fields) => {
+        //for checking if the project exists in the database
         async.parallel({
             projectId: callback => {
                 Project.findOne({'name': fields.project_name}).exec(callback);
@@ -121,15 +116,16 @@ exports.alter_post = (req, res, next) => {
                 next(err);
             }
 
-            //if nothing wrong, create a new template for the new asset
+            //if nothing's wrong, create a new template for the new asset
             //get the asset template
             const assetTemplate = getNewAssetTemplate(fields);
             assetTemplate.lastAlterTime = Date.now();
-            if (results.projectId != null) {
+            if (results.projectId !== null) {
                 assetTemplate.project = results.projectId;
             }
-            console.log('update asset:')
+            console.log('update asset:');
             console.log(assetTemplate);
+
             //update the database
             Asset.findByIdAndUpdate(req.query.id, assetTemplate, {}, (err) => {
                 if (err) {
@@ -142,24 +138,25 @@ exports.alter_post = (req, res, next) => {
     })
 };
 
+//get method for version control page
 exports.version_control_get = (req, res, next) => {
-    let assetTemplate = {_id:req.query.id, valid:true};
-    //console.log(assetTemplate)
-    Asset.findOne(assetTemplate).exec( (err,result) => {
-        //console.log(result);
-        //console.log(result.activedVersion);
-        res.render('versionControl',{asset:result});
+    let assetTemplate = {_id: req.query.id, valid: true};
+    Asset.findOne(assetTemplate).exec((err, result) => {
+        res.render('versionControl', {asset: result});
     })
 
 };
+
+//function to deal with the version change request.
+// get a version from the user and set that as the default version
 exports.version_change = (req, res, next) => {
-    Asset.findOne({_id:req.body.id, valid:true}).exec( (err, result) => {
-        for(let i = 0; i < result.history.length; i++ ){
+    Asset.findOne({_id: req.body.id, valid: true}).exec((err, result) => {
+        for (let i = 0; i < result.history.length; i++) {
             result.history[i].activated = false;
         }
         result.history[req.body.version].activated = true;
 
-        Asset.findByIdAndUpdate(req.body.id, result , {}, err => {
+        Asset.findByIdAndUpdate(req.body.id, result, {}, err => {
             if (err) {
                 return next(err);
             }
@@ -167,35 +164,40 @@ exports.version_change = (req, res, next) => {
         })
     })
 };
-exports.file_update = (req, res, next ) => {
+
+//handling the file upload operation
+exports.file_update = (req, res, next) => {
     const form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
-        if(err) {
+        if (err) {
             return next(err);
         }
 
 
-        Asset.findOne({_id:fields.id, valid:true}).exec( (err, result) => {
-
+        Asset.findOne({_id: fields.id, valid: true}).exec((err, result) => {
+            //rename new files with its id and the version
             result.version += 1;
             const oldpath = files.file_upload.path;
-            const newpath = result.trueLocation + result._id +  '_version' + result.version;
+            const newpath = result.trueLocation + result._id + '_version' + result.version;
             let newHistory = {
                 name: result._id + '_version' + result.version,
                 version: result.version,
                 activated: true,
                 description: fields.description,
-                updateTime: dateFormat(Date.now(),'yyyy-mm-dd hh:MM:ss'),
+                updateTime: dateFormat(Date.now(), 'yyyy-mm-dd hh:MM:ss'),
                 updatedBy: req.user.email
             };
 
-            for(let i = 0; i < result.history.length; i++ ){
+
+            //reset the activated status of all the different versions
+            for (let i = 0; i < result.history.length; i++) {
                 result.history[i].activated = false;
             }
             result.history.push(newHistory);
 
+            //update the asset version history
             Asset.findByIdAndUpdate(fields.id, result, {}, err => {
-                if(err) {
+                if (err) {
                     return next(err);
                 }
 
@@ -204,16 +206,17 @@ exports.file_update = (req, res, next ) => {
                     if (err) {
                         return next(err);
                     }
-                    res.render('homepage',{title:'Version Updated'});
+                    res.render('homepage', {title: 'Version Updated'});
                 });
             })
         });
 
     });
 };
-exports.version_list = (req, res, next ) => {
-    asset
-};
+
+//generate the new asset template from the parameter fields
+//this method need all attributes of an asset
+//the attributes which reference another schema will be either '-1' or ObjectId with '-1' represent null
 let getNewAssetTemplate = fields => {
     const assetTemplate = createNewAsset(fields);
     switch (fields.asset_type) {
@@ -243,13 +246,14 @@ let getNewAssetTemplate = fields => {
             break;
         case 'Prop':
             assetTemplate.propType = fields.prop_type;
-            assetTemplate.propName = fields.prop_name === '-1'? null: fields.prop_name;
+            assetTemplate.propName = fields.prop_name === '-1' ? null : fields.prop_name;
             break;
     }
     return assetTemplate;
 };
 
-//create a new asset template based on the request
+//create a new asset template based on the fields
+//name, type and directory can not be null
 let createNewAsset = fields => ({
     name: fields.asset_name,
     type: fields.asset_type,
@@ -257,4 +261,3 @@ let createNewAsset = fields => ({
     fakeDirectory: fields.directory,
     period: fields.period_name == '-1' ? null : fields.period_name,
 });
-

@@ -1,8 +1,8 @@
-var projects = [];
-var poses = [];
-var sites = [];
-var allDirectories = [];
-var currentDirectory = null;
+let projects = [];
+let poses = [];
+let sites = [];
+let allDirectories = [];
+let currentDirectory = null;
 
 
 //for control the size of input bar
@@ -10,20 +10,20 @@ $(".tt-hint").addClass("form-control");
 
 //select all project from the database and make it as typeahaed
 function getAllProject() {
-    var req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
 
     req.open("GET", "/dynamic/selectallproject");
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
 
-            var responds = JSON.parse(req.responseText);
+            const responds = JSON.parse(req.responseText);
             //alert(req.responseText);
             projects = [];
-            for (var i = 0; i < responds.length; i++) {
+            for (let i = 0; i < responds.length; i++) {
                 projects.push(responds[i].name);
             }
 
-            var project = new Bloodhound({
+            const project = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 local: projects
@@ -39,7 +39,7 @@ function getAllProject() {
                     source: project
                 })
         }
-    }
+    };
     req.send();
 }
 
@@ -82,17 +82,17 @@ function getAllPose() {
 // }
 
 function getAllSite() {
-    var req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
 
     req.open("GET", "/dynamic/selectallsite");
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
 
-            var sites = JSON.parse(req.responseText);
+            const sites = JSON.parse(req.responseText);
             //alert(req.responseText);
 
 
-            var site = new Bloodhound({
+            const site = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 local: sites
@@ -145,7 +145,7 @@ function diagram() {
 
 
 function getAllDirectory(callback) {
-    var req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
     req.open("GET", "/dynamic/selectalldirectory");
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
@@ -159,9 +159,9 @@ function getAllDirectory(callback) {
 };
 
 function getFoldersById(id) {
-    var folders = [];
+    const folders = [];
 
-    for (var i = 0; i < allDirectories.length; i++) {
+    for (let i = 0; i < allDirectories.length; i++) {
         if (allDirectories[i].super == id) {
             folders.push(allDirectories[i]);
         }
@@ -171,7 +171,7 @@ function getFoldersById(id) {
 };
 
 function getSuperFolderIdById(id) {
-    for (var i = 0; i < allDirectories.length; i++) {
+    for (let i = 0; i < allDirectories.length; i++) {
         if (allDirectories[i]._id == id) {
             return allDirectories[i].super;
         }
@@ -179,7 +179,7 @@ function getSuperFolderIdById(id) {
 }
 
 function getFolderObjectById(id) {
-    for (var i = 0; i < allDirectories.length; i++) {
+    for (let i = 0; i < allDirectories.length; i++) {
         if (allDirectories[i]._id == id) {
             return allDirectories[i]
         }
@@ -191,11 +191,11 @@ function back(id) {
         return;
     }
     currentDirectory = getSuperFolderIdById(id);
-    var currentFolderName;
+    let currentFolderName;
     if (currentDirectory == null) {
         currentFolderName = 'Root';
     } else {
-        var currentFolder = getFolderObjectById(currentDirectory);
+        const currentFolder = getFolderObjectById(currentDirectory);
         currentFolderName = currentFolder.name;
     }
     setDirectoryTableHeader(currentFolderName);
@@ -206,7 +206,7 @@ function back(id) {
 function explore(id) {
     //alert();
     currentDirectory = id;
-    var currentFolder = getFolderObjectById(id);
+    const currentFolder = getFolderObjectById(id);
     setDirectoryTableHeader(currentFolder.name);
     setDirectoryTableBody();
 }
@@ -218,9 +218,9 @@ function setDirectoryTableHeader(name) {
 }
 
 function setDirectoryTableBody() {
-    var folders = getFoldersById(currentDirectory);
-    for (var i = 0, len = folders.length; i < len; i++) {
-        var html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' + folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
+    const folders = getFoldersById(currentDirectory);
+    for (let i = 0, len = folders.length; i < len; i++) {
+        const html = '<tr/><th scope="row"><botton  type="button" class="btn glyphicon glyphicon-folder-close onclick=" onclick="explore(\'' + folders[i]._id + '\')" > ' + folders[i].name + '</botton></th><th scope="row"/>';
         //alert(html);
         $("#directory_tbody").append(html);
     }
@@ -232,7 +232,7 @@ function save() {
         return;
     }
     $("#directory").val(currentDirectory);
-    var req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
     req.open("GET", "/dynamic/getfullfolderdirectory?id=" + currentDirectory);
     req.onreadystatechange = function () {
 
@@ -241,7 +241,7 @@ function save() {
             $("#directory_content").html('Root' + req.responseText);
             $("#directory_selector").modal('hide');
         }
-    }
+    };
     req.send();
 }
 

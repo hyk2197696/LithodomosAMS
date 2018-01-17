@@ -1,3 +1,9 @@
+/**
+ * user permission control
+ * check the user's permission before access pages and doing operations
+ */
+
+//basic permission for checking the logging status
 exports.isLoggedIn = (req, res, next)=> {
 
     // if user is authenticated in the session, carry on
@@ -8,6 +14,7 @@ exports.isLoggedIn = (req, res, next)=> {
     res.render('index',{});
 };
 
+//check the search permission
 exports.checkSearchPermission = (req,res,next) =>  {
     if(req.isAuthenticated()){
         if (req.user.permission.indexOf('search') !== -1){
@@ -22,6 +29,7 @@ exports.checkSearchPermission = (req,res,next) =>  {
     //console.log(req)
 };
 
+//check the create permission
 exports.checkCreatePermission = (req,res,next) =>  {
     if(req.isAuthenticated()){
         if (req.user.permission.indexOf('create') !== -1){
@@ -36,6 +44,7 @@ exports.checkCreatePermission = (req,res,next) =>  {
     //console.log(req)
 };
 
+//check the update permission
 exports.checkUpdatePermission = (req,res,next) =>  {
     if(req.isAuthenticated()){
         if (req.user.permission.indexOf('update') !== -1){
@@ -50,6 +59,7 @@ exports.checkUpdatePermission = (req,res,next) =>  {
     //console.log(req)
 };
 
+//check the delete permission
 exports.checkDeletePermission = (req,res,next) =>  {
     if(req.isAuthenticated()){
         if (req.user.permission.indexOf('delete') !== -1){
@@ -64,6 +74,7 @@ exports.checkDeletePermission = (req,res,next) =>  {
     //console.log(req)
 };
 
+//check if it is the user
 exports.isAdmin = (req, res, next) => {
     if(req.isAuthenticated()){
         if(req.user.role === 'admin'){

@@ -147,7 +147,7 @@ let diagram = () => {
     $("#asset_type").val("Diagram");
 };
 
-
+//find the folder by the id of the folders
 let getFoldersById = id => {
     let folders = [];
 
@@ -160,6 +160,7 @@ let getFoldersById = id => {
     return folders;
 };
 
+
 let getSuperFolderIdById = id => {
     for (let i = 0; i < allDirectories.length; i++) {
         if (allDirectories[i]._id === id) {
@@ -167,6 +168,7 @@ let getSuperFolderIdById = id => {
         }
     }
 };
+
 
 let getFolderObjectById = id => {
     for (let i = 0; i < allDirectories.length; i++) {
@@ -176,6 +178,7 @@ let getFolderObjectById = id => {
     }
 };
 
+//function for get back when browse the directory
 let back = (id) => {
     if (id === null) {
         return;
@@ -193,6 +196,7 @@ let back = (id) => {
 
 };
 
+//function for explore a folder when browse the directory
 let explore = id => {
     //alert();
     currentDirectory = id;
@@ -216,7 +220,8 @@ let setDirectoryTableBody = () => {
     }
 };
 
-
+//function for save the directory
+// send the folder id to the sever and get the full directory name
 let save = () => {
     if (currentDirectory === null) {
         alert('Can\'t save assets in root directory,\nplease choose another');

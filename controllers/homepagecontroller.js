@@ -1,11 +1,4 @@
-const app = require('../app');
-const formidable = require('formidable');
-const fs = require('fs');
 const Asset = require('../models/asset');
-const mongoose = require('mongoose');
-const Model = require('../models/model');
-const extend = require('mongoose-schema-extend');
-const Schema = mongoose.Schema;
 //index page
 
 

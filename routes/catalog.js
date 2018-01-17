@@ -67,7 +67,7 @@ router.post('/changeversion', permission.checkUpdatePermission, alter_controller
 
 router.post('/updatefile', permission.checkUpdatePermission, alter_controller.file_update);
 
-router.post('/versionlist', permission.checkUpdatePermission, alter_controller.version_list);
+//router.post('/versionlist', permission.checkUpdatePermission, alter_controller.version_list);
 
 
 

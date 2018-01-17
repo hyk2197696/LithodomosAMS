@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var ManMadeTypeSchema = new Schema({
+const ManMadeTypeSchema = new Schema({
     name: {type: String, required: true}
-})
+});
 
 module.exports = mongoose.model('ManMadeType', ManMadeTypeSchema);

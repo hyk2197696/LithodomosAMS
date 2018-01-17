@@ -1,7 +1,6 @@
 /**
  * Controller for database operation
  */
-const json = require('json');
 const Asset = require('../models/asset');
 const Project = require('../models/project');
 

@@ -1,1 +1,1 @@
-var assetList=[];
+let assetList=[];

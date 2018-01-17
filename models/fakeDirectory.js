@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var FakeDirectorySchema = new Schema({
+const FakeDirectorySchema = new Schema({
     name: {type: String, required: true},
     super: this
 });

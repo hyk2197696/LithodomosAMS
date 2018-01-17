@@ -1,13 +1,8 @@
 /**
  * Controller for asset search
  */
-const con = require('./databasecontroller');
-const app = require('../app');
-const json = require('json');
-const exp = require('express');
 const async = require('async');
 const formidable = require('formidable');
-const fs = require('fs');
 const Asset = require('../models/asset');
 const Reference = require('../models/reference');
 const Period = require('../models/period');
@@ -21,12 +16,8 @@ const DiagramType = require('../models/diagramType');
 const Publication = require('../models/publication');
 const Project = require('../models/project');
 const Prop = require('../models/prop');
-const uniqid = require('uniqid');
-const ObjectID = require("bson-objectid");
-const path = require('path');
-const queryString = require('query-string');
 
-//get method for asset search
+//get method for asset search, getting all the information needed for rendering the page
 exports.search_get = (req, res, next) => {
     async.parallel({
         reference_list: callback => {
@@ -92,38 +83,6 @@ exports.search_get = (req, res, next) => {
 
 // Handle Asset search on POST
 exports.search_post = (req, res, next) => {
-
-    // //Check that the id field is not empty
-    // //req.checkBody('name', 'ID required').notEmpty();
-    //
-    // //Trim and escape the name field.
-    // req.sanitize('name').escape();
-    // req.sanitize('name').trim();
-    //
-    // //Run the validators
-    // var errors = req.validationErrors();
-    //
-    //
-    //
-    // if (errors) {
-    //     //If there are errors render the form again, passing the previously entered values and errors
-    //     res.render('searchForm', { title: 'Search Asset', id:req.body.id, errors: errors});
-    //     return;
-    // }
-    // else {
-    //     //if there are no errors search the database and return the result, render the asset list page
-    //     Asset.find( {name: ({$regex:req.body.name})} )
-    //         .exec( (err, list_asset) => {
-    //             if (err)  {return next(err);}
-    //             if(list_asset.length == 0) {
-    //                                  res.render('success', {title: 'empty', massage: 'empty!'});
-    //                              }
-    //                              else {
-    //                                  console.log(list_asset);
-    //                                  res.render('assetList', { list_asset : list_asset})
-    //                              }
-    //         })
-    //  }
     let form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
         async.parallel({
@@ -144,33 +103,14 @@ exports.search_post = (req, res, next) => {
             console.log("Search for assets : ");
             console.log(fields);
             console.log(assetTemplate);
-            return res.redirect('/catalog/assetlist?page=1&sortBy=name&method=1&assetTemplate=' + encodeURI(JSON.stringify(assetTemplate)));
             //find all satisfying assets, sort by asset name
-            // Asset.find({$query: assetTemplate, $orderby: {'name': 1}}).exec((err, list_asset) => {
-            //     if (err) {
-            //         return next(err);
-            //     }
-            //     if (list_asset.length == 0) {
-            //         res.render('success', {title: 'empty', massage: 'empty!'});
-            //     }
-            //     else {
-            //         console.log(list_asset.length);
-            //         res.render('assetlist', {
-            //             list_asset: list_asset,
-            //             assetNum: list_asset.length,
-            //             assetTemplate:  encodeURI(JSON.stringify(assetTemplate)),
-            //             page:1,
-            //             sortBy:'name',
-            //             method: 1
-            //         });
-            //         return res.redirect('/catalog/assetlist?list_asset')
-            //     }
-            // })
+            return res.redirect('/catalog/assetlist?page=1&sortBy=name&method=1&assetTemplate=' + encodeURI(JSON.stringify(assetTemplate)));
+
         })
     });
 };
 
-
+//generate the asset template for asset search
 let getNewAssetTemplate = fields => {
     let assetTemplate = createNewAsset(fields);
     switch (fields.asset_type) {

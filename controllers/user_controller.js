@@ -1,10 +1,10 @@
 /**
  * Controller for user controller
  */
-const mongoose = require('mongoose');
 const User = require('../models/user');
 const async = require('async');
 
+//get method for user config page
 exports.config_get = (req, res, next)=> {
     const page = req.query.page;
     const sortBy = {};
@@ -29,6 +29,7 @@ exports.config_get = (req, res, next)=> {
     })
 };
 
+//handling the change permission request
 exports.change_permission = (req, res, next) => {
     console.log(req.query.id);
     const permissionList = req.query.permission.split(',');
@@ -42,10 +43,11 @@ exports.change_permission = (req, res, next) => {
     })
 };
 
+//handling the user delete request
 exports.delete_user = ( req, res, next) => {
     console.log('delete user: ' + req.query.id);
     User.findByIdAndRemove(req.query.id, err => {
         if(err) next(err);
         res.end('success');
     })
-}
+};

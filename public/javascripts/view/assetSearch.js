@@ -21,17 +21,17 @@ $(document).ready(function () {
 
 
 function getAllAssetName() {
-    var req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
 
     req.open("GET", "/dynamic/selectallassetname");
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
 
-            var names = JSON.parse(req.responseText);
+            const names = JSON.parse(req.responseText);
             //alert(req.responseText);
 
 
-            var name = new Bloodhound({
+            const name = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 local: names
@@ -47,6 +47,6 @@ function getAllAssetName() {
                     source: name
                 })
         }
-    }
+    };
     req.send();
 }

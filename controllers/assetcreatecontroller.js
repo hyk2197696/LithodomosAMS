@@ -41,10 +41,6 @@ exports.create_get = (req, res, next) => {
 
 //get method for asset create. select all the information need to build up the page asynchronously and render the page
 exports.asset_create_get = (req, res, next) => {
-    // Reference.find()
-    //     .exec( (err, reference_list) => {
-    //         if (err)  {return next(err);}
-    //console.log(reference_list);
     async.parallel({
         reference_list: callback => {
             Reference.find().exec(callback);
@@ -118,7 +114,6 @@ exports.create_post = (req, res, next) => {
                 //if the following attributes of the asset is not defined
                 const projectId = found_project === null ? null : found_project.id;
                 const referenceId = fields.reference === '-1' ? null : fields.reference;
-                //var fakeDirectoryId = fields.directory == 'null'? null: fields.directory;
 
                 if (err) {
                     return next(err);
@@ -166,6 +161,7 @@ exports.create_post = (req, res, next) => {
 
 };
 
+//post method for full asset create
 exports.asset_create_post = (req, res, next) => {
 
     const form = new formidable.IncomingForm();
@@ -199,6 +195,7 @@ exports.asset_create_post = (req, res, next) => {
                 fs.mkdirSync(dir);
             }
 
+            //build the file structure for storing assets. See document for more details
             dir += '/' + assetTemplate._id.toString().charAt(assetTemplate._id.toString().length - 1);
             if (!fs.existsSync(dir)){
                 fs.mkdirSync(dir);
@@ -223,10 +220,7 @@ exports.asset_create_post = (req, res, next) => {
             assetTemplate.history = [];
             assetTemplate.history.push(newHistory);
             const newpath = assetTemplate.trueLocation + prototypeName;
-            // const newpath = process.cwd().replace(/\\/g,'/') + '/../file/' +
-            //     assetTemplate._id[assetTemplate._id.length - 1] + '/' +
-            //     assetTemplate._id[assetTemplate._id.length - 2] + '/' +
-            //     assetTemplate._id;
+
 
             console.log('directory' + newpath);
             const newAsset = new Asset(assetTemplate);
@@ -251,6 +245,7 @@ exports.asset_create_post = (req, res, next) => {
 
 };
 
+//build the asset template by the post information
 let getNewAssetTemplate = fields => {
     let assetTemplate = createNewAsset(fields);
     switch (fields.asset_type) {

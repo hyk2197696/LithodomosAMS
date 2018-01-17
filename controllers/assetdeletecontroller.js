@@ -4,16 +4,16 @@
 const Asset = require('../models/asset');
 const fs = require('fs');
 const async = require('async');
+
 //get method for asset deletion delete the asset by id (collection.findByIdAndRemove())
 exports.delete_get = (req, res, next) => {
-
+    //for the deletion, set the valid attribute to false and record delete time and delete user
+    //do not delete files now for future restore
     Asset.findByIdAndUpdate(req.query.id, {'valid':false, deletedTime: Date.now(), deletedBy: req.user.email},  (err,result) => {
         if (err) {
             return next(err);
         }
 
-        //fs.unlinkSync(result.trueLocation);
-        //console.log('file deleted');
         Asset.count((err, countAsset) => {
             if (err) {
                 return next(err);
@@ -22,16 +22,23 @@ exports.delete_get = (req, res, next) => {
         });
     });
 };
+
+//shift delete is for permanently delete the asset and files
 exports.asset_shift_delete = (req, res, next) => {
 
     Asset.findByIdAndRemove(req.query.id ,  (err,result) => {
         if (err) {
             return next(err);
         }
+        console.log('asset deleted:');
         console.log(result);
-        //console.log(result.trueLocation);
-        //fs.unlinkSync(result.trueLocation);
-        //console.log('file deleted');
+        for(let i = 0; i < result.history.length; i++){
+            let location = result.trueLocation + result.history[i].name;
+            console.log(location);
+            fs.unlinkSync(location);
+        }
+
+
         Asset.count((err, countAsset) => {
             if (err) {
                 return next(err);
@@ -41,19 +48,19 @@ exports.asset_shift_delete = (req, res, next) => {
     });
 };
 
+//restore the deleted asset
 exports.asset_restore = (req, res, next) => {
     Asset.findByIdAndUpdate(req.query.id, {'valid':true, deletedTime: null, deletedBy: null},  (err,result) => {
         if (err) {
             return next(err);
         }
-        //console.log(result.trueLocation);
-        //fs.unlinkSync(result.trueLocation);
-        //console.log('file deleted');
         res.redirect('/catalog/asset?id=' + req.query.id);
     });
-}
+};
 
+//method for getting the deleted history list
 exports.history_list = (req, res, next ) => {
+    //for sorting and pagination
     const method = req.query.method===undefined?1:req.query.method;
     const page = req.query.page===undefined?1:req.query.page;
     const sortBy = {};
@@ -102,4 +109,4 @@ exports.history_list = (req, res, next ) => {
 
     })
 
-}
+};

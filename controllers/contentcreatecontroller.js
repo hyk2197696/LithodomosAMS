@@ -1,9 +1,6 @@
 /**
  * Controller for content(different attributes of asset) creation
  */
-const con = require('./databasecontroller');
-const app = require('../app');
-const json = require('json');
 const Reference = require('../models/reference');
 const Period = require('../models/period');
 const StatueType = require('../models/statueType');
@@ -17,7 +14,7 @@ const Publication = require('../models/publication');
 const Project = require('../models/project');
 const Prop = require('../models/prop');
 
-
+//handling the project create request
 exports.project_create_get = (req, res, next) => {
     let projectDetail = {name: req.query.name};
     Project.count(projectDetail, (err, projectCount) => {

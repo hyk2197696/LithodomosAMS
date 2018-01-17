@@ -1,13 +1,7 @@
 /**
  * Controller for asset display
  */
-const con = require('./databasecontroller');
-const app = require('../app');
-const json = require('json');
-const exp = require('express');
 const async = require('async');
-const formidable = require('formidable');
-const fs = require('fs');
 const Asset = require('../models/asset');
 const Reference = require('../models/reference');
 const Period = require('../models/period');
@@ -22,8 +16,6 @@ const Publication = require('../models/publication');
 const Project = require('../models/project');
 const FakeDirectory = require('../models/fakeDirectory');
 const Prop = require('../models/prop');
-const ObjectID = require("bson-objectid");
-const path = require('path');
 const queryString = require('query-string');
 
 //get method for asset display, find an asset by id and send back asset details
