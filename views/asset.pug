@@ -34,12 +34,12 @@ block content
 
                 if (asset.project != null )
                     tr
-                        td Project
+                        td Site
                         td #{asset.project.name}
                 if (asset.reference != null )
                     tr
                         td Reference
-                        td #{asset.reference.name}
+                        td #{asset.reference}
                 if (asset.period != null )
                     tr
                         td Period
@@ -119,62 +119,69 @@ block content
                     tr
                         td Deleted Time:
                         td #{asset.deletedTimeFormatted}
+    -function checkUpdate ( permission){return permission.indexOf('update')  !== -1;}
+    -function checkDelete ( permission){return permission.indexOf('delete')  !== -1;}
     if( asset.valid != false)
         .text-center
+
             - var alterhref = "/catalog/assetalter?id=" + asset.id;
             - var deletehref = "/catalog/assetdelete?id=" + asset.id;
             - var versionHref = "/catalog/versioncontrol?id=" + asset.id;
             - var downloadhref = "/catalog/assetdownload?id=" + asset.id;
             a(href = downloadhref class="btn btn-default btn-lg")
                 span(class="glyphicon glyphicon-download-alt") Download
-            a(href = alterhref class="btn btn-default btn-lg")
-                span(class="glyphicon glyphicon-pencil") Modify Info
-            a(href = versionHref class="btn btn-default btn-lg")
-                span(class="glyphicon glyphicon-upload") Version
-            a(href ='#' data-href = deletehref, class="btn btn-default btn-lg", data-toggle='modal', data-target='#confirm-delete' )
-                span.glyphicon.glyphicon-trash Delete
-            #confirm-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                .modal-dialog
-                    .modal-content
-                        .modal-header
-                            h2.text-center WARNING!
-                        .modal-body
-                            h3 If delete, the file will be completely deleted and there is no way to get it back. Are you sure to delete the asset?
-                            br
-                        .modal-footer
-                            button.btn.btn-default(type='button', data-dismiss='modal') Cancel
-                            a.btn.btn-danger.btn-ok Delete
+            if checkUpdate(user.permission)
+                a(href = alterhref class="btn btn-default btn-lg")
+                    span(class="glyphicon glyphicon-pencil") Modify Info
+            if checkUpdate(user.permission)
+                a(href = versionHref class="btn btn-default btn-lg")
+                    span(class="glyphicon glyphicon-upload") Version
+            if checkDelete(user.permission)
+                a(href ='#' data-href = deletehref, class="btn btn-default btn-lg", data-toggle='modal', data-target='#confirm-delete' )
+                    span.glyphicon.glyphicon-trash Delete
+                #confirm-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                h2.text-center WARNING!
+                            .modal-body
+                                h3 If delete, the file will be completely deleted and there is no way to get it back. Are you sure to delete the asset?
+                                br
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+                                a.btn.btn-danger.btn-ok Delete
     else
         .text-center
             - var restoreHref = '/catalog/assetrestore?id=' + asset.id;
-            a(data-href = restoreHref class="btn btn-default btn-lg" data-toggle='modal', data-target='#confirm-restore')
-                span(class="fa fa-undo") Restore
-            #confirm-restore.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                .modal-dialog
-                    .modal-content
-                        .modal-header
-                            h2.text-center WARNING!
-                        .modal-body
-                            h3 Are you sure to restore the asset?
-                            br
-                        .modal-footer
-                            button.btn.btn-default(type='button', data-dismiss='modal') Cancel
-                            a.btn.btn-danger.btn-ok Restore
-
-            - var restoreHref = '/catalog/assetshiftdelete?id=' + asset.id;
-            a(data-href = restoreHref class="btn btn-default btn-lg" data-toggle='modal', data-target='#confirm-shift-delete')
-                span(class="fa fa-times") Shift Delete
-            #confirm-shift-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                .modal-dialog
-                    .modal-content
-                        .modal-header
-                            h2.text-center WARNING!
-                        .modal-body
-                            h3 If delete, the asset will be completely deleted and there is no way to get files back. Confirm the shift deletion?
-                            br
-                        .modal-footer
-                            button.btn.btn-default(type='button', data-dismiss='modal') Cancel
-                            a.btn.btn-danger.btn-ok Sure
+            if checkDelete(user.permission)
+                a(data-href = restoreHref class="btn btn-default btn-lg" data-toggle='modal', data-target='#confirm-restore')
+                    span(class="fa fa-undo") Restore
+                #confirm-restore.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                h2.text-center WARNING!
+                            .modal-body
+                                h3 Are you sure to restore the asset?
+                                br
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+                                a.btn.btn-danger.btn-ok Restore
+            if checkDelete(user.permission)
+                - var restoreHref = '/catalog/assetshiftdelete?id=' + asset.id;
+                a(data-href = restoreHref class="btn btn-default btn-lg" data-toggle='modal', data-target='#confirm-shift-delete')
+                    span(class="fa fa-times") Shift Delete
+                #confirm-shift-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                h2.text-center WARNING!
+                            .modal-body
+                                h3 If delete, the asset will be completely deleted and there is no way to get files back. Confirm the shift deletion?
+                                br
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+                                a.btn.btn-danger.btn-ok Sure
 
     script.
         $(document).ready(function () {
@@ -204,3 +211,4 @@ block content
         $('#confirm-shift-delete').on('show.bs.modal', function (e) {
                     $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
                 });
+

@@ -5,7 +5,6 @@ const async = require('async');
 const formidable = require('formidable');
 const fs = require('fs');
 const Asset = require('../models/asset');
-const Reference = require('../models/reference');
 const Period = require('../models/period');
 const StatueType = require('../models/statueType');
 const ArchitecturalElementType = require('../models/architecturalElementType');
@@ -28,7 +27,6 @@ exports.alter_get = (req, res, next) => {
             Asset.findById(req.query.id)
                 .populate('project', Project)
                 .populate('fakeDirectory', FakeDirectory)
-                .populate('reference', Reference)
                 .populate('period', Period)
                 .populate('shaderType', ShaderType)
                 .populate('diagramType', DiagramType)
@@ -41,9 +39,6 @@ exports.alter_get = (req, res, next) => {
                 .populate('style', Style)
                 .populate('propName', Prop)
                 .exec(callback)
-        },
-        reference_list: callback => {
-            Reference.find().exec(callback);
         },
         period_list: callback => {
             Period.find().exec(callback);
@@ -86,7 +81,6 @@ exports.alter_get = (req, res, next) => {
             {
                 title: 'Asset Alter',
                 asset: result.asset,
-                reference_list: result.reference_list,
                 shader_type_list: result.shader_type_list,
                 period_list: result.period_list,
                 diagram_type_list: result.diagram_type_list,
@@ -173,7 +167,6 @@ exports.file_update = (req, res, next) => {
             return next(err);
         }
 
-
         Asset.findOne({_id: fields.id, valid: true}).exec((err, result) => {
             //rename new files with its id and the version
             result.version += 1;
@@ -183,6 +176,7 @@ exports.file_update = (req, res, next) => {
                 name: result._id + '_version' + result.version,
                 version: result.version,
                 activated: true,
+                fileName:files.file_upload.name,
                 description: fields.description,
                 updateTime: dateFormat(Date.now(), 'yyyy-mm-dd hh:MM:ss'),
                 updatedBy: req.user.email
@@ -257,7 +251,7 @@ let getNewAssetTemplate = fields => {
 let createNewAsset = fields => ({
     name: fields.asset_name,
     type: fields.asset_type,
-    reference: fields.reference == '-1' ? null : fields.reference,
+    reference: fields.reference == '' || fields.reference === null ? null : fields.reference,
     fakeDirectory: fields.directory,
     period: fields.period_name == '-1' ? null : fields.period_name,
 });

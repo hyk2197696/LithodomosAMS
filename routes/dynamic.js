@@ -23,7 +23,7 @@ router.get('/getfullfolderdirectory', permission.checkSearchPermission, director
 
 router.get('/selectallassetname', permission.checkSearchPermission, database_controller.get_all_asset_name);
 
-router.get('/getusername', permission.isLoggedIn, (req,res)=>{res.end(req.user.email)});
+router.get('/getuser', permission.isLoggedIn, (req,res)=>{res.end(JSON.stringify(req.user))});
 
 //check
 router.get('/checkfolderexistance', permission.checkSearchPermission, directory_controller.check_folder_existance);

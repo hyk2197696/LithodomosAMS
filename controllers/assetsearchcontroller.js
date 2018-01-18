@@ -4,7 +4,6 @@
 const async = require('async');
 const formidable = require('formidable');
 const Asset = require('../models/asset');
-const Reference = require('../models/reference');
 const Period = require('../models/period');
 const StatueType = require('../models/statueType');
 const ArchitecturalElementType = require('../models/architecturalElementType');
@@ -20,9 +19,6 @@ const Prop = require('../models/prop');
 //get method for asset search, getting all the information needed for rendering the page
 exports.search_get = (req, res, next) => {
     async.parallel({
-        reference_list: callback => {
-            Reference.find().exec(callback);
-        },
         period_list: callback => {
             Period.find().exec(callback);
         },
@@ -63,7 +59,6 @@ exports.search_get = (req, res, next) => {
         res.render('assetSearch',
             {
                 title: 'Search for Asset',
-                reference_list: result.reference_list,
                 shader_type_list: result.shader_type_list,
                 period_list: result.period_list,
                 diagram_type_list: result.diagram_type_list,
@@ -98,7 +93,7 @@ exports.search_post = (req, res, next) => {
             let assetTemplate = getNewAssetTemplate(fields);
 
             if (results.projectId != null) {
-                assetTemplate.project = results.projectId;
+                assetTemplate.project = results.projectId.id;
             }
             console.log("Search for assets : ");
             console.log(fields);
@@ -185,7 +180,7 @@ let createNewAsset = fields => {
     if (fields.asset_type != 'Asset') {
         assetTemplate.type = fields.asset_type;
     }
-    if (fields.reference != '-1') {
+    if (fields.reference != '' && fields.reference != null) {
         assetTemplate.reference = fields.reference;
     }
     if (fields.directory != '') {

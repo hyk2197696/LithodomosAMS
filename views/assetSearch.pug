@@ -81,19 +81,21 @@ block content
 
             //project
             div.form-group.row
-                label.col-sm-12(for='project_name') Project Name
+                label.col-sm-12(for='project_name') Site Name
 
                 div#project_div.col-sm-12.container-fluid
-                    input#project_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Project Name', name='project_name'  )
+                    input#project_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Site Name', name='project_name'  )
 
             //Reference
             div.form-group.row
                 label.col-sm-12(for='reference') Reference:
                 div.col-sm-12
-                    select#reference.form-control(type='select', placeholder='Select reference' name='reference' )
-                        option#reference_default_option(value= '-1') Please select a reference if there is one
-                        for ref in reference_list
-                            option(value=ref.id) #{ref.name}
+                    textarea#reference.form-control(rows='5', name='reference')
+                //div.col-sm-12
+                //    select#reference.form-control(type='select', placeholder='Select reference' name='reference' )
+                //        option#reference_default_option(value= '-1') Please select a reference if there is one
+                //        for ref in reference_list
+                //            option(value=ref.id) #{ref.name}
 
             //Period of the asset
             div.form-group.row

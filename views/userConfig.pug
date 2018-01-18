@@ -116,7 +116,7 @@ block content
                         else
                             a.page-link Previous
 
-                    -for (var i = 1; i <= (parseInt(userNum) / 10 + 1); i++)
+                    -for (var i = 1; i <= (parseInt(userNum) / 10 + 0.9); i++)
                         li.page-item
                             if(i != page)
                                 -var itemHref = '?page=' + i + '&order=' + order;

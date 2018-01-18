@@ -97,11 +97,12 @@ html(lang='en')
       function getUser() {
           let req = new XMLHttpRequest();
 
-          req.open("GET", "/dynamic/getUserName");
+          req.open("GET", "/dynamic/getuser");
           req.onreadystatechange = function() {
               if (req.readyState === 4) {
-                  $("#userName").html('Hi, ' + req.responseText);
-                  if(req.responseText === 'admin'){
+                  var user = JSON.parse(req.responseText)
+                  $("#userName").html('Hi, ' + user.email);
+                  if(user.role === 'admin'){
                       $("#config").html('<li><a href="/catalog/config?page=1&order=1">User Control</a></li>')
                   }
               }

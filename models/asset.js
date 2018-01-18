@@ -4,8 +4,8 @@ const moment = require('moment');
 const AssetSchema = new Schema({
     //all Assets' attributes
     name: {type: String, require: true},
-    project: {type: Schema.ObjectId, ref: 'Project'},
-    reference: {type: Schema.ObjectId, ref: 'Reference'},
+    project: {type: Schema.ObjectId, ref: 'Project'},//shown as site
+    reference: {type:String},
     fakeDirectory: {type: Schema.ObjectId, ref: 'FakeDirectory', require: true},
     trueLocation: {type: String, require: true},
     fileName: {type: String, require: true},

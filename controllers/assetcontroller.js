@@ -3,7 +3,6 @@
  */
 const async = require('async');
 const Asset = require('../models/asset');
-const Reference = require('../models/reference');
 const Period = require('../models/period');
 const StatueType = require('../models/statueType');
 const ArchitecturalElementType = require('../models/architecturalElementType');
@@ -24,7 +23,6 @@ exports.asset_get = (req, res, next) => {
     Asset.findById(req.query.id)
         .populate('project', Project)
         .populate('fakeDirectory', FakeDirectory)
-        .populate('reference', Reference)
         .populate('period', Period)
         .populate('shaderType', ShaderType)
         .populate('diagramType', DiagramType)
@@ -41,7 +39,7 @@ exports.asset_get = (req, res, next) => {
                 return next(err);
             }
             console.log(asset_datail);
-            res.render('asset', {title: asset_datail.name, asset: asset_datail})
+            res.render('asset', {title: asset_datail.name, asset: asset_datail, user: req.user})
         })
 
 };
@@ -53,68 +51,75 @@ exports.asset_download = (req, res, next) => {
             return next(err);
         }
         console.log(result.downloadLink)
-        res.download(result.downloadLink, result.fileName);
+        res.download(result.downloadLink, result.activatedVersion.fileName);
     });
 };
 
 //find all assets
 exports.asset_list = (req, res, next) => {
-    const parsed = queryString.parse(req.url.split('?')[1]);
-    const assetTemplate = getNewAssetTemplate(parsed);
-
-    //const assetTemplate = JSON.parse(req.query.assetTemplate);
-
-    console.log(assetTemplate);
-    const method = req.query.method===undefined?1:req.query.method;
-    const page = req.query.page===undefined?1:req.query.page;
-    let sortBy = {};
-    switch(req.query.sortBy===undefined?'name':req.query.sortBy) {
-        case 'name':
-            sortBy.name = method;
-            break;
-        case 'type':
-            sortBy.type = method;
-            break;
-        case 'fileType':
-            sortBy.fileType = method;
-            break;
-        case 'lastUpdate':
-            sortBy.lastAlterTime = method;
-            break;
-    }
-
-    console.log('find assets, template:');
-    console.log(assetTemplate);
-    console.log('sort by: ');
-    console.log(sortBy);
-    async.parallel({
-        assetList: callback => {
-            Asset.find(assetTemplate).skip((page - 1) * 10).limit(10).sort(sortBy).exec(callback);
-        },
-        count: callback => {
-            Asset.count(assetTemplate,callback);
-        }
-    }, (err, results) => {
-        if (err) {
-            next(err);
+    Project.find({name:req.query.project_name}).exec( (err,result) => {
+        if(err) {
+            return next(err);
         }
 
-        if (results.count === 0) {
-            res.render('homepage', {title: 'There are no asset at the moment!'});
+        const parsed = queryString.parse(req.url.split('?')[1]);
+        const assetTemplate = getNewAssetTemplate(parsed);
+        if(result.length === 1){
+            assetTemplate.project=result[0].id;
         }
-        else {
+        //const assetTemplate = JSON.parse(req.query.assetTemplate);
 
-            res.render('assetList', {
-                list_asset: results.assetList,
-                assetTemplate:queryString.stringify(assetTemplate),
-                assetNum: results.count,
-                page: page,
-                method: method,
-                sortBy: req.query.sortBy===undefined?'name':req.query.sortBy
-            })
+        console.log(assetTemplate);
+        const method = req.query.method===undefined?1:req.query.method;
+        const page = req.query.page===undefined?1:req.query.page;
+        let sortBy = {};
+        switch(req.query.sortBy===undefined?'name':req.query.sortBy) {
+            case 'name':
+                sortBy.name = method;
+                break;
+            case 'type':
+                sortBy.type = method;
+                break;
+            case 'fileType':
+                sortBy.fileType = method;
+                break;
+            case 'lastUpdate':
+                sortBy.lastAlterTime = method;
+                break;
         }
+
+        console.log('find assets, template:');
+        console.log(assetTemplate);
+        console.log('sort by: ');
+        console.log(sortBy);
+        async.parallel({
+            assetList: callback => {
+                Asset.find(assetTemplate).skip((page - 1) * 10).limit(10).sort(sortBy).exec(callback);
+            },
+            count: callback => {
+                Asset.count(assetTemplate,callback);
+            }
+        }, (err, results) => {
+            if (err) {
+                next(err);
+            }
+
+            if (results.count === 0) {
+                res.render('homepage', {title: 'There are no asset at the moment!'});
+            }
+            else {
+
+                res.render('assetList', {
+                    list_asset: results.assetList,
+                    assetTemplate:queryString.stringify(assetTemplate),
+                    assetNum: results.count,
+                    page: page,
+                    method: method,
+                    sortBy: req.query.sortBy===undefined?'name':req.query.sortBy
+                })
+            }
+        });
     });
-
 };
 
 exports.history_version_download = (req, res, next) => {
@@ -124,7 +129,7 @@ exports.history_version_download = (req, res, next) => {
         }
         const location = result.trueLocation + result._id + '_version' + req.query.version;
         console.log(location);
-        res.download(location, result.fileName);
+        res.download(location, result.activatedVersion.fileName);
     });
 };
 
@@ -205,7 +210,7 @@ let createNewAsset = fields => {
     if (fields.asset_type != 'Asset' && fields.asset_type != null) {
         assetTemplate.type = fields.asset_type;
     }
-    if (fields.reference != '-1' && fields.reference != null) {
+    if (fields.reference != '' && fields.reference != null) {
         assetTemplate.reference = fields.reference;
     }
     if (fields.directory != '' && fields.directory != null) {

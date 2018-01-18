@@ -85,14 +85,14 @@ block content
 
             //project name
             div.form-group.row
-                label.col-sm-12(for='project_name') Project Name
+                label.col-sm-12(for='project_name') Site Name
 
 
                 div#project_div.col-sm-9.container-fluid
-                    input#project_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Project Name', name='project_name', value=null == asset.project ? null : asset.project.name)
+                    input#project_name.typeahead.col-sm-12.form-control(type='text' ,placeholder='Input Site Name', name='project_name', value=null == asset.project ? null : asset.project.name)
                 div.col-sm-3
                     button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#project_create' )
-                        | Create new project
+                        | Create new Site
 
                     // Modal
                     #project_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
@@ -102,11 +102,11 @@ block content
                                     button.close(type='button', data-dismiss='modal', aria-hidden='true')
                                         | ×
                                     h4#project_create_label.modal-title.text-center
-                                        | Create a new project
+                                        | Create a new Site
                                 .modal-body
                                     div.form-group
                                         label(for='new_project_name') name:
-                                        input#new_project_name.form-control(type='text', placeholder='New project name')
+                                        input#new_project_name.form-control(type='text', placeholder='New Site name')
 
                                 .modal-footer
                                     button.btn.btn-default(type='button', data-dismiss='modal')
@@ -117,38 +117,40 @@ block content
             //Reference
             div.form-group.row
                 label.col-sm-12(for='reference') Reference:
-                div.col-sm-9
-                    select#reference.form-control(type='select', placeholder='Select reference' name='reference' required='true' )
-                        if(null == asset.reference)
-                            option#reference_default_option(value= '-1') Please select a reference if there is one
-                        else
-                            option#reference_default_option(value= asset.reference.id) #{asset.reference.name}
-                            option(value= '-1') No reference
-                        for ref in reference_list
-                            if ref.id != (null == asset.reference ? null : asset.reference.id)
-                                option(value=ref.id) #{ref.name}
-                div.col-sm-3
-                    button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#reference_create' )
-                        | Create new reference
-                // Modal
-                #reference_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='reference_create_label', aria-hidden='true')
-                    .modal-dialog
-                        .modal-content
-                            .modal-header
-                                button.close(type='button', data-dismiss='modal', aria-hidden='true')
-                                    | ×
-                                h4#reference_create_label.modal-title.text-center
-                                    | Create a new reference
-                            .modal-body
-
-                                div.form-group
-                                    label(for='new_project_name') name:
-                                    input#new_reference_name.form-control(type='text', placeholder='New reference name')
-
-                            .modal-footer
-                                button.btn.btn-default(type='button', data-dismiss='modal')
-                                    | close
-                                button.btn.btn-primary(type='button', onclick ="referenceCreate()") Create
+                div.col-sm-12
+                    textarea#reference.form-control(rows='5', name='reference', value=asset.reference == null?null:asset.reference)
+                //div.col-sm-9
+                //    select#reference.form-control(type='select', placeholder='Select reference' name='reference' required='true' )
+                //        if(null == asset.reference)
+                //            option#reference_default_option(value= '-1') Please select a reference if there is one
+                //        else
+                //            option#reference_default_option(value= asset.reference.id) #{asset.reference.name}
+                //            option(value= '-1') No reference
+                //        for ref in reference_list
+                //            if ref.id != (null == asset.reference ? null : asset.reference.id)
+                //                option(value=ref.id) #{ref.name}
+                //div.col-sm-3
+                //    button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#reference_create' )
+                //        | Create new reference
+                //// Modal
+                //#reference_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='reference_create_label', aria-hidden='true')
+                //    .modal-dialog
+                //        .modal-content
+                //            .modal-header
+                //                button.close(type='button', data-dismiss='modal', aria-hidden='true')
+                //                    | ×
+                //                h4#reference_create_label.modal-title.text-center
+                //                    | Create a new reference
+                //            .modal-body
+                //
+                //                div.form-group
+                //                    label(for='new_project_name') name:
+                //                    input#new_reference_name.form-control(type='text', placeholder='New reference name')
+                //
+                //            .modal-footer
+                //                button.btn.btn-default(type='button', data-dismiss='modal')
+                //                    | close
+                //                button.btn.btn-primary(type='button', onclick ="referenceCreate()") Create
 
 
 
@@ -244,7 +246,7 @@ block content
                         div.col-sm-9
                             select#statue_culture_name.form-control(type='select', placeholder='Select statue Element Culture' name='statue_culture_name'  )
                                 if(null == asset.statueCulture)
-                                    option#statue_culture_default(value= '-1') Please select a reference if there is one
+                                    option#statue_culture_default(value= '-1') Please select a culture if there is one
                                 else
                                     option#statue_culture_default(value= asset.statueCulture.id) #{asset.statueCulture.name}
                                     option(value= '-1') No statueCulture
@@ -581,7 +583,7 @@ block content
                             button.btn.btn-default.btn-md(type='button', data-toggle='modal', data-target='#diagram_type_create' )
                                 | Create new diagram type
                         // Modal
-                        #diagram_type_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='reference_create_label', aria-hidden='true')
+                        #diagram_type_create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='diagram_type_create_label', aria-hidden='true')
                             .modal-dialog
                                 .modal-content
                                     .modal-header
