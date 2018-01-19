@@ -21,74 +21,36 @@ var projects = [];
 var fakeDirectories = [];
 var references = [];
 
-var projectCreate = (name, cb) => {
-    projectDetail = {name: name};
-    var project = new Project(projectDetail);
 
-    project.save(
-        err => {
-            if (err) {
-                cb(err, null);
-                return;
-            }
-            console.log('New Porject: ' + project);
-            projects.push(project);
-            cb(null, project);
-        });
 
-};
+var assetCreate = (name, cb) => {
+    let assetTemplate = {
+        name: name,
+        fakeDirectory: '5a42cc65c506b50dcc52b18d',
+        period:'5a4af8a7ba7beb1e7c623335',
+        project:'5a42cc65c506b50dcc52b189',
+        fileName: 'interviewforjoao.txt',
+        fileType: '.txt',
+        trueLocation: 'C:/Users/Render4/WebstormProjects/LithodomosAMS/./file/a/7/',
+        createTime: Date.now(),
+        valid: true,
+        type: 'Asset',
+        version: 1
+        };
 
-var referenceCreate = (name, cb) => {
-    referenceDetail = {
-        name: name
+    var newHistory = {
+        name: 'name1',
+        version: 1,
+        activated: true,
+        fileName:'filename',
+        description: 'First uploaded version',
+        updateTime: Date.now(),
+        updatedBy: 'Bernardo'
     };
-    var reference = new Reference(referenceDetail);
+    assetTemplate.history = [];
+    assetTemplate.history.push(newHistory);
 
-    reference.save(
-        err => {
-            if (err) {
-                cb(err, null);
-                return;
-            }
-            console.log('New Reference: ' + reference);
-            references.push(reference);
-            cb(null, reference);
-        });
-};
-
-var fakeDirectoryCreate = (name, superDirectory, cb) => {
-    fakeDirectoryDetail = {
-        name: name,
-    }
-    if (superDirectory != null) {
-        fakeDirectoryDetail.super = superDirectory;
-    } else {
-        fakeDirectoryDetail.super = null;
-    }
-
-    var fakeDirectory = new FakeDirectory(fakeDirectoryDetail);
-    fakeDirectory.save(
-        err => {
-            if (err) {
-                cb(err, null);
-                return;
-            }
-            console.log('New directory: ' + fakeDirectory);
-            fakeDirectories.push(fakeDirectory);
-            cb(null, fakeDirectory);
-
-        }
-    )
-};
-
-var assetCreate = (name, project, reference, fakeDirectory, cb) => {
-    assetDetail = {
-        name: name,
-        project: project,
-        reference: reference,
-        fakeDirectory: fakeDirectory
-    }
-    var asset = new Asset(assetDetail);
+    var asset = new Asset(assetTemplate);
     asset.save(err => {
             if (err) {
                 cb(err, null);
@@ -101,53 +63,97 @@ var assetCreate = (name, project, reference, fakeDirectory, cb) => {
     )
 };
 
-var generate = (cb) => {
+var generate1 = (cb) => {
     async.parallel([
-            callback => {
-                projectCreate('project 1', callback);
-            },
-            callback => {
-                projectCreate('project 2', callback);
-            },
-            callback => {
-                projectCreate('project 3', callback);
-            },
-            callback => {
-                projectCreate('project 4', callback);
-            },
-            callback => {
-                referenceCreate('reference 1', callback);
-            },
-            callback => {
-                referenceCreate('reference 2', callback);
-            },
-            callback => {
-                referenceCreate('reference 3', callback);
-            },
-            callback => {
-                fakeDirectoryCreate('D1_1', null, callback);
-            },
-            callback => {
-                fakeDirectoryCreate('D1_2', null, callback);
-            }
-
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
+        cb => assetCreate('name1',cb),
         ], cb
     );
 };
 
-var createAsset = (cb) => async.parallel([
-        callback => {
-            assetCreate('asset 1', projects[0], references[0], fakeDirectories[0], callback);
-        },
-        callback => {
-            assetCreate('asset 2', projects[1], references[1], fakeDirectories[1], callback);
-        }
-    ],
-    cb);
+var generate2 = (cb) => {
+    async.parallel([
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+            cb => generate1(cb),
+
+        ], cb
+    );
+};
+var generate = (cb) => {
+    async.parallel([
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+            cb => generate2(cb),
+
+        ], cb
+    );
+};
+// var createAsset = (cb) => async.parallel([
+//         callback => {
+//             assetCreate('asset 1', projects[0], references[0], fakeDirectories[0], callback);
+//         },
+//         callback => {
+//             assetCreate('asset 2', projects[1], references[1], fakeDirectories[1], callback);
+//         }
+//     ],
+//     cb);
 
 
-async.series([
-        generate,
+async.parallel([
+        cb => generate(cb),
+        cb => generate(cb),
+        cb => generate(cb),
+        cb => generate(cb),
+        cb => generate(cb),
+        cb => generate(cb),
+        cb => generate(cb),
+        cb => generate(cb),
+        cb => generate(cb),
+        cb => generate(cb),
+
         //createAsset
     ],
     (err, results) => {

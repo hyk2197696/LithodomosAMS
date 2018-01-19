@@ -99,6 +99,7 @@ let getAllSite = () => {
     };
     req.send();
 };
+
 let getAllDirectory = callback => {
 
     let req = new XMLHttpRequest();

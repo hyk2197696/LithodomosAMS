@@ -71,8 +71,6 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-
-
 // routes ======================================================================
 //require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 

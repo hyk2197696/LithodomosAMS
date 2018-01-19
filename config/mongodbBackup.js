@@ -1,5 +1,21 @@
+'use strict';
+/**
+ * @file callback example
+ * @module mongodb-backup
+ * @subpackage examples
+ * @version 0.0.1
+ * @author hex7c0 <hex7c0@gmail.com>
+ * @license GPLv3
+ */
+
+/*
+ * initialize module
+ */
+const backup = require('mongodb-backup'); // use require('mongodb-backup') instead
 const CronJob = require('cron').CronJob;
-new CronJob('*/1 * * * *', () => {
+let dir = process.cwd().replace(/\\/g,'/') + '/../file/mongo';
+//console.log(dir);
+new CronJob('00 50 12 * * 5', () => {
     console.log("start backup");
     var backup = require('mongodb-backup'); // use require('mongodb-backup') instead
 
@@ -8,7 +24,7 @@ new CronJob('*/1 * * * *', () => {
      */
     backup ({
         uri: 'mongodb://localhost:27017/lithodomos', // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
-        root: 'C:/Users/Render4/WebstormProjects/LithodomosAMS/file/mongo', // write files into this dir
+        root: dir, // write files into this dir
         callback: function(err) {
 
             if (err) {
@@ -18,6 +34,4 @@ new CronJob('*/1 * * * *', () => {
             }
         }
     });
-}, null, true, 'America/Los_Angeles');
-
-console.log("start");
+}, null, true, 'Australia/Melbourne');
