@@ -13,9 +13,10 @@
  */
 const backup = require('mongodb-backup'); // use require('mongodb-backup') instead
 const CronJob = require('cron').CronJob;
+var cmd=require('node-cmd');
 let dir = process.cwd().replace(/\\/g,'/') + '/../file/mongo';
 //console.log(dir);
-new CronJob('00 50 12 * * 5', () => {
+new CronJob('40 35 12 * * 1-5', () => {
     console.log("start backup");
     var backup = require('mongodb-backup'); // use require('mongodb-backup') instead
 
@@ -30,7 +31,12 @@ new CronJob('00 50 12 * * 5', () => {
             if (err) {
                 console.error(err);
             } else {
-                console.log('finish');
+                cmd.run('sdclt.exe /KICKOFFNEW');
+                setTimeout( () => {
+                    cmd.run('sdclt.exe /UIMODE /SHOW');
+
+                    console.log('finish');
+                },3000);
             }
         }
     });

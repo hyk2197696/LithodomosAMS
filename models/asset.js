@@ -6,19 +6,20 @@ const AssetSchema = new Schema({
     name: {type: String, require: true},
     project: {type: Schema.ObjectId, ref: 'Project'},//shown as site
     reference: {type:String},
+    period: {type: Schema.ObjectId, ref: 'Period'},
     fakeDirectory: {type: Schema.ObjectId, ref: 'FakeDirectory', require: true},
     trueLocation: {type: String, require: true},
     fileName: {type: String, require: true},
     fileType: {type: String, require: true},
     type: {
         type: String,
-        enum: ['Asset', 'Model', 'Shader', 'Diagram', 'Statue', 'Architectural Element', 'Prop', 'manMade'],
+        enum: ['Asset',  'Shader', 'Diagram', 'Statue', 'Architectural Element', 'Prop'],
         require: true,
         default: 'Asset'
     },
     version: Number,
     history:{ type: [JSON] },
-    period: {type: Schema.ObjectId, ref: 'Period'},
+
     valid: {type: Boolean, default: true}, //for soft deletion
 
     createTime: {type: Date, default: Date.now},
@@ -66,11 +67,6 @@ AssetSchema
 AssetSchema
     .virtual('lastAlterTimeFormatted')
     .get(function () {
-        // if(this.lastAlterTime == null){
-        //     console.log('this one has not been updated yet');
-        //     console.log(this.createTimeFormatted);
-        //     return this.createTimeFormatted;
-        // }
         return this.lastAlterTime ? moment(this.lastAlterTime).format('YYYY-MM-DD hh:mm:ss') : ' ';
     });
 

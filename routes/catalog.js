@@ -27,10 +27,6 @@ router.post('/assetfind', permission.checkSearchPermission, directory_controller
 
 router.get('/asset', permission.checkSearchPermission, asset_controller.asset_get);
 
-router.get('/assetcreate', permission.checkCreatePermission, create_controller.create_get);
-
-router.post('/assetcreate', permission.checkCreatePermission, create_controller.create_post);
-
 router.get('/fullassetcreate', permission.checkCreatePermission, create_controller.asset_create_get);
 
 router.post('/fullassetcreate', permission.checkCreatePermission, create_controller.asset_create_post);

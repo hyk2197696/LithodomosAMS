@@ -7,7 +7,7 @@ var async = require('async');
 var Project = require('./project');
 var Asset = require('./asset');
 var FakeDirectory = require('./fakeDirectory');
-var Reference = require('./reference');
+
 
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb://localhost:27017/lithodomos';

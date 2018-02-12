@@ -36,8 +36,6 @@ router.get('/deleteuser', permission.isAdmin, user_controller.delete_user);
 //create content
 router.get('/projectcreate', permission.checkCreatePermission, content_controller.project_create_get);
 
-router.get('/referencecreate', permission.checkCreatePermission, content_controller.reference_create_get);
-
 router.get('/periodcreate', permission.checkCreatePermission, content_controller.period_create_get);
 
 router.get('/statuetypecreate', permission.checkCreatePermission, content_controller.statue_type_create_get);

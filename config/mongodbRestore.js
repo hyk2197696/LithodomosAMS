@@ -13,7 +13,7 @@
  */
 var restore = require('mongodb-restore'); // use require('mongodb-restore') instead
 
-//let dir = process.cwd().replace(/\\/g,'/') + '/../file/mongo';
+let dir = process.cwd().replace(/\\/g,'/') + '/../file/mongo/lithodomos';
 /*
  * use
  */

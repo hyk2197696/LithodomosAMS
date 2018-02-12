@@ -27,7 +27,7 @@ exports.checkSearchPermission = (req,res,next) =>  {
     }
     res.render('index',{});
     //console.log(req)
-};
+}   ;
 
 //check the create permission
 exports.checkCreatePermission = (req,res,next) =>  {

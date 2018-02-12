@@ -1,7 +1,7 @@
 /**
  * Controller for content(different attributes of asset) creation
  */
-const Reference = require('../models/reference');
+
 const Period = require('../models/period');
 const StatueType = require('../models/statueType');
 const ArchitecturalElementType = require('../models/architecturalElementType');
@@ -42,33 +42,33 @@ exports.project_create_get = (req, res, next) => {
     })
 };
 
-exports.reference_create_get = (req, res, next) => {
-    const referenceDetail = {name: req.query.name};
-    Reference.count(referenceDetail, (err, referenceCount) => {
-        if (err) {
-            next(err);
-        }
-        if (referenceCount > 0) {
-            res.end('Reference exists!');
-            return;
-        }
-
-        //if not exist, create new reference
-        const newReference = new Reference(referenceDetail);
-        newReference.save(err => {
-            if (err) {
-                next(err);
-            }
-            let resText = {};
-            resText.message = 'New reference create successfully!';
-            console.log('insert new reference : ');
-            console.log(newReference);
-            resText.newReference = newReference;
-            //success
-            res.end(JSON.stringify(resText));
-        })
-    })
-};
+// exports.reference_create_get = (req, res, next) => {
+//     const referenceDetail = {name: req.query.name};
+//     Reference.count(referenceDetail, (err, referenceCount) => {
+//         if (err) {
+//             next(err);
+//         }
+//         if (referenceCount > 0) {
+//             res.end('Reference exists!');
+//             return;
+//         }
+//
+//         //if not exist, create new reference
+//         const newReference = new Reference(referenceDetail);
+//         newReference.save(err => {
+//             if (err) {
+//                 next(err);
+//             }
+//             let resText = {};
+//             resText.message = 'New reference create successfully!';
+//             console.log('insert new reference : ');
+//             console.log(newReference);
+//             resText.newReference = newReference;
+//             //success
+//             res.end(JSON.stringify(resText));
+//         })
+//     })
+// };
 
 exports.period_create_get = (req, res, next) => {
     const periodDetail = {name: req.query.name};
